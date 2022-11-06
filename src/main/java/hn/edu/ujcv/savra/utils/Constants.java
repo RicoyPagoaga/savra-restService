@@ -8,4 +8,6 @@ public class Constants {
     public  static final String URL_BASE_PAISES  = String.format("%s/paises",URL_BASE);
     public  static final String URL_BASE_CATEGORIA_CLIENTES  = String.format("%s/categoria_clientes",URL_BASE);
     public  static final String URL_BASE_CLIENTES  = String.format("%s/clientes",URL_BASE);
+    public static final  String URL_BASE_EMPLEADOS= String.format("%s/empleados",URL_BASE);
+    public static final  String URL_BASE_TIPO_DOCUMENTO= String.format("%s/tipoDocumento",URL_BASE);
 }
