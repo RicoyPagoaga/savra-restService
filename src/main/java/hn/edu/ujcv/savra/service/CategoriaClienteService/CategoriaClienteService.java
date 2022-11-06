@@ -8,7 +8,6 @@ import hn.edu.ujcv.savra.repository.CategoriaClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +18,31 @@ public class CategoriaClienteService implements ICategoriaClienteService{
 
     @Override
     public CategoriaCliente saveCategoriaCliente(CategoriaCliente pCategoriaCliente) throws BusinessException, SqlExceptions {
-        return repository.save(pCategoriaCliente);
+        try{
+            //nombre
+            if(pCategoriaCliente.getNombre().isEmpty()){
+                throw new BusinessException("Nombre Categoría esta Vacío");
+            }
+            if(pCategoriaCliente.getNombre().length() < 3){
+                throw new BusinessException("Nombre Categoría debe tener mínimo 3 caracteres");
+            }
+            if(pCategoriaCliente.getNombre().length() >20){
+                throw new BusinessException("Nombre Categoría debe contener menos de 20 caracteres");
+            }
+            //descripcion
+            if(pCategoriaCliente.getDescripcion().isEmpty()){
+                throw new BusinessException("Descripción de categoría esta vacío");
+            }
+            if(pCategoriaCliente.getDescripcion().length() < 3){
+                throw new BusinessException("Descripción debe tener mínimo 3 caracteres");
+            }
+            if(pCategoriaCliente.getDescripcion().length() > 50){
+                throw new BusinessException("Descripción debe debe contener menos de 50 caracteres");
+            }
+            return repository.save(pCategoriaCliente);
+        }catch (Exception e){
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @Override
@@ -68,6 +91,26 @@ public class CategoriaClienteService implements ICategoriaClienteService{
     public CategoriaCliente updateCategoriaCliente(CategoriaCliente pCategoriaCliente) throws BusinessException,NotFoundException , SqlExceptions {
         Optional<CategoriaCliente> opt = null;
         try{
+            //nombre
+            if(pCategoriaCliente.getNombre().isEmpty()){
+                throw new BusinessException("Nombre Categoría esta Vacío");
+            }
+            if(pCategoriaCliente.getNombre().length() < 3){
+                throw new BusinessException("Nombre Categoría debe tener mínimo 3 caracteres");
+            }
+            if(pCategoriaCliente.getNombre().length() >20){
+                throw new BusinessException("Nombre Categoría debe contener menos de 20 caracteres");
+            }
+            //descripcion
+            if(pCategoriaCliente.getDescripcion().isEmpty()){
+                throw new BusinessException("Descripción de categoría esta vacío");
+            }
+            if(pCategoriaCliente.getDescripcion().length() < 3){
+                throw new BusinessException("Descripción debe tener mínimo 3 caracteres");
+            }
+            if(pCategoriaCliente.getDescripcion().length() > 50){
+                throw new BusinessException("Descripción debe debe contener menos de 50 caracteres");
+            }
             opt = repository.findById(pCategoriaCliente.getIdCategoria());
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
