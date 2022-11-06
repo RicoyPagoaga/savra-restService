@@ -67,7 +67,7 @@ public class TipoDocumentoService implements ITipoDocumentoService {
     public TipoDocumento getTipoDocumentoByNombre(String nombre) throws BusinessException, NotFoundException {
         Optional<TipoDocumento> opt= null;
         try {
-            opt=repository.findByNombre(nombre);
+            opt=repository.findByNombreDocumento(nombre);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
         }

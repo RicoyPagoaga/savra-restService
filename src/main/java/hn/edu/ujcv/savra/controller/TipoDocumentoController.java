@@ -78,7 +78,7 @@ public class TipoDocumentoController {
     @GetMapping("/nombre/{nombre}")
     public ResponseEntity<TipoDocumento> findTipoDocumendoByNombre (@PathVariable String nombre){
         try {
-            return new ResponseEntity(service.getTipoDocumentoByNombre(nombre),HttpStatus.OK);
+            return new ResponseEntity(service.getTipoDocumentoByNombre(nombre), HttpStatus.OK);
 
         }catch (BusinessException e){
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
