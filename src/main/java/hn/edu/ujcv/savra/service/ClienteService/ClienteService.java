@@ -43,16 +43,21 @@ public class ClienteService implements IClienteService{
             }
             //idTipoDocumento
             if(pCliente.getIdTipoDocumento() < 1) {
-                throw new BusinessException("Id Documento Invalido");
+                throw new BusinessException("Id Documento vacío");
             }
-            Pattern patron=Pattern.compile("[2389]");
+            Pattern patron=Pattern.compile("[72389]");
             Matcher validarNumero = patron.matcher(pCliente.getTelefono().substring(0,1));
             //telefono
             if (pCliente.getTelefono().isEmpty()){
                 throw new BusinessException("Teléfono esta vacío");
             }
             if (pCliente.getTelefono().length() != 8){
-                throw new BusinessException("No. de teléfono debe ser igual a 8 carácteres");
+                throw new BusinessException("No. de teléfono debe ser igual a 8 dígitos");
+            }
+            Pattern pat = Pattern.compile("[\\d]*");
+            Matcher mat = pat.matcher(pCliente.getTelefono());
+            if(!mat.matches()){
+                throw new BusinessException("No. de teléfono debe ser númerico");
             }
             if (!validarNumero.matches()){
                 throw new BusinessException("No. de teléfono no pertenece a una operadora valida");
@@ -68,8 +73,8 @@ public class ClienteService implements IClienteService{
                 throw new BusinessException("Direccion debe ser menor a 50 Carácteres");
             }
             //idCategoria
-            if (pCliente.getIdCategoria() < 0){
-                throw new BusinessException("Id Categoria Invalido");
+            if (pCliente.getIdCategoria() < 1){
+                throw new BusinessException("Id Categoría vacío");
             }
             return repository.save(pCliente);
         }catch (Exception e){
@@ -142,7 +147,12 @@ public class ClienteService implements IClienteService{
                 throw new BusinessException("Teléfono esta vacío");
             }
             if (pCliente.getTelefono().length() != 8){
-                throw new BusinessException("No. de teléfono debe ser igual a 8 carácteres");
+                throw new BusinessException("No. de teléfono debe ser igual a 8 dígitos");
+            }
+            Pattern pat = Pattern.compile("[\\d]*");
+            Matcher mat = pat.matcher(pCliente.getTelefono());
+            if(!mat.matches()){
+                throw new BusinessException("No. de teléfono debe ser númerico");
             }
             if (!validarNumero.matches()){
                 throw new BusinessException("No. de teléfono no pertenece a una operadora valida");
