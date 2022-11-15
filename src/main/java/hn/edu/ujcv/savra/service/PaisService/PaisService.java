@@ -50,7 +50,7 @@ public class PaisService implements IPaisService{
             Pattern pat = Pattern.compile("[\\d]*");
             Matcher mat = pat.matcher(pPais.getCod_area());
             if(!mat.matches()){
-                throw new BusinessException("Código de área debe ser númerico (no utilizar '+')");
+                throw new BusinessException("Código de área debe ser númerico (no es necesario utilizar '+')");
             }
             pPais.setCod_iso(pPais.getCod_iso().toUpperCase());
             pPais.setNombre(pPais.getNombre().toUpperCase());
@@ -127,10 +127,8 @@ public class PaisService implements IPaisService{
             Pattern pat = Pattern.compile("[\\d]*");
             Matcher mat = pat.matcher(pPais.getCod_area());
             if(!mat.matches()){
-                throw new BusinessException("Código de área debe ser númerico (no utilizar '+')");
+                throw new BusinessException("Código de área debe ser númerico (no es necesario utilizar '+')");
             }
-            pPais.setCod_iso(pPais.getCod_iso().toUpperCase());
-            pPais.setNombre(pPais.getNombre().toUpperCase());
             opt = repository.findById(pPais.getIdPais());
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
@@ -141,8 +139,8 @@ public class PaisService implements IPaisService{
             try {
                 Pais newPais = new Pais();
                 newPais.setIdPais(pPais.getIdPais());
-                newPais.setNombre(pPais.getNombre());
-                newPais.setCod_iso(pPais.getCod_iso());
+                newPais.setNombre(pPais.getNombre().toUpperCase());
+                newPais.setCod_iso(pPais.getCod_iso().toUpperCase());
                 newPais.setCod_area(pPais.getCod_area());
                 return repository.save(newPais);
             }catch (Exception e1){
