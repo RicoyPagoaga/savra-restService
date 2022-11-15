@@ -21,30 +21,31 @@ public class PaisService implements IPaisService{
         try{
             //cod_iso
             if(pPais.getCod_iso().isEmpty()){
-                throw new BusinessException("Código ISO esta Vacío");
+                throw new BusinessException("Código ISO esta Vacío ఠ_ఠ");
             }
             if(pPais.getCod_iso().length() != 2){
-                throw new BusinessException("Utilice el código ISO de 2 letras");
+                throw new BusinessException("Utilice el código ISO de 2 letras ఠ_ఠ");
             }
             //nombre
             if(pPais.getNombre().isEmpty()){
-                throw new BusinessException("Nombre País esta vacío");
+                throw new BusinessException("Nombre País esta vacío ఠ_ఠ");
             }
             if(pPais.getNombre().length() < 4){
-                throw new BusinessException("Nombre País debe contener más de 4 caracteres");
+                throw new BusinessException("Nombre País debe contener más de 4 caracteres ఠ_ఠ");
             }
             if(pPais.getNombre().length() >56){
-                throw new BusinessException("Nombre País debe contener menos de 56 caracteres");
+                throw new BusinessException("Nombre País debe contener menos de 56 caracteres ఠ_ఠ");
             }
+
             //cod_area
             if(pPais.getCod_area().isEmpty()){
-                throw new BusinessException("Código de área esta vacío");
+                throw new BusinessException("Código de área esta vacío ఠ_ఠ");
             }
             if(pPais.getCod_area().length() < 1){
-                throw new BusinessException("Código de área debe contener al menos un caracter");
+                throw new BusinessException("Código de área debe contener al menos un caracterఠ_ఠ");
             }
             if(pPais.getCod_area().length() > 3){
-                throw new BusinessException("Código de área no debe contener mas de 3 caracteres");
+                throw new BusinessException("Código de área no debe contener mas de 3 caracteresఠ_ఠ");
             }
             Pattern pat = Pattern.compile("[\\d]*");
             Matcher mat = pat.matcher(pPais.getCod_area());
