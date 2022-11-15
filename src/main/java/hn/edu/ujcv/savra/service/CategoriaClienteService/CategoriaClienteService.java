@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CategoriaClienteService implements ICategoriaClienteService{
@@ -20,25 +22,31 @@ public class CategoriaClienteService implements ICategoriaClienteService{
     public CategoriaCliente saveCategoriaCliente(CategoriaCliente pCategoriaCliente) throws BusinessException, SqlExceptions {
         try{
             //nombre
-            if(pCategoriaCliente.getNombre().isEmpty()){
+            if(pCategoriaCliente.getNombre().trim().isEmpty()){
                 throw new BusinessException("Nombre Categoría esta Vacío");
             }
-            if(pCategoriaCliente.getNombre().length() < 3){
+            if(pCategoriaCliente.getNombre().trim().length() < 3){
                 throw new BusinessException("Nombre Categoría debe tener mínimo 3 caracteres");
             }
-            if(pCategoriaCliente.getNombre().length() >20){
+            if(pCategoriaCliente.getNombre().trim().length() >20){
                 throw new BusinessException("Nombre Categoría debe contener menos de 20 caracteres");
             }
+            Pattern patDoc = Pattern.compile("[a-zA-Z]*");
+            Matcher matDoc = patDoc.matcher(pCategoriaCliente.getNombre().trim());
+            if(!matDoc.matches()){
+                throw new BusinessException("Nombre Categoría no debe contener números ఠ_ఠ");
+            }
             //descripcion
-            if(pCategoriaCliente.getDescripcion().isEmpty()){
+            if(pCategoriaCliente.getDescripcion().trim().isEmpty()){
                 throw new BusinessException("Descripción de categoría esta vacío");
             }
-            if(pCategoriaCliente.getDescripcion().length() < 3){
+            if(pCategoriaCliente.getDescripcion().trim().length() < 3){
                 throw new BusinessException("Descripción debe tener mínimo 3 caracteres");
             }
-            if(pCategoriaCliente.getDescripcion().length() > 50){
+            if(pCategoriaCliente.getDescripcion().trim().length() > 50){
                 throw new BusinessException("Descripción debe debe contener menos de 50 caracteres");
             }
+            pCategoriaCliente.setNombre(pCategoriaCliente.getNombre().trim().toUpperCase());
             return repository.save(pCategoriaCliente);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
@@ -92,23 +100,28 @@ public class CategoriaClienteService implements ICategoriaClienteService{
         Optional<CategoriaCliente> opt = null;
         try{
             //nombre
-            if(pCategoriaCliente.getNombre().isEmpty()){
+            if(pCategoriaCliente.getNombre().trim().isEmpty()){
                 throw new BusinessException("Nombre Categoría esta Vacío");
             }
-            if(pCategoriaCliente.getNombre().length() < 3){
+            if(pCategoriaCliente.getNombre().trim().length() < 3){
                 throw new BusinessException("Nombre Categoría debe tener mínimo 3 caracteres");
             }
-            if(pCategoriaCliente.getNombre().length() >20){
+            if(pCategoriaCliente.getNombre().trim().length() >20){
                 throw new BusinessException("Nombre Categoría debe contener menos de 20 caracteres");
             }
+            Pattern patDoc = Pattern.compile("[a-zA-Z]*");
+            Matcher matDoc = patDoc.matcher(pCategoriaCliente.getNombre().trim());
+            if(!matDoc.matches()){
+                throw new BusinessException("Nombre Categoría no debe contener números ఠ_ఠ");
+            }
             //descripcion
-            if(pCategoriaCliente.getDescripcion().isEmpty()){
+            if(pCategoriaCliente.getDescripcion().trim().isEmpty()){
                 throw new BusinessException("Descripción de categoría esta vacío");
             }
-            if(pCategoriaCliente.getDescripcion().length() < 3){
+            if(pCategoriaCliente.getDescripcion().trim().length() < 3){
                 throw new BusinessException("Descripción debe tener mínimo 3 caracteres");
             }
-            if(pCategoriaCliente.getDescripcion().length() > 50){
+            if(pCategoriaCliente.getDescripcion().trim().length() > 50){
                 throw new BusinessException("Descripción debe debe contener menos de 50 caracteres");
             }
             opt = repository.findById(pCategoriaCliente.getIdCategoria());
@@ -121,7 +134,7 @@ public class CategoriaClienteService implements ICategoriaClienteService{
             try {
                 CategoriaCliente newCategoria = new CategoriaCliente();
                 newCategoria.setIdCategoria(pCategoriaCliente.getIdCategoria());
-                newCategoria.setNombre(pCategoriaCliente.getNombre());
+                newCategoria.setNombre(pCategoriaCliente.getNombre().toUpperCase());
                 newCategoria.setDescripcion(pCategoriaCliente.getDescripcion());
                 return repository.save(newCategoria);
             }catch (Exception e1){
