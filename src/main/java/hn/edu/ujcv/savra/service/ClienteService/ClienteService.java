@@ -23,23 +23,23 @@ public class ClienteService implements IClienteService{
         try{
             //nombre
             if(pCliente.getNombre().isEmpty()){
-                throw new BusinessException("Nombre Cliente esta Vacío");
+                throw new BusinessException("Nombre Cliente esta Vacío ఠ_ఠ");
             }
             if(pCliente.getNombre().length() < 3){
-                throw new BusinessException("Nombre Cliente debe contener mínimo 3 carácteres");
+                throw new BusinessException("Nombre Cliente debe contener mínimo 3 carácteres ఠ_ఠ");
             }
             if(pCliente.getNombre().length() >60){
-                throw new BusinessException("Nombre Cliente debe contener menos de 60 carácteres");
+                throw new BusinessException("Nombre Cliente debe contener menos de 60 carácteres ఠ_ఠ");
             }
             //documento
             if(pCliente.getDocumento().isEmpty()){
-                throw new BusinessException("Documento esta vacío");
+                throw new BusinessException("Documento esta vacío ఠ_ఠ");
             }
             if(pCliente.getDocumento().length() < 7){
-                throw new BusinessException("Documento debe tener mínimo 7 carácteres");
+                throw new BusinessException("Documento debe tener mínimo 7 carácteres ఠ_ఠ");
             }
             if(pCliente.getDocumento().length() > 14){
-                throw new BusinessException("Documento debe ser menor o igual a 14 carácteres");
+                throw new BusinessException("Documento debe ser menor o igual a 14 carácteres ఠ_ఠ");
             }
             //idTipoDocumento
             if(pCliente.getIdTipoDocumento() < 1) {
@@ -52,25 +52,25 @@ public class ClienteService implements IClienteService{
                 throw new BusinessException("Teléfono esta vacío");
             }
             if (pCliente.getTelefono().length() != 8){
-                throw new BusinessException("No. de teléfono debe ser igual a 8 dígitos");
+                throw new BusinessException("No. de teléfono debe ser igual a 8 dígitos ఠ_ఠ");
             }
             Pattern pat = Pattern.compile("[\\d]*");
             Matcher mat = pat.matcher(pCliente.getTelefono());
             if(!mat.matches()){
-                throw new BusinessException("No. de teléfono debe ser númerico");
+                throw new BusinessException("No. de teléfono debe ser númerico ఠ_ఠ");
             }
             if (!validarNumero.matches()){
-                throw new BusinessException("No. de teléfono no pertenece a una operadora valida");
+                throw new BusinessException("No. de teléfono no pertenece a una operadora valida ఠ_ఠ");
             }
             //direccion
             if (pCliente.getDireccion().isEmpty()){
-                throw new BusinessException("Direccion del cliente esta vacío");
+                throw new BusinessException("Direccion del cliente esta vacío ఠ_ఠ");
             }
             if (pCliente.getDireccion().length() < 6){
-                throw new BusinessException("Direccion debe ser mayor a 6 carácteres");
+                throw new BusinessException("Direccion debe ser mayor a 6 carácteres ఠ_ఠ");
             }
             if (pCliente.getDireccion().length() > 50){
-                throw new BusinessException("Direccion debe ser menor a 50 Carácteres");
+                throw new BusinessException("Direccion debe ser menor a 50 Carácteres ఠ_ఠ");
             }
             //idCategoria
             if (pCliente.getIdCategoria() < 1){

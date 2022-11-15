@@ -3,7 +3,6 @@ package hn.edu.ujcv.savra.controller;
 import hn.edu.ujcv.savra.entity.Pais;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
-import hn.edu.ujcv.savra.exceptions.SqlExceptions;
 import hn.edu.ujcv.savra.service.PaisService.PaisService;
 import hn.edu.ujcv.savra.utils.Constants;
 import hn.edu.ujcv.savra.utils.RestApiError;

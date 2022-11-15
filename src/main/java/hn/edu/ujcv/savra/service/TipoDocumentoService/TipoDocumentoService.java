@@ -18,9 +18,24 @@ public class TipoDocumentoService implements ITipoDocumentoService {
     @Override
     public TipoDocumento saveTipoDocumento(TipoDocumento tipoDocumento) throws BusinessException {
         try {
+            //nombreDocumento
             if(tipoDocumento.getNombreDocumento().isEmpty()){
-                throw new BusinessException("No debe estar vacio");
+                throw new BusinessException("El nombre no debe estar vacio ఠ_ఠ");
             }
+            if(tipoDocumento.getNombreDocumento().length()< 3){
+                throw new BusinessException("El nombre no debe tener menos de 3 caracteres ఠ_ఠ");
+            }
+            if (tipoDocumento.getNombreDocumento().length()>30){
+                throw new BusinessException("El nombre no debe tener mas de 30 caracteres ఠ_ఠ");
+            }
+            if (tipoDocumento.getNombreDocumento().matches("(.)\\1{2,}")){
+                throw new BusinessException("No debe tener tantas letras repetidas ఠ_ఠ");
+            }
+             if (tipoDocumento.getNombreDocumento().matches("[^A-Za-zÁÉÍÓÚáéíóúñ\\s]")){
+                 throw new BusinessException("El nombre solo debe tener letras ఠ_ఠ");
+             }
+
+            tipoDocumento.setNombreDocumento(tipoDocumento.getNombreDocumento().toUpperCase());
             return repository.save(tipoDocumento);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
@@ -113,7 +128,8 @@ public class TipoDocumentoService implements ITipoDocumentoService {
             try {
                 TipoDocumento existingtTipoDocumento =new TipoDocumento();
                 existingtTipoDocumento.setIdTipoDocumento(tipoDocumento.getIdTipoDocumento());
-                existingtTipoDocumento.setNombreDocumento(tipoDocumento.getNombreDocumento());
+                existingtTipoDocumento.setNombreDocumento(tipoDocumento.getNombreDocumento().toUpperCase());
+
                 return repository.save(existingtTipoDocumento);
             }catch (Exception e){
                 throw new BusinessException(e.getMessage());
