@@ -175,6 +175,11 @@ public class ProveedorService implements IProveedorService {
         if (proveedor.getNombreContacto().trim().length() < 5) {
             throw new BusinessException("Ingrese más de cinco caracteres en el nombre del contacto");
         }
+        Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+        Matcher matDoc = patDoc.matcher(proveedor.getNombreContacto().trim());
+        if(!matDoc.matches()){
+            throw new BusinessException("Nombre de contacto no debe contener números o letras con tilde ఠ_ఠ");
+        }
         if (proveedor.getNombreContacto().length() > 100) {
             throw new BusinessException("El nombre de contacto no debe exceder los cien caracteres");
         }

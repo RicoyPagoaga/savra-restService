@@ -17,8 +17,8 @@ public class Repuesto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long   idRepuesto;
     private String nombre;
-    private int    fecha_referenciaInicio;
-    private int    fecha_referenciaFinal;
+    private int    anio_referenciaInicio;
+    private int    anio_referenciaFinal;
     private long   idCategoria;
     private int    stockActual;
     private int    stockMinimo;

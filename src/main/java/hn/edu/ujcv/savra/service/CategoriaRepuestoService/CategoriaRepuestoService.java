@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CategoriaRepuestoService implements ICategoriaRepuestoService {
@@ -130,6 +132,11 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
         }
         if (categoriaRepuesto.getNombre().trim().length() < 3) {
             throw new BusinessException("Ingrese más de tres caracteres en el nombre de la categoría de repuesto");
+        }
+        Pattern patDoc = Pattern.compile("[a-zA-Z]*");
+        Matcher matDoc = patDoc.matcher(categoriaRepuesto.getNombre().trim());
+        if(!matDoc.matches()){
+            throw new BusinessException("Nombre de categoría no debe contener números ఠ_ఠ");
         }
         if (categoriaRepuesto.getNombre().trim().length() > 80) {
             throw new BusinessException("El nombre de la categoría de repuesto no debe exceder los ochenta caracteres");

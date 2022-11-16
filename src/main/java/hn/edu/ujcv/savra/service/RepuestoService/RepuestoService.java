@@ -112,8 +112,8 @@ public class RepuestoService implements IRepuestoService {
             try {
                 validarRepuesto(repuesto);
                 Repuesto repuestoExistente = new Repuesto(
-                        repuesto.getIdRepuesto(), repuesto.getNombre(), repuesto.getFecha_referenciaInicio(),
-                        repuesto.getFecha_referenciaFinal(), repuesto.getIdCategoria(), repuesto.getStockActual(),
+                        repuesto.getIdRepuesto(), repuesto.getNombre(), repuesto.getAnio_referenciaInicio(),
+                        repuesto.getAnio_referenciaFinal(), repuesto.getIdCategoria(), repuesto.getStockActual(),
                         repuesto.getStockMinimo(), repuesto.getStockMaximo(), repuesto.getIdProveedor(), repuesto.getIdModelo(),
                         repuesto.getIdTransmision()
                 );
@@ -173,28 +173,28 @@ public class RepuestoService implements IRepuestoService {
         } */
 
         //fecha referencia inicio
-        if (String.valueOf(repuesto.getFecha_referenciaInicio()).isEmpty()) {
-            throw new BusinessException("La fecha de referencia inicial no debe estar vacía");
+        if (String.valueOf(repuesto.getAnio_referenciaInicio()).isEmpty()) {
+            throw new BusinessException("El año de referencia inicial no debe estar vacío");
         }
-        if (repuesto.getFecha_referenciaInicio() < 0) {
+        if (repuesto.getAnio_referenciaInicio() < 0) {
             throw new BusinessException("El año de referencia inicial no debe ser un valor negativo");
         }
-        if (String.valueOf(repuesto.getFecha_referenciaInicio()).length() != 4) {
+        if (String.valueOf(repuesto.getAnio_referenciaInicio()).length() != 4) {
             throw new BusinessException("El año de referencia inicial debe contener cuatro digitos");
         }
         // fecha referencia final
-        if (String.valueOf(repuesto.getFecha_referenciaFinal()).isEmpty()) {
-            throw new BusinessException("La fecha de referencia final no debe estar vacía");
+        if (String.valueOf(repuesto.getAnio_referenciaFinal()).isEmpty()) {
+            throw new BusinessException("El año de referencia final no debe estar vacío");
         }
-        if (repuesto.getFecha_referenciaFinal() < 0) {
+        if (repuesto.getAnio_referenciaFinal() < 0) {
             throw new BusinessException("El año de referencia final no debe ser un valor negativo");
         }
-        if (String.valueOf(repuesto.getFecha_referenciaFinal()).length() != 4) {
+        if (String.valueOf(repuesto.getAnio_referenciaFinal()).length() != 4) {
             throw new BusinessException("El año de referencia final debe contener cuatro digitos");
         }
         //
-        if (repuesto.getFecha_referenciaInicio() >= repuesto.getFecha_referenciaFinal()) {
-            throw new BusinessException("El año de referencia inicial no debe ser mayor o igual al año de referencia final");
+        if (repuesto.getAnio_referenciaInicio() > repuesto.getAnio_referenciaFinal()) {
+            throw new BusinessException("El año de referencia inicial no debe ser mayor al año de referencia final");
         }
         //id Categoria
         if (String.valueOf(repuesto.getIdCategoria()).isEmpty()) {
