@@ -1,4 +1,4 @@
-package hn.edu.ujcv.savra.service.Marca;
+package hn.edu.ujcv.savra.service.MarcaService;
 
 import hn.edu.ujcv.savra.entity.Marca;
 import hn.edu.ujcv.savra.exceptions.BusinessException;

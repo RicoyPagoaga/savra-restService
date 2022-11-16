@@ -15,6 +15,7 @@ public class Constants {
     public static final String URL_BASE_MODELOS     = String.format("%s/modelos", URL_BASE);
     public static final String URL_BASE_TRANSMISIONES     = String.format("%s/transmisiones", URL_BASE);
     public static final String URL_BASE_REPUESTOS   = String.format("%s/repuestos", URL_BASE);
+    public static final String URL_BASE_CATEGORIA_REPUESTOS   = String.format("%s/categoria_repuestos", URL_BASE);
 
     public static final String URL_BASE_USUARIOS   = String.format("%s/usuarios", URL_BASE);
 }

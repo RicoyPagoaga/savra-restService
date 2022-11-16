@@ -1,12 +1,12 @@
 package hn.edu.ujcv.savra.controller;
 
-import hn.edu.ujcv.savra.entity.Marca;
+import hn.edu.ujcv.savra.entity.CategoriaRepuesto;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
-import hn.edu.ujcv.savra.service.MarcaService.MarcaService;
+import hn.edu.ujcv.savra.service.CategoriaRepuestoService.CategoriaRepuestoService;
 import hn.edu.ujcv.savra.utils.Constants;
 import hn.edu.ujcv.savra.utils.RestApiError;
-import org.hibernate.mapping.Any;
+import org.hibernate.annotations.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,19 +16,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/marcas")
-public class MarcaController {
+@RequestMapping("/api/v1/categoria_repuestos")
+public class CategoriaRepuestoController {
 
     @Autowired
-    private MarcaService service;
+    private CategoriaRepuestoService service;
 
-    @PostMapping("/addMarca")
-    public ResponseEntity<Object> addMarca(@RequestBody Marca marca) {
+    @PostMapping("/addCategoriaRepuesto")
+    public ResponseEntity<Object> addCategoriaRepuesto(@RequestBody CategoriaRepuesto categoriaRepuesto) {
         try {
-            service.saveMarca(marca);
+            service.saveCategoriaRepuesto(categoriaRepuesto);
             HttpHeaders responseHeader = new HttpHeaders();
-            responseHeader.set("location", Constants.URL_BASE_MARCAS + marca.getIdMarca());
-            return new ResponseEntity(marca, responseHeader, HttpStatus.CREATED);
+            responseHeader.set("location", Constants.URL_BASE_CATEGORIA_REPUESTOS + categoriaRepuesto.getIdCategoria());
+            return new ResponseEntity(categoriaRepuesto, responseHeader, HttpStatus.CREATED);
         } catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Informacion enviada no es valida",
@@ -37,10 +37,10 @@ public class MarcaController {
         }
     }
 
-    @PostMapping("/addMarcas")
-    public ResponseEntity<Any> addMarcas(@RequestBody List<Marca> marcas) {
+    @PostMapping("/addCategoriasRepuesto")
+    public ResponseEntity<Object> addCategoriasRepuesto(@RequestBody List<CategoriaRepuesto> categoriasRepuesto) {
         try {
-            return new ResponseEntity(service.saveMarcas(marcas), HttpStatus.CREATED);
+            return new ResponseEntity(service.saveCategoriasRepuesto(categoriasRepuesto), HttpStatus.CREATED);
         } catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Informacion enviada no es valida",
@@ -50,9 +50,9 @@ public class MarcaController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Marca>> findAllMarcas() {
+    public ResponseEntity<List<CategoriaRepuesto>> findAllCategoriasRepuesto() {
         try {
-            return new ResponseEntity(service.getMarcas(), HttpStatus.OK);
+            return new ResponseEntity(service.getCategoriasRepuesto(), HttpStatus.OK);
         } catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Informacion enviada no es valida",
@@ -62,14 +62,15 @@ public class MarcaController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Marca> findMarcaById(@PathVariable long id) {
+    public ResponseEntity<CategoriaRepuesto> findCategoriaRepuestoById(@PathVariable long id) {
         try {
-            return new ResponseEntity(service.getMarcaById(id), HttpStatus.OK);
+            return new ResponseEntity(service.getCategoriaRepuestoById(id), HttpStatus.OK);
         } catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Informacion enviada no es valida",
                     e.getMessage());
             return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+
         } catch (NotFoundException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Informacion enviada no es valida",
@@ -79,14 +80,15 @@ public class MarcaController {
     }
 
     @GetMapping("/nombre/{nombre}")
-    public ResponseEntity<Marca> findMarcaByNombre(@PathVariable String nombre) {
+    public ResponseEntity<CategoriaRepuesto> findCategoriaRepuestoByNombre(@PathVariable String nombre) {
         try {
-            return new ResponseEntity(service.getMarcaByNombre(nombre), HttpStatus.OK);
+            return new ResponseEntity(service.getCategoriaRepuestoByNombre(nombre), HttpStatus.OK);
         } catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Informacion enviada no es valida",
                     e.getMessage());
             return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+
         } catch (NotFoundException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Informacion enviada no es valida",
@@ -96,10 +98,10 @@ public class MarcaController {
     }
 
     @PutMapping("")
-    public ResponseEntity<Any> updateMarca(@RequestBody Marca marca) {
+    public ResponseEntity<Any> updateCategoriaRepuesto(@RequestBody CategoriaRepuesto categoriaRepuesto) {
         try {
-            service.updateMarca(marca);
-            return new ResponseEntity(marca, HttpStatus.OK);
+            service.updateCategoriaRepuesto(categoriaRepuesto);
+            return new ResponseEntity(categoriaRepuesto, HttpStatus.OK);
         } catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Informacion enviada no es valida",
@@ -114,9 +116,9 @@ public class MarcaController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Any> deleteMarca(@PathVariable long id) {
+    public ResponseEntity<Any> deleteCategoriaRepuesto(@PathVariable long id) {
         try {
-            service.deleteMarca(id);
+            service.deleteCategoriaRepuesto(id);
             return new ResponseEntity(HttpStatus.OK);
         } catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
