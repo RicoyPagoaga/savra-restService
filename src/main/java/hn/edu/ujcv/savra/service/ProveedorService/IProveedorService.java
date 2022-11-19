@@ -1,4 +1,4 @@
-package hn.edu.ujcv.savra.service.Proveedor;
+package hn.edu.ujcv.savra.service.ProveedorService;
 
 import hn.edu.ujcv.savra.entity.Proveedor;
 import hn.edu.ujcv.savra.exceptions.BusinessException;

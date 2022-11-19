@@ -1,4 +1,4 @@
-package hn.edu.ujcv.savra.service.Modelo;
+package hn.edu.ujcv.savra.service.ModeloService;
 
 import hn.edu.ujcv.savra.entity.Marca;
 import hn.edu.ujcv.savra.entity.Modelo;

@@ -10,16 +10,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "proveedor")
-
-public class Proveedor {
+@Table (name = "categoriaRepuesto")
+public class CategoriaRepuesto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long   idProveedor;
-    private String nombre;
-    private String correo;
-    private String telefono;
-    private long   idPais;
-    private String nombreContacto;
-    private String sitioWeb;
+    long   idCategoria;
+    String nombre;
+    String descripcion;
 }

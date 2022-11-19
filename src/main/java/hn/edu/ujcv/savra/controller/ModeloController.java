@@ -3,7 +3,7 @@ package hn.edu.ujcv.savra.controller;
 import hn.edu.ujcv.savra.entity.Modelo;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
-import hn.edu.ujcv.savra.service.Modelo.ModeloService;
+import hn.edu.ujcv.savra.service.ModeloService.ModeloService;
 import hn.edu.ujcv.savra.utils.Constants;
 import hn.edu.ujcv.savra.utils.RestApiError;
 import org.hibernate.mapping.Any;

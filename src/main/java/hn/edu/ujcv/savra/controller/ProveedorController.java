@@ -3,7 +3,7 @@ package hn.edu.ujcv.savra.controller;
 import hn.edu.ujcv.savra.entity.Proveedor;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
-import hn.edu.ujcv.savra.service.Proveedor.ProveedorService;
+import hn.edu.ujcv.savra.service.ProveedorService.ProveedorService;
 import hn.edu.ujcv.savra.utils.Constants;
 import hn.edu.ujcv.savra.utils.RestApiError;
 import org.hibernate.mapping.Any;
