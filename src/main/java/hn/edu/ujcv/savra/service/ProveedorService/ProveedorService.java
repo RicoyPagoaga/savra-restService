@@ -146,7 +146,7 @@ public class ProveedorService implements IProveedorService {
             throw new BusinessException("La dirección de correo es inválida");
         }
         //telefono
-        Pattern patron=Pattern.compile("[2389]");
+        Pattern patron=Pattern.compile("[27389]");
         Matcher validarNumero = patron.matcher(proveedor.getTelefono().substring(0,1));
 
         if (proveedor.getTelefono().isEmpty()) {

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class TipoDocumentoService implements ITipoDocumentoService {
@@ -31,9 +33,14 @@ public class TipoDocumentoService implements ITipoDocumentoService {
             if (tipoDocumento.getNombreDocumento().matches("(.)\\1{2,}")){
                 throw new BusinessException("No debe tener tantas letras repetidas ఠ_ఠ");
             }
-             if (tipoDocumento.getNombreDocumento().matches("[^A-Za-zÁÉÍÓÚáéíóúñ\\s]")){
-                 throw new BusinessException("El nombre solo debe tener letras ఠ_ఠ");
-             }
+            if (tipoDocumento.getNombreDocumento().matches("[^A-Za-zÁÉÍÓÚáéíóúñ\\s]")){
+                throw new BusinessException("El nombre solo debe tener letras ఠ_ఠ");
+            }
+            Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+            Matcher matDoc = patDoc.matcher(tipoDocumento.getNombreDocumento().trim());
+            if(!matDoc.matches()){
+                throw new BusinessException("Nombre Documento no debe contener números o letras con tildeఠ_ఠ");
+            }
 
             tipoDocumento.setNombreDocumento(tipoDocumento.getNombreDocumento().toUpperCase());
             return repository.save(tipoDocumento);
@@ -126,6 +133,27 @@ public class TipoDocumentoService implements ITipoDocumentoService {
         }
         else {
             try {
+                //NombreDocumento
+                if(tipoDocumento.getNombreDocumento().isEmpty()){
+                    throw new BusinessException("El nombre no debe estar vacio ఠ_ఠ");
+                }
+                if(tipoDocumento.getNombreDocumento().trim().length()< 3){
+                    throw new BusinessException("El nombre no debe tener menos de 3 caracteres ఠ_ఠ");
+                }
+                if (tipoDocumento.getNombreDocumento().trim().length()>30){
+                    throw new BusinessException("El nombre no debe tener mas de 30 caracteres ఠ_ఠ");
+                }
+                if (tipoDocumento.getNombreDocumento().trim().matches("(.)\\1{2,}")){
+                    throw new BusinessException("No debe tener tantas letras repetidas ఠ_ఠ");
+                }
+                if (tipoDocumento.getNombreDocumento().trim().matches("[^A-Za-zÁÉÍÓÚáéíóúñ\\s]")){
+                    throw new BusinessException("El nombre solo debe tener letras ఠ_ఠ");
+                }
+                Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+                Matcher matDoc = patDoc.matcher(tipoDocumento.getNombreDocumento().trim());
+                if(!matDoc.matches()){
+                    throw new BusinessException("Nombre Documento no debe contener números o caracteres especialesఠ_ఠ");
+                }
                 TipoDocumento existingtTipoDocumento =new TipoDocumento();
                 existingtTipoDocumento.setIdTipoDocumento(tipoDocumento.getIdTipoDocumento());
                 existingtTipoDocumento.setNombreDocumento(tipoDocumento.getNombreDocumento().toUpperCase());

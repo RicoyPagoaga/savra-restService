@@ -32,12 +32,12 @@ public class ClienteService implements IClienteService{
                 throw new BusinessException("Nombre Cliente debe contener mínimo 3 carácteres ఠ_ఠ");
             }
             if(pCliente.getNombre().trim().length() >60){
-                throw new BusinessException("Nombre Cliente debe contener menos de 60 carácteres ఠ_ఠ");
+                throw new BusinessException("Nombre Cliente no debe contener mas de 60 carácteres ఠ_ఠ");
             }
             Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
             Matcher matDoc = patDoc.matcher(pCliente.getNombre().trim());
             if(!matDoc.matches()){
-                throw new BusinessException("Nombre Cliente no debe contener números o letras con tildeఠ_ఠ");
+                throw new BusinessException("Nombre Cliente no debe contener números o caracteres especialesఠ_ఠ");
             }
             //documento
             if(pCliente.getDocumento().trim().isEmpty()){

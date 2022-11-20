@@ -30,10 +30,10 @@ public class TransmisionService implements ITransmisionService{
             if (pTransmision.getNombre().length() < 6) {
                 throw new BusinessException("Nombre de la transmisión debe contener minimo 6 carácteres!");
             }
-            Pattern pat = Pattern.compile("[\\w]*");
-            Matcher mat = pat.matcher(pTransmision.getNombre().trim());
-            if (!mat.matches()){
-                throw new BusinessException("Nombre de la transmisión no debe contener digitos");
+            Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+            Matcher matDoc = patDoc.matcher(pTransmision.getNombre().trim());
+            if(!matDoc.matches()){
+                throw new BusinessException("Nombre Cliente no debe contener números o caracteres especialesఠ_ఠ");
             }
             pTransmision.setNombre(pTransmision.getNombre().toUpperCase());
             return repository.save(pTransmision);
