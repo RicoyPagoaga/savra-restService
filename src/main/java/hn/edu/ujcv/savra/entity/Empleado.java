@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -18,9 +19,9 @@ public class Empleado {
     private String nombre;
     private String documento;
     private long   idTipoDocumento;
-    private Date   fechaNacimiento;
+    private LocalDate fechaNacimiento=null;
     private String telefono;
-    private Date   fechaIngreso;
+    private LocalDate   fechaIngreso;
     private String correo;
     private String direccion;
 }

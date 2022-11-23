@@ -7,8 +7,7 @@ import hn.edu.ujcv.savra.repository.EmpleadosRepository;
 import hn.edu.ujcv.savra.repository.TipoDocumentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -24,35 +23,45 @@ public class EmpleadosService implements IEmpleadosService{
     public Empleado saveEmpleados(Empleado empleado) throws BusinessException {
         try {
             //nombre
-            if (empleado.getNombre().isEmpty()){
-                throw new BusinessException("El campo no debe estar vacio");
-            }if(empleado.getNombre().length()<5){
-                throw new BusinessException("El nombre debe tener mas de 10 caracteres");
-            }if (empleado.getTelefono().length()<8){
-                throw new BusinessException("No debe tener menos de 8 caracteres");
+            if (empleado.getNombre().trim().isEmpty()){
+                throw new BusinessException("El campo no debe estar vacio ఠ_ఠ");
             }
-            Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+            if(empleado.getNombre().trim().length()<3){
+                throw new BusinessException("El nombre debe tener mas de 3 caracteres ఠ_ఠ");
+            }
+            if(empleado.getNombre().trim().length()>50){
+                throw new BusinessException("El nombre no debe tener mas de 50 caracteres ఠ_ఠ");
+            }
+//            Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+            Pattern patDoc = Pattern.compile("^[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s[a-zA-ZÀ-ÿ\\u00f1\\u00d1])*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+$");
             Matcher matDoc = patDoc.matcher(empleado.getNombre().trim());
             if(!matDoc.matches()){
-                throw new BusinessException("Nombre Empleado no debe contener números o caracteres especialesఠ_ఠ");
+                throw new BusinessException("Nombre Empleado no debe contener números o caracteres especiales ni espacios dobles ఠ_ఠ");
             }
-            //documento
-            contiene(empleado.getIdTipoDocumento(), empleado.getDocumento().trim());
+            if (empleado.getDocumento().trim().isEmpty()){
+                throw new BusinessException("El documento está vacío");
+            }
             //idTipoDocumento
             if(empleado.getIdTipoDocumento() < 1) {
                 throw new BusinessException("Id Documento vacío");
             }
-            //fechaNacimiento
-            if (empleado.fechaNacimiento == null){
-                throw BusinessException("La fecha de nacimiento esta vacía");
+            //documento
+            contiene(empleado.getIdTipoDocumento(), empleado.getDocumento().trim());
+
+            //fecha nacimiento
+            if (empleado.getFechaNacimiento()==null){
+                throw new BusinessException("Fecha de nacimiento esta vacía");
             }
-            if (empleado.fechaNacimiento.isAfter(LocalDate.now())){
-                throw BusinessException("La fecha de nacimiento es invalida")
-            };
-            if (empleado.fechaNacimiento.isAfter(LocalDate.now().minusYears(18))){
-                throw BusinessException("El paciente debe tener mas de 18 años")
+            if (empleado.getFechaNacimiento().isAfter( LocalDate.now().minusYears(18))){
+                throw new BusinessException("El empleado debe ser mayor de 18 años");
+            }
+            if (empleado.getFechaNacimiento().isBefore(LocalDate.now().minusYears(60))){
+                throw new BusinessException("La edad no debe ser mayor a 60");
             }
             //telefono
+            if (empleado.getTelefono().trim().isEmpty()){
+                throw new BusinessException("Teléfono esta vacío");
+            }
             Pattern patron=Pattern.compile("[72389]");
             Matcher validarNumero = patron.matcher(empleado.getTelefono().substring(0,1));
             if (empleado.getTelefono().trim().length() != 8){
@@ -66,9 +75,7 @@ public class EmpleadosService implements IEmpleadosService{
             if (!validarNumero.matches()){
                 throw new BusinessException("No. de teléfono no pertenece a una operadora valida ఠ_ఠ");
             }
-            //fechaIngreso
-
-            //correo
+            //Correo
             if (empleado.getCorreo().isEmpty()) {
                 throw new BusinessException("El correo no debe estar vacío");
             }
@@ -83,13 +90,13 @@ public class EmpleadosService implements IEmpleadosService{
             }
             //direccion
             if (empleado.getDireccion().trim().isEmpty()){
-                throw new BusinessException("Direccion del cliente esta vacío ఠ_ఠ");
+                throw new BusinessException("Dirección del empleado esta vacio ఠ_ఠ");
             }
             if (empleado.getDireccion().trim().length() < 6){
-                throw new BusinessException("Direccion debe ser mayor a 6 carácteres ఠ_ఠ");
+                throw new BusinessException("Dirección debe ser mayor a 6 caracteres ఠ_ఠ");
             }
-            if (empleado.getDireccion().trim().length() > 50){
-                throw new BusinessException("Direccion debe ser menor a 50 Carácteres ఠ_ఠ");
+            if (empleado.getDireccion().trim().length() > 100){
+                throw new BusinessException("Dirección no debe ser mayor a 100 caracteres ఠ_ఠ");
             }
             empleado.setNombre(empleado.getNombre().trim().toUpperCase());
             return repository.save(empleado);
@@ -184,6 +191,80 @@ public class EmpleadosService implements IEmpleadosService{
         }
         else {
             try {
+                //nombre
+                if (empleado.getNombre().trim().isEmpty()){
+                    throw new BusinessException("El campo no debe estar vacio ఠ_ఠ");
+                }
+                if(empleado.getNombre().trim().length()<3){
+                    throw new BusinessException("El nombre debe tener mas de 3 caracteres ఠ_ఠ");
+                }
+                if(empleado.getNombre().trim().length()>50){
+                    throw new BusinessException("El nombre no debe tener mas de 50 caracteres ఠ_ఠ");
+                }
+//            Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+                Pattern patDoc = Pattern.compile("^[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s[a-zA-ZÀ-ÿ\\u00f1\\u00d1])*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+$");
+                Matcher matDoc = patDoc.matcher(empleado.getNombre().trim());
+                if(!matDoc.matches()){
+                    throw new BusinessException("Nombre Empleado no debe contener números o caracteres especiales ni espacios dobles ఠ_ఠ");
+                }
+                if (empleado.getDocumento().trim().isEmpty()){
+                    throw new BusinessException("El documento está vacío");
+                }
+                //idTipoDocumento
+                if(empleado.getIdTipoDocumento() < 1) {
+                    throw new BusinessException("Id Documento vacío");
+                }
+                //documento
+                contiene(empleado.getIdTipoDocumento(), empleado.getDocumento().trim());
+
+                //fecha nacimiento
+                if (empleado.getFechaNacimiento()==null){
+                    throw new BusinessException("Fecha de nacimiento esta vacía");
+                }
+                if (empleado.getFechaNacimiento().isAfter( LocalDate.now().minusYears(18))){
+                    throw new BusinessException("El empleado debe ser mayor de 18 años");
+                }
+                //telefono
+                if (empleado.getTelefono().trim().isEmpty()){
+                    throw new BusinessException("Teléfono esta vacío");
+                }
+                Pattern patron=Pattern.compile("[72389]");
+                Matcher validarNumero = patron.matcher(empleado.getTelefono().substring(0,1));
+                if (empleado.getTelefono().trim().length() != 8){
+                    throw new BusinessException("No. de teléfono debe ser igual a 8 dígitos ఠ_ఠ");
+                }
+                Pattern pat = Pattern.compile("[\\d]*");
+                Matcher mat = pat.matcher(empleado.getTelefono().trim());
+                if(!mat.matches()){
+                    throw new BusinessException("No. de teléfono debe ser númerico ఠ_ఠ");
+                }
+                if (!validarNumero.matches()){
+                    throw new BusinessException("No. de teléfono no pertenece a una operadora valida ఠ_ఠ");
+                }
+                //Correo
+                if (empleado.getCorreo().isEmpty()) {
+                    throw new BusinessException("El correo no debe estar vacío");
+                }
+                if (empleado.getCorreo().trim().length() < 3) {
+                    throw new BusinessException("Ingrese más de tres caracteres en el correo");
+                }
+                if (empleado.getCorreo().trim().length() > 75) {
+                    throw new BusinessException("Debe ingresar menos de 75 caracteres en el correo");
+                }
+                if (!validarCorreo(empleado.getCorreo())) {
+                    throw new BusinessException("La dirección de correo es inválida");
+                }
+                //direccion
+                if (empleado.getDireccion().trim().isEmpty()){
+                    throw new BusinessException("Dirección del empleado esta vacio ఠ_ఠ");
+                }
+                if (empleado.getDireccion().trim().length() < 6){
+                    throw new BusinessException("Dirección debe ser mayor a 6 caracteres ఠ_ఠ");
+                }
+                if (empleado.getDireccion().trim().length() > 100){
+                    throw new BusinessException("Dirección no debe ser mayor a 100 caracteres ఠ_ఠ");
+                }
+
                 Empleado existingEmpleado =new Empleado();
                 existingEmpleado.setIdEmpleado(empleado.getIdEmpleado());
                 existingEmpleado.setNombre(empleado.getNombre());
@@ -224,19 +305,27 @@ public class EmpleadosService implements IEmpleadosService{
                     throw new BusinessException("DNI debe ser númerico");
                 }
                 if (nombreDoc.length() != 13){
-                    throw new BusinessException("Cantidad de caracteres DNI invalido!");
+                    throw new BusinessException("Cantidad de digitos DNI invalido! requeridos:13");
                 }
             }else if (buscarDocumento(id).getNombreDocumento().contains("RTN")){
                 if(!mat.matches()){
                     throw new BusinessException("RTN debe ser númerico");
                 }
                 if (nombreDoc.length() != 14){
-                    throw new BusinessException("Cantidad de caracteres RTN invalido!");
+                    throw new BusinessException("Cantidad de digitos RTN invalido! requeridos:14");
                 }
             }else {
+                Pattern patDoc = Pattern.compile("[a-zA-Z\\d]]*");
+                Matcher matDoc = patDoc.matcher(nombreDoc.trim());
+//                if (!matDoc.matches()){
+//                    throw new BusinessException("Documento no debe contener espacios ni caracteres especiales");
+//                }
                 if (nombreDoc.length() < 7){
-                    System.out.println(nombreDoc.length());
                     throw new BusinessException("Documento no debe ser menor a 7 de caracteres !");
+                }
+                if (nombreDoc.length() > 11){
+                    //System.out.println(nombreDoc.length());  imporimir en consola
+                    throw new BusinessException("Documento no debe ser mayor a 11 de caracteres !");
                 }
             }
         }catch (Exception e){
@@ -249,5 +338,8 @@ public class EmpleadosService implements IEmpleadosService{
         Matcher matcher = pattern.matcher(correo);
 
         return matcher.find();
+    }
+    private void validarEmpleado(Empleado empleado) throws BusinessException{
+
     }
 }
