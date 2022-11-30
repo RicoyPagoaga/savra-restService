@@ -101,8 +101,8 @@ public class UsuarioService implements IUsuarioService  {
             try {
 
                 Usuario usuarioExistente = new Usuario(
-                        usuario.getIdUsuario(), usuario.getActivo(), usuario.getIdEmpleado(), usuario.getUsername(),
-                        usuario.getPassword()
+                        usuario.getIdUsuario(), usuario.getIdEmpleado(), usuario.getUsername(),
+                        usuario.getPassword(), usuario.getActivo(), usuario.getBloqueado()
                 );
                 return repository.save(usuarioExistente);
             } catch (Exception e) {

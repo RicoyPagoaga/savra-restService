@@ -36,7 +36,7 @@ public class EmpleadosService implements IEmpleadosService{
             Pattern patDoc = Pattern.compile("^[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s[a-zA-ZÀ-ÿ\\u00f1\\u00d1])*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+$");
             Matcher matDoc = patDoc.matcher(empleado.getNombre().trim());
             if(!matDoc.matches()){
-                throw new BusinessException("Nombre Empleado no debe contener números o caracteres especiales ni espacios dobles ఠ_ఠ");
+                throw new BusinessException("Nombre no debe contener números o caracteres especiales ni espacios duplicados ఠ_ఠ");
             }
             if (empleado.getDocumento().trim().isEmpty()){
                 throw new BusinessException("El documento está vacío");
@@ -56,7 +56,7 @@ public class EmpleadosService implements IEmpleadosService{
                 throw new BusinessException("El empleado debe ser mayor de 18 años");
             }
             if (empleado.getFechaNacimiento().isBefore(LocalDate.now().minusYears(60))){
-                throw new BusinessException("La edad no debe ser mayor a 60");
+                throw new BusinessException("El empleado no debe ser mayor de 60 años");
             }
             //telefono
             if (empleado.getTelefono().trim().isEmpty()){
@@ -86,7 +86,7 @@ public class EmpleadosService implements IEmpleadosService{
                 throw new BusinessException("Debe ingresar menos de 75 caracteres en el correo");
             }
             if (!validarCorreo(empleado.getCorreo())) {
-                throw new BusinessException("La dirección de correo es inválida");
+                throw new BusinessException("La dirección de correo electrónico es inválida");
             }
             //direccion
             if (empleado.getDireccion().trim().isEmpty()){

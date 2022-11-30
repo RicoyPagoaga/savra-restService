@@ -31,8 +31,8 @@ public class ClienteService implements IClienteService{
             if(pCliente.getNombre().trim().length() < 3){
                 throw new BusinessException("Nombre Cliente debe contener mínimo 3 carácteres ఠ_ఠ");
             }
-            if(pCliente.getNombre().trim().length() >60){
-                throw new BusinessException("Nombre Cliente no debe contener mas de 60 carácteres ఠ_ఠ");
+            if(pCliente.getNombre().trim().length() >50){
+                throw new BusinessException("Nombre Cliente no debe contener mas de 50 carácteres ఠ_ఠ");
             }
             Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
             Matcher matDoc = patDoc.matcher(pCliente.getNombre().trim());
@@ -85,15 +85,6 @@ public class ClienteService implements IClienteService{
             throw new BusinessException(e.getMessage());
         }
     }
-
-    private void validarNumerosDocumento(String nombreDocumento) throws BusinessException {
-        Pattern pat = Pattern.compile("[\\d]*");
-        Matcher mat = pat.matcher(nombreDocumento);
-        if(!mat.matches()){
-            throw new BusinessException("Documento debe ser númerico");
-        }
-    }
-
 
     @Override
     public List<Cliente> getClientes() throws BusinessException {
