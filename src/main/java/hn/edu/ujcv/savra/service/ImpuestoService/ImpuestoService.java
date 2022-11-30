@@ -145,14 +145,14 @@ public class ImpuestoService implements IImpuestoService {
         //fechas
         LocalDate fechaActual = LocalDate.now();
         //fecha inicio
-        if (String.valueOf(impuesto.getFechaInicio()).isEmpty()) {
+        if (impuesto.getFechaInicio() == null) {
             throw new BusinessException("La fecha de inicio es requerida");
         }
         if (impuesto.getFechaInicio().isAfter(fechaActual)) {
             throw new BusinessException("La fecha de inicio no puede ser mayor a la fecha actual");
         }
         //fecha final
-        if (String.valueOf(impuesto.getFechaFinal()).isEmpty()) {
+        if (impuesto.getFechaFinal() == null) {
             throw new BusinessException("La fecha final es requerida");
         }
         if (impuesto.getFechaFinal().isAfter(fechaActual)) {
