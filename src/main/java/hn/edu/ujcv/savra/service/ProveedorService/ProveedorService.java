@@ -1,8 +1,10 @@
 package hn.edu.ujcv.savra.service.ProveedorService;
 
+import hn.edu.ujcv.savra.entity.Pais;
 import hn.edu.ujcv.savra.entity.Proveedor;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
+import hn.edu.ujcv.savra.repository.PaisRepository;
 import hn.edu.ujcv.savra.repository.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,18 +124,29 @@ public class ProveedorService implements IProveedorService {
     }
 
     private void validarProvedor(Proveedor proveedor) throws BusinessException {
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
         //nombre
-        if (proveedor.getNombre().isEmpty()) {
+        if (proveedor.getNombre().trim().isEmpty()) {
             throw new BusinessException("El nombre del proveedor es requerido");
         }
         if (proveedor.getNombre().trim().length() < 5) {
             throw new BusinessException("Ingrese más de cinco caracteres en el nombre del proveedor");
         }
         if (proveedor.getNombre().trim().length() > 100) {
-            throw new BusinessException("Debe ingresar menos de cien caracteres en el nombre");
+            throw new BusinessException("El nombre no debe exceder los cien caracteres");
+        }
+        if (dobleEspacio.matcher(proveedor.getNombre()).find()) {
+            throw new BusinessException("Nombre de proveedor no debe contener espacios dobles ఠ_ఠ");
+        }
+        List<Proveedor> proveedores = getProveedores();
+        for (Proveedor item : proveedores) {
+            if ((item.getNombre().equals(proveedor.getNombre().trim())) &&
+                    (item.getIdProveedor() != proveedor.getIdProveedor())) {
+                throw new BusinessException("El nombre del proveedor ya está en uso");
+            }
         }
         //correo
-        if (proveedor.getCorreo().isEmpty()) {
+        if (proveedor.getCorreo().trim().isEmpty()) {
             throw new BusinessException("El correo no debe estar vacío");
         }
         if (proveedor.getCorreo().trim().length() < 3) {
@@ -146,14 +159,19 @@ public class ProveedorService implements IProveedorService {
             throw new BusinessException("La dirección de correo es inválida");
         }
         //telefono
-        Pattern patron=Pattern.compile("[27389]");
-        Matcher validarNumero = patron.matcher(proveedor.getTelefono().substring(0,1));
-
-        if (proveedor.getTelefono().isEmpty()) {
+        if (proveedor.getTelefono().trim().isEmpty()) {
             throw new BusinessException("El teléfono no debe estar vacío");
         }
+        Pattern patron=Pattern.compile("[27389]");
+        Matcher validarNumero = patron.matcher(proveedor.getTelefono().substring(0,1));
+        Pattern pat = Pattern.compile("[\\d]*");
+        Matcher mat = pat.matcher(proveedor.getTelefono().trim());
+
         if (proveedor.getTelefono().length() != 8){
             throw new BusinessException("No. de teléfono debe ser igual a 8 carácteres");
+        }
+        if(!mat.matches()){
+            throw new BusinessException("No. de teléfono debe ser númerico ఠ_ఠ");
         }
         if (!validarNumero.matches()){
             throw new BusinessException("No. de teléfono no pertenece a una operadora válida");
@@ -165,26 +183,29 @@ public class ProveedorService implements IProveedorService {
         if (proveedor.getIdPais() <= 0) {
             throw new BusinessException("Código ISO inválido");
         }
-        /*if (!validarCodigoISO(proveedor.getCod_iso())) {
+        if (!validarPais(proveedor.getIdPais())) {
             throw new BusinessException("Indique Código ISO válido");
-        }*/
+        }
         //nombreContacto
-        if (proveedor.getNombreContacto().isEmpty()) {
+        if (proveedor.getNombreContacto().trim().isEmpty()) {
             throw new BusinessException("El nombre de contacto no debe estar vacío");
         }
         if (proveedor.getNombreContacto().trim().length() < 5) {
             throw new BusinessException("Ingrese más de cinco caracteres en el nombre del contacto");
         }
-        Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
-        Matcher matDoc = patDoc.matcher(proveedor.getNombreContacto().trim());
-        if(!matDoc.matches()){
-            throw new BusinessException("Nombre de contacto no debe contener números o letras con tilde ఠ_ఠ");
+        Pattern patDoc = Pattern.compile("[0-9]+");
+        boolean matDoc = patDoc.matcher(proveedor.getNombreContacto().trim()).find();
+        if(matDoc){
+            throw new BusinessException("Nombre de contacto no debe contener números ఠ_ఠ");
+        }
+        if (dobleEspacio.matcher(proveedor.getNombreContacto()).find()) {
+            throw new BusinessException("Nombre de contacto no debe contener espacios dobles ఠ_ఠ");
         }
         if (proveedor.getNombreContacto().length() > 100) {
             throw new BusinessException("El nombre de contacto no debe exceder los cien caracteres");
         }
         //sitioWeb
-        if (proveedor.getSitioWeb().isEmpty()) {
+        if (proveedor.getSitioWeb().trim().isEmpty()) {
             throw new BusinessException("El sitio web es requerido");
         }
         if (proveedor.getSitioWeb().trim().length() < 3) {
@@ -213,17 +234,17 @@ public class ProveedorService implements IProveedorService {
         return matcher.find();
     }
 
-    //@Autowired
-    //private PaisRepository paisRepository;
+    @Autowired
+    private PaisRepository paisRepository;
     private boolean validarPais(long id) {
         boolean condicion=false;
-        /*List<Pais> paises = paisRepository.findAll();
+        List<Pais> paises = paisRepository.findAll();
         for (Pais item : paises) {
             if (item.getIdPais() == id) {
                 condicion=true;
                 break;
             }
-        }*/
+        }
         return condicion;
     }
 }
