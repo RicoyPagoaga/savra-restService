@@ -14,6 +14,6 @@ public class Cargo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idCargo;
     private String nombre;
-    private String descripcion;
     private double salario;
+    private String descrpcion;
 }

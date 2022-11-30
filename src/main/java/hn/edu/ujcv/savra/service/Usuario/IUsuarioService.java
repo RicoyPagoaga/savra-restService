@@ -1,6 +1,5 @@
 package hn.edu.ujcv.savra.service.Usuario;
 
-import hn.edu.ujcv.savra.entity.Marca;
 import hn.edu.ujcv.savra.entity.Usuario;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
