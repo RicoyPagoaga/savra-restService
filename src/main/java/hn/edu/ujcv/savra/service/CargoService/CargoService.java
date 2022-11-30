@@ -138,6 +138,33 @@ public class CargoService implements ICargoService{
         }
         else {
             try {
+                //Nombre Cargo
+                if (cargo.getNombre().trim().isEmpty()){
+                    throw new BusinessException("El nombre no debe estar vacio");
+                }
+                if(cargo.getNombre().trim().length() <5){
+                    throw new BusinessException("Nombre Cargo debe contener mínimo 5 carácteres ఠ_ఠ");
+                }
+                if(cargo.getNombre().trim().length() >25){
+                    throw new BusinessException("Nombre Cargo no debe contener mas de 25 carácteres ఠ_ఠ");
+                }
+                Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+                Matcher matDoc = patDoc.matcher(cargo.getNombre().trim());
+                if(!matDoc.matches()){
+                    throw new BusinessException("Nombre Cargo no debe contener números o carácteres especiales ఠ_ఠ");
+                }
+
+                //Descripcion
+                if (cargo.getDescrpcion().trim().isEmpty()){
+                    throw new BusinessException("La descripción no debe estar vacía");
+                }
+                if(cargo.getDescrpcion().trim().length() < 3){
+                    throw new BusinessException("Descripción Cargo debe contener mínimo 3 carácteres ఠ_ఠ");
+                }
+                if(cargo.getDescrpcion().trim().length() >50){
+                    throw new BusinessException("Descripción Cargo debe contener menos de 50 carácteres ఠ_ఠ");
+                }
+
                 Cargo existingCargo=new Cargo();
                 existingCargo.setIdCargo(cargo.getIdCargo());
                 existingCargo.setNombre(cargo.getNombre());
