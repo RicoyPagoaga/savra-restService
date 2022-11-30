@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public class ModeloService implements IModeloService {
@@ -128,7 +129,7 @@ public class ModeloService implements IModeloService {
 
     private void validarModelo(Modelo modelo) throws BusinessException, NotFoundException {
         //nombre
-        if (modelo.getNombre().isEmpty()) {
+        if (modelo.getNombre().trim().isEmpty()) {
             throw new BusinessException("El nombre del modelo no debe estar vacio");
         }
         if (modelo.getNombre().trim().length() < 5) {
@@ -136,6 +137,16 @@ public class ModeloService implements IModeloService {
         }
         if (modelo.getNombre().trim().length() > 80) {
             throw new BusinessException("El nombre del modelo es demasiado largo");
+        }
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+        if (dobleEspacio.matcher(modelo.getNombre()).find()) {
+            throw new BusinessException("Nombre de modelo no debe contener espacios dobles ఠ_ఠ");
+        }
+        List<Modelo> modelos = getModelos();
+        for (Modelo item : modelos) {
+            if ((item.getNombre().equals(modelo.getNombre().trim())) && (item.getIdModelo() != modelo.getIdModelo())) {
+                throw new BusinessException("El nombre del modelo ya está en uso");
+            }
         }
         //id marca
         if (String.valueOf(modelo.getIdMarca()).isEmpty()) {

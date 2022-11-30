@@ -1,5 +1,4 @@
-package hn.edu.ujcv.savra.service.RepuestoService;
-
+package hn.edu.ujcv.savra.service.RepuestoTemporalService;
 
 import hn.edu.ujcv.savra.entity.*;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
@@ -8,20 +7,19 @@ import hn.edu.ujcv.savra.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
-public class RepuestoService implements IRepuestoService {
+public class RepuestoTemporalService implements IRepuestoTemporalService {
 
     @Autowired
-    private RepuestoRepository repository;
+    private RepuestoTemporalRepository repository;
 
     @Override
-    public Repuesto saveRepuesto(Repuesto repuesto) throws BusinessException {
+    public RepuestoTemporal saveRepuesto(RepuestoTemporal repuesto) throws BusinessException {
         try {
             validarRepuesto(repuesto);
             return repository.save(repuesto);
@@ -31,9 +29,9 @@ public class RepuestoService implements IRepuestoService {
     }
 
     @Override
-    public List<Repuesto> saveRepuestos(List<Repuesto> repuestos) throws BusinessException {
+    public List<RepuestoTemporal> saveRepuestos(List<RepuestoTemporal> repuestos) throws BusinessException {
         try {
-            for (Repuesto item : repuestos) {
+            for (RepuestoTemporal item : repuestos) {
                 validarRepuesto(item);
             }
             return repository.saveAll(repuestos);
@@ -43,7 +41,7 @@ public class RepuestoService implements IRepuestoService {
     }
 
     @Override
-    public List<Repuesto> getRepuestos() throws BusinessException {
+    public List<RepuestoTemporal> getRepuestos() throws BusinessException {
         try {
             return repository.findAll();
         } catch (Exception e) {
@@ -52,8 +50,8 @@ public class RepuestoService implements IRepuestoService {
     }
 
     @Override
-    public Repuesto getRepuestoById(long id) throws BusinessException, NotFoundException {
-        Optional<Repuesto> opt=null;
+    public RepuestoTemporal getRepuestoById(long id) throws BusinessException, NotFoundException {
+        Optional<RepuestoTemporal> opt=null;
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
@@ -66,22 +64,8 @@ public class RepuestoService implements IRepuestoService {
     }
 
     @Override
-    public Repuesto getRepuestoByNombre(String nombre) throws BusinessException, NotFoundException {
-        Optional<Repuesto> opt=null;
-        try {
-            opt = repository.findFirstByNombre(nombre);
-        } catch (Exception e) {
-            throw new BusinessException(e.getMessage());
-        }
-        if (!opt.isPresent()) {
-            throw new NotFoundException("No se encontró el repuesto " + nombre);
-        }
-        return opt.get();
-    }
-
-    @Override
     public void deleteRepuesto(long id) throws BusinessException, NotFoundException {
-        Optional<Repuesto> opt=null;
+        Optional<RepuestoTemporal> opt=null;
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
@@ -98,33 +82,7 @@ public class RepuestoService implements IRepuestoService {
         }
     }
 
-    @Override
-    public Repuesto updateRepuesto(Repuesto repuesto) throws BusinessException, NotFoundException {
-        Optional<Repuesto> opt=null;
-        try {
-            opt = repository.findById(repuesto.getIdRepuesto());
-        } catch (Exception e) {
-            throw new BusinessException(e.getMessage());
-        }
-        if (!opt.isPresent()) {
-            throw new NotFoundException("No se encontró el repuesto " + repuesto.getIdRepuesto());
-        } else{
-            try {
-                validarRepuesto(repuesto);
-                Repuesto repuestoExistente = new Repuesto(
-                        repuesto.getIdRepuesto(), repuesto.getNombre(), repuesto.getAnio_referenciaInicio(),
-                        repuesto.getAnio_referenciaFinal(), repuesto.getIdCategoria(), repuesto.getStockActual(),
-                        repuesto.getStockMinimo(), repuesto.getStockMaximo(), repuesto.getIdProveedor(), repuesto.getIdModelo(),
-                        repuesto.getIdTransmision()
-                );
-                return repository.save(repuestoExistente);
-            } catch (Exception e) {
-                throw new BusinessException(e.getMessage());
-            }
-        }
-    }
-
-    private void validarRepuesto(Repuesto repuesto) throws BusinessException, NotFoundException, ParseException {
+    private void validarRepuesto(RepuestoTemporal repuesto) throws BusinessException, NotFoundException {
         //nombre
         if (repuesto.getNombre().trim().isEmpty()) {
             throw new BusinessException("El nombre del repuesto es requerido");
@@ -139,12 +97,8 @@ public class RepuestoService implements IRepuestoService {
         if (dobleEspacio.matcher(repuesto.getNombre()).find()) {
             throw new BusinessException("Nombre de modelo no debe contener espacios dobles ఠ_ఠ");
         }
-        List<Repuesto> repuestos = getRepuestos();
-        for (Repuesto item : repuestos) {
-            if ((item.getNombre().equals(repuesto.getNombre().trim())) && (item.getIdRepuesto() != repuesto.getIdRepuesto())) {
-                throw new BusinessException("El nombre del repuesto ya está en uso");
-            }
-        }
+        validarNombre(repuesto.getNombre());
+
         LocalDate fechaActual = LocalDate.now();
         //referencia inicio
         if (String.valueOf(repuesto.getAnio_referenciaInicio()).trim().isEmpty()) {
@@ -243,6 +197,24 @@ public class RepuestoService implements IRepuestoService {
         }
         if (!validarTransmision(repuesto.getIdTransmision())) {
             throw new NotFoundException("Indique transmisión válida");
+        }
+        //precio
+        if (String.valueOf(repuesto.getPrecio()).isEmpty()) {
+            throw new BusinessException("El precio no debe estar vacío");
+        }
+        if (repuesto.getPrecio() <= 0) {
+            throw new BusinessException("El precio no puede ser menor o igual a cero");
+        }
+    }
+
+    @Autowired
+    private RepuestoRepository repuestoRepository;
+    private void validarNombre(String nombre) throws BusinessException {
+        List<Repuesto> repuestos = repuestoRepository.findAll();
+        for (Repuesto item : repuestos) {
+            if ((item.getNombre().equals(nombre.trim()))) {
+                throw new BusinessException("El nombre del repuesto ya está en uso");
+            }
         }
     }
 

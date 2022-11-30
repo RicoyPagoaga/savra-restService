@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public class MarcaService implements IMarcaService {
@@ -124,7 +125,7 @@ public class MarcaService implements IMarcaService {
     }
 
     private void validarMarca(Marca marca) throws BusinessException {
-        if (marca.getNombre().isEmpty()) {
+        if (marca.getNombre().trim().isEmpty()) {
             throw new BusinessException("El nombre de la marca no debe estar vacío");
         }
         if (marca.getNombre().trim().length() < 3) {
@@ -133,9 +134,13 @@ public class MarcaService implements IMarcaService {
         if (marca.getNombre().trim().length() > 50) {
             throw new BusinessException("El nombre de la marca no debe exceder los cincuenta caracteres");
         }
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+        if (dobleEspacio.matcher(marca.getNombre()).find()) {
+            throw new BusinessException("Nombre de marca no debe contener espacios dobles ఠ_ఠ");
+        }
         List<Marca> marcas = getMarcas();
         for (Marca item : marcas) {
-            if ((item.getNombre().equals(marca.getNombre())) && (item.getIdMarca() != marca.getIdMarca())) {
+            if ((item.getNombre().equals(marca.getNombre().trim())) && (item.getIdMarca() != marca.getIdMarca())) {
                 throw new BusinessException("El nombre de la marca ya está en uso");
             }
         }

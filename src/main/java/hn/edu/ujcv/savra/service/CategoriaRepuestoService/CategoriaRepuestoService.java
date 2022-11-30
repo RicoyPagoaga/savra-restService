@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -133,13 +132,23 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
         if (categoriaRepuesto.getNombre().trim().length() < 3) {
             throw new BusinessException("Ingrese más de tres caracteres en el nombre de la categoría de repuesto");
         }
-        Pattern patDoc = Pattern.compile("[a-zA-Z]*");
-        Matcher matDoc = patDoc.matcher(categoriaRepuesto.getNombre().trim());
-        if(!matDoc.matches()){
+        Pattern patDoc = Pattern.compile("[0-9]+");
+        boolean matDoc = patDoc.matcher(categoriaRepuesto.getNombre().trim()).find();
+        if(matDoc){
             throw new BusinessException("Nombre de categoría no debe contener números ఠ_ఠ");
+        }
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+        if (dobleEspacio.matcher(categoriaRepuesto.getNombre()).find()) {
+            throw new BusinessException("Nombre de categoría no debe contener espacios dobles ఠ_ఠ");
         }
         if (categoriaRepuesto.getNombre().trim().length() > 80) {
             throw new BusinessException("El nombre de la categoría de repuesto no debe exceder los ochenta caracteres");
+        }
+        List<CategoriaRepuesto> categorias = getCategoriasRepuesto();
+        for (CategoriaRepuesto item : categorias) {
+            if ((item.getNombre().equals(categoriaRepuesto.getNombre())) && (item.getIdCategoria() != categoriaRepuesto.getIdCategoria())) {
+                throw new BusinessException("El nombre de la categoría de repuesto ya está en uso");
+            }
         }
         //descripcion
         if (categoriaRepuesto.getDescripcion().isEmpty()) {
@@ -151,11 +160,8 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
         if (categoriaRepuesto.getDescripcion().trim().length() > 100) {
             throw new BusinessException("La descripción no debe exceder los cien caracteres");
         }
-        List<CategoriaRepuesto> categorias = getCategoriasRepuesto();
-        for (CategoriaRepuesto item : categorias) {
-            if ((item.getNombre().equals(categoriaRepuesto.getNombre())) && (item.getIdCategoria() != categoriaRepuesto.getIdCategoria())) {
-                throw new BusinessException("El nombre de la categoría de repuesto ya está en uso");
-            }
+        if (dobleEspacio.matcher(categoriaRepuesto.getDescripcion()).find()) {
+            throw new BusinessException("Descripción de categoría no debe contener espacios dobles ఠ_ఠ");
         }
     }
 }
