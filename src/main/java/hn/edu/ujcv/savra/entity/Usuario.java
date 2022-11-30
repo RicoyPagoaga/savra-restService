@@ -16,8 +16,9 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long   idUsuario;
-    private int    activo;
     private long   idEmpleado;
     private String username;
     private String password;
+    private int    activo;
+    private int    bloqueado;
 }
