@@ -20,6 +20,7 @@ public class MetodoPagoService implements IMetodoPagoService {
     @Override
     public MetodoPago saveMetodoPago(MetodoPago metodoPago) throws BusinessException {
         try {
+            metodoPago.setNombre(metodoPago.getNombre().toUpperCase());
             validarMetodoPago(metodoPago);
             return repository.save(metodoPago);
         } catch (Exception e) {
@@ -113,6 +114,7 @@ public class MetodoPagoService implements IMetodoPagoService {
             throw new NotFoundException("No se encontró el método de pago " + metodoPago.getIdMetodoPago());
         } else{
             try {
+                metodoPago.setNombre(metodoPago.getNombre().toUpperCase());
                 validarMetodoPago(metodoPago);
                 MetodoPago metodoExistente = new MetodoPago(
                         metodoPago.getIdMetodoPago(), metodoPago.getNombre()

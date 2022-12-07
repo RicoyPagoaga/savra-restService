@@ -213,7 +213,7 @@ public class ShipperService implements IShipperService{
 
 
     private boolean validarSitioWeb(String sitio) {
-        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]{3,}+(\\.[_A-Za-z0-9-]{2,}+)");
+        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]{3,}+(\\.[_A-Za-z0-9-]{2,}+)*(\\.[A-Za-z]{2,})$");
         Matcher matcher = pattern.matcher(sitio);
 
         return matcher.find();

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,7 @@ public class TipoEntregaService implements ITipoEntregaService {
     @Override
     public TipoEntrega saveTipoEntrega(TipoEntrega tipoEntrega) throws BusinessException {
         try {
+            tipoEntrega.setNombre(tipoEntrega.getNombre().toUpperCase());
             validarTipoEntrega(tipoEntrega);
             return repository.save(tipoEntrega);
         } catch (Exception e) {
@@ -112,6 +114,7 @@ public class TipoEntregaService implements ITipoEntregaService {
             throw new NotFoundException("No se encontró el tipo de entrega: " + tipoEntrega.getIdTipoEntrega());
         } else {
             try {
+                tipoEntrega.setNombre(tipoEntrega.getNombre().toUpperCase());
                 validarTipoEntrega(tipoEntrega);
                 TipoEntrega tipoEntregaExiste = new TipoEntrega(
                         tipoEntrega.getIdTipoEntrega(), tipoEntrega.getNombre(),
