@@ -21,9 +21,11 @@ public class Constants {
     public static final String URL_BASE_ARQUEO   = String.format("%s/arqueos", URL_BASE);
     public static final String URL_BASE_PERMISO   = String.format("%s/permisos", URL_BASE);
     public static final String URL_BASE_SHIPPER   = String.format("%s/shippers", URL_BASE);
-    public static final String URL_BASE_TIPO_ENTREGA    = String.format("%s/tipos_entrega", URL_BASE);
-    public static final String URL_BASE_METODO_PAGO     = String.format("%s/metodos_pago", URL_BASE);
-    public static final String URL_BASE_PRECIO_REPUESTO = String.format("%s/precios_repuesto", URL_BASE);
-    public static final String URL_BASE_IMPUESTO        = String.format("%s/impuestos", URL_BASE);
-
+    public static final String URL_BASE_TIPO_ENTREGA       = String.format("%s/tipos_entrega", URL_BASE);
+    public static final String URL_BASE_METODO_PAGO        = String.format("%s/metodos_pago", URL_BASE);
+    public static final String URL_BASE_PRECIO_REPUESTO    = String.format("%s/precios_repuesto", URL_BASE);
+    public static final String URL_BASE_IMPUESTO           = String.format("%s/impuestos", URL_BASE);
+    public static final String URL_BASE_IMPUESTO_HISTORICO = String.format("%s/historico_impuestos", URL_BASE);
+    public static final String URL_BASE_COMPRA             = String.format("%s/compras", URL_BASE);
+    public static final String URL_BASE_COMPRA_DETALLE     = String.format("%s/compra_detalle", URL_BASE);
 }

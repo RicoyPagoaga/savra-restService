@@ -22,6 +22,7 @@ public class ModeloService implements IModeloService {
     @Override
     public Modelo saveModelo(Modelo modelo) throws BusinessException {
         try {
+            modelo.setNombre(modelo.getNombre().toUpperCase());
             validarModelo(modelo);
             return repository.save(modelo);
         } catch (Exception e) {
@@ -115,6 +116,7 @@ public class ModeloService implements IModeloService {
             throw new NotFoundException("No se encontró el modelo " + modelo.getIdModelo());
         } else{
             try {
+                modelo.setNombre(modelo.getNombre().toUpperCase());
                 validarModelo(modelo);
                 Modelo modeloExistente = new Modelo(
                         modelo.getIdModelo(), modelo.getNombre(),

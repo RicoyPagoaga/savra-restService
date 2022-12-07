@@ -158,6 +158,10 @@ public class ProveedorService implements IProveedorService {
         if (!validarCorreo(proveedor.getCorreo())) {
             throw new BusinessException("La dirección de correo es inválida");
         }
+        String[] nombre = proveedor.getCorreo().split("@");
+        if (nombre[0].matches("(.)\\1{2,}")){
+            throw new BusinessException("La dirección de correo no debe tener tantas letras repetidas");
+        }
         //telefono
         if (proveedor.getTelefono().trim().isEmpty()) {
             throw new BusinessException("El teléfono no debe estar vacío");
@@ -228,7 +232,7 @@ public class ProveedorService implements IProveedorService {
     }
 
     private boolean validarSitioWeb(String sitio) {
-        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]{3,}+(\\.[_A-Za-z0-9-]{2,}+)");
+        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]{3,}+(\\.[_A-Za-z0-9-]{2,}+)*(\\.[A-Za-z]{2,})$");
         Matcher matcher = pattern.matcher(sitio);
 
         return matcher.find();
