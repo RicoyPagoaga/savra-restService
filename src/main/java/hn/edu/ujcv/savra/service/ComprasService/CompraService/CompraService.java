@@ -157,6 +157,15 @@ public class CompraService implements ICompraService {
                     throw new BusinessException("La fecha de entrega no puede exceder los treinta días desde su despacho");
                 }
             }
+
+            if (compra.getFechaRecibido().isBefore(fechaActual)) {
+                throw new BusinessException("La fecha de entrega no puede ser una fecha anterior a la fecha de compra");
+            }
+            if (compra.getFechaRecibido().isBefore(compra.getFechaDespacho())) {
+                throw new BusinessException("La fecha de entrega no puede ser una fecha anterior a la fecha de despacho");
+            }
+            
+
         }
         //no. Comprobante
         if(compra.getNoComprobante().trim().isEmpty()) {

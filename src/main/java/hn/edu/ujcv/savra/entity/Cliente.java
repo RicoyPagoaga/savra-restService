@@ -17,8 +17,8 @@ public class Cliente {
     private long idCliente;
     private String nombre;
     private String documento;
-    private long idTipoDocumento;
+    private Long idTipoDocumento;
     private String telefono;
     private String  direccion;
-    private long idCategoria;
+    private Long idCategoria;
 }

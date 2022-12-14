@@ -300,6 +300,8 @@ public class EmpleadosService implements IEmpleadosService{
         try {
             Pattern pat = Pattern.compile("[\\d]*");
             Matcher mat = pat.matcher(nombreDoc);
+            Pattern patron=Pattern.compile("[01]");
+            Matcher validarNumero = patron.matcher(nombreDoc.substring(0,1));
             if (buscarDocumento(id).getNombreDocumento().contains("DNI")){
                 if(!mat.matches()){
                     throw new BusinessException("DNI debe ser númerico");
@@ -307,12 +309,18 @@ public class EmpleadosService implements IEmpleadosService{
                 if (nombreDoc.length() != 13){
                     throw new BusinessException("Cantidad de digitos DNI invalido! requeridos:13");
                 }
+                if (!validarNumero.matches()){
+                    throw new BusinessException("DNI invalido! debe comenzar con 0 u 1");
+                }
             }else if (buscarDocumento(id).getNombreDocumento().contains("RTN")){
                 if(!mat.matches()){
                     throw new BusinessException("RTN debe ser númerico");
                 }
                 if (nombreDoc.length() != 14){
                     throw new BusinessException("Cantidad de digitos RTN invalido! requeridos:14");
+                }
+                if (!validarNumero.matches()){
+                    throw new BusinessException("RTN invalido! debe comenzar con 0 u 1");
                 }
             }else {
                 Pattern patDoc = Pattern.compile("[a-zA-Z\\d]]*");

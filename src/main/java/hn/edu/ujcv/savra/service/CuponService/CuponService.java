@@ -49,7 +49,7 @@ public class CuponService implements ICuponService{
             try {
                 validarCupon(pCupon);
                 Cupon newCupon = new Cupon(pCupon.getIdCupon(),pCupon.getCodigo(),pCupon.getFechaEmision(),
-                        pCupon.getFechaCaducidad(),pCupon.getActivo(), pCupon.getPorcentajeDescuento());
+                        pCupon.getFechaCaducidad(),pCupon.getCantidadMaxima(), pCupon.getCantidadDisponible(), pCupon.getActivo(), pCupon.getPorcentajeDescuento());
                 return repository.save(newCupon);
             }catch (Exception e){
                 throw new BusinessException(e.getMessage());
@@ -145,6 +145,20 @@ public class CuponService implements ICuponService{
         }
         if (pCupon.getFechaCaducidad().isAfter(pCupon.getFechaEmision().plusMonths(1))){
            throw new BusinessException("Fecha de caducidad no puede ser mayor de 1 mes de la fecha de emisión");}
+        //cantidadMaxima
+        if (pCupon.getCantidadMaxima()<=0){
+            throw new BusinessException("Cantidad Máxima no puede ser menor o igual cero");
+        }
+        if (pCupon.getCantidadMaxima() > 150){
+            throw new BusinessException("Cantidad Máxima no puede ser mayor a 150");
+        }
+        //cantidadDisponible
+        if (pCupon.getCantidadDisponible()< 0){
+            throw new BusinessException("Cantidad disponible no puede ser menor a cero");
+        }
+        if (pCupon.getCantidadDisponible() > pCupon.getCantidadMaxima()){
+            throw new BusinessException("Cantidad disponible no puede ser mayor a la cantidad máxima ");
+        }
         //porcentajeDescuento
         if (String.valueOf(pCupon.getPorcentajeDescuento()) == ""){
             throw new BusinessException("Porcentaje de descuento esta vacio");

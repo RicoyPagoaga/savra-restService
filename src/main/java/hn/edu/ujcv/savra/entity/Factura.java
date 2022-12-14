@@ -24,9 +24,9 @@ public class Factura {
     private long idMetodoPago;
     private double efectivo;
     private String tarjeta;
-    private long idCupon;
+    private Long idCupon;
     private long idTipoEntrega;
-    private long idShipper;
+    private Long idShipper;
     private double costoEnvio;
     private LocalDate fechaDespacho = null;
     private LocalDate fechaEntrega= null;

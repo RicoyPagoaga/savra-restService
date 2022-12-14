@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public class ParametroFacturaService implements IParametroFacturaService{
@@ -21,6 +22,9 @@ public class ParametroFacturaService implements IParametroFacturaService{
         try {
             pParametro.setCai(pParametro.getCai().toUpperCase());
             validarParametro(pParametro);
+            if (!pParametro.getFechaInicio().isEqual(LocalDate.now())){
+                throw new BusinessException("Fecha Inicio debe der la fecha actual");
+            }
             return repository.save(pParametro);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
@@ -95,6 +99,14 @@ public class ParametroFacturaService implements IParametroFacturaService{
         if (pParametro.getCai().isEmpty()){
             throw new BusinessException("CAI Vacío");
         }
+        Pattern numerosCai = Pattern.compile("[0-9]+");
+        if(!numerosCai.matcher(pParametro.getCai().trim()).find()){
+            throw new BusinessException("CAI debe contener almenos un número");
+        }
+        Pattern letrasCai = Pattern.compile("[a-zA-Z]+");
+        if(!letrasCai.matcher(pParametro.getCai().trim()).find()){
+            throw new BusinessException("CAI debe contener almenos una letra");
+        }
         if (pParametro.getCai().length() != 37){
             throw new BusinessException("CAI incompleto seguir ejemplo");
         }
@@ -112,9 +124,35 @@ public class ParametroFacturaService implements IParametroFacturaService{
         }
         String[] item = pParametro.getRangoFinal().split("-");
         String[] item2 = pParametro.getRangoInicial().split("-");
+        System.out.println(item2[3]);
+        System.out.println(Integer.parseInt(item2[3]));
+        if(Integer.parseInt(item2[0]) > 20){
+            throw new BusinessException("Punto de Emisión en Rango Inicial no debe ser mayor de 020 , verifique 1er segmento!");
+        }
+        if(Integer.parseInt(item2[0]) < 1){
+            throw new BusinessException("Punto de Emisión en Rango Inicial no debe ser menor de 01 , verifique 1er segmento!");
+        }
+        if(Integer.parseInt(item2[1]) > 1){
+            throw new BusinessException("Establecimiento en Rango Inicial no debe ser mayor de 001 , verifique 2do segmento!");
+        }
+        if(Integer.parseInt(item2[1]) < 1){
+            throw new BusinessException("Establecimiento en Rango Inicial no debe ser menor de 001 , verifique 2do segmento!");
+        }
+        if(Integer.parseInt(item2[2]) > 1){
+            throw new BusinessException("Tipo Documento en Rango Inicial no debe ser mayor de 01 , verifique 3er segmento!");
+        }
+        if(Integer.parseInt(item2[2]) < 1){
+            throw new BusinessException("Tipo Documento en Rango Inicial no debe ser menor de 01 , verifique 3er segmento!");
+        }
+        if(Integer.parseInt(item2[3]) < 1){
+            throw new BusinessException("Numeración correlativa en rango inicial no debe ser menor de 000000001 , verifique 4to segmento!");
+        }
+        if(Integer.parseInt(item2[3]) > 1000000){
+            throw new BusinessException("Numeración correlativa en rango inicial no debe ser mayor de 001000000 , verifique 4to segmento!");
+        }
         for (int i=0;i<item.length-1;i++){
             if (!item[i].equals(item2[i])){
-                throw new BusinessException("Rango final no acorde a rango Inicial! verifique los primeros 3 segmentos");
+                throw new BusinessException("Rango final no acorde a rango inicial! verifique los primeros 3 segmentos");
             }
         }
         if (Integer.parseInt(item[3]) < Integer.parseInt(item2[3])+100){
@@ -123,14 +161,17 @@ public class ParametroFacturaService implements IParametroFacturaService{
         if (Integer.parseInt(item[3]) > Integer.parseInt(item2[3])+100000){
             throw new BusinessException("Rango final no debe ser mayor de 100,000 del rango inicial, verifique 4to segmento");
         }
+        if (pParametro.getFechaLimiteEmision() == null){
+            throw new BusinessException("Fecha límite de emisión esta vacía");
+        }
         if (pParametro.getFechaLimiteEmision().isBefore(LocalDate.now().plusMonths(5))){
             throw new BusinessException("Fecha límite de emisión no debe ser menor de 5 meses");
         }
         if (pParametro.getFechaLimiteEmision().isAfter(LocalDate.now().plusMonths(7))){
             throw new BusinessException("Fecha límite de emisión no debe ser mayor de 7 meses");
         }
-        if (!pParametro.getFechaInicio().isEqual(LocalDate.now())){
-            throw new BusinessException("Fecha Inicio debe der la fecha actual");
+        if (pParametro.getFechaInicio() == null){
+            throw new BusinessException("Fecha Inicio esta vacía actual");
         }
     }
 }
