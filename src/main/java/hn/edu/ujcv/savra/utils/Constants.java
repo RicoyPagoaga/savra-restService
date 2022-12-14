@@ -28,4 +28,5 @@ public class Constants {
     public static final String URL_BASE_IMPUESTO_HISTORICO = String.format("%s/historico_impuestos", URL_BASE);
     public static final String URL_BASE_COMPRA             = String.format("%s/compras", URL_BASE);
     public static final String URL_BASE_COMPRA_DETALLE     = String.format("%s/compra_detalle", URL_BASE);
+    public static final String URL_BASE_DEVOLUCION_COMPRA  = String.format("%s/devolucion_compra", URL_BASE);
 }

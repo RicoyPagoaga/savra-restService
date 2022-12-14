@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -20,6 +21,7 @@ public class MarcaService implements IMarcaService {
     @Override
     public Marca saveMarca(Marca marca) throws BusinessException {
         try {
+            marca.setNombre(marca.getNombre().trim());
             validarMarca(marca);
             return repository.save(marca);
         } catch (Exception e) {
@@ -115,7 +117,7 @@ public class MarcaService implements IMarcaService {
             try {
                 validarMarca(marca);
                 Marca marcaExistente = new Marca(
-                        marca.getIdMarca(), marca.getNombre()
+                        marca.getIdMarca(), marca.getNombre().trim()
                 );
                 return repository.save(marcaExistente);
             } catch (Exception e) {
@@ -135,8 +137,22 @@ public class MarcaService implements IMarcaService {
             throw new BusinessException("El nombre de la marca no debe exceder los cincuenta caracteres");
         }
         Pattern dobleEspacio = Pattern.compile("\\s{2,}");
-        if (dobleEspacio.matcher(marca.getNombre()).find()) {
+        if (dobleEspacio.matcher(marca.getNombre().trim()).find()) {
             throw new BusinessException("Nombre de marca no debe contener espacios dobles ఠ_ఠ");
+        }
+        Pattern pat = Pattern.compile("[\\d]*");
+        Matcher mat_ = pat.matcher(marca.getNombre().trim());
+        if(mat_.matches()) {
+            throw new BusinessException("El nombre de marca debe contener letras ఠ_ఠ");
+        }
+        String[] nombre = marca.getNombre().trim().split(" ");
+        for (String item: nombre) {
+            if(item.matches("(.)\\1{2,}")) {
+                throw new BusinessException("El nombre no debe tener tantas letras repetidas ఠ_ఠ");
+            }
+            if(item.length()==1) {
+                throw new BusinessException("Nombre de marca inválido");
+            }
         }
         List<Marca> marcas = getMarcas();
         for (Marca item : marcas) {

@@ -5,18 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "compradetalle")
-public class CompraDetalle {
+@Table(name = "devolucionCompra")
+public class DevolucionCompra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long   idCompraDetalle;
-    private long   idCompra;
-    private long   idRepuesto;
-    private int    cantidad;
-    private double precio;
+    private long      idDevolucion;
+    private long      idCompraDetalle;
+    private LocalDate fecha;
+    private int       cantidad;
+    private String    motivo;
 }

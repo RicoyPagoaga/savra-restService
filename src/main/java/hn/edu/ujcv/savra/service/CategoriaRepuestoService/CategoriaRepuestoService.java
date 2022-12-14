@@ -19,6 +19,8 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
     @Override
     public CategoriaRepuesto saveCategoriaRepuesto(CategoriaRepuesto categoriaRepuesto) throws BusinessException {
         try {
+            categoriaRepuesto.setNombre(categoriaRepuesto.getNombre().trim());
+            categoriaRepuesto.setDescripcion(categoriaRepuesto.getDescripcion().trim());
             validarCategoria(categoriaRepuesto);
             return repository.save(categoriaRepuesto);
         } catch (Exception e) {
@@ -114,8 +116,8 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
             try {
                 validarCategoria(categoriaRepuesto);
                 CategoriaRepuesto categoriaExistente = new CategoriaRepuesto(
-                       categoriaRepuesto.getIdCategoria(), categoriaRepuesto.getNombre(),
-                        categoriaRepuesto.getDescripcion()
+                       categoriaRepuesto.getIdCategoria(), categoriaRepuesto.getNombre().trim(),
+                        categoriaRepuesto.getDescripcion().trim()
                 );
                 return repository.save(categoriaExistente);
             } catch (Exception e) {
@@ -126,11 +128,14 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
 
     private void validarCategoria(CategoriaRepuesto categoriaRepuesto) throws BusinessException {
         //nombre
-        if (categoriaRepuesto.getNombre().isEmpty()) {
+        if (categoriaRepuesto.getNombre().trim().isEmpty()) {
             throw new BusinessException("El nombre de la categoría de repuesto no debe estar vacío");
         }
         if (categoriaRepuesto.getNombre().trim().length() < 3) {
             throw new BusinessException("Ingrese más de tres caracteres en el nombre de la categoría de repuesto");
+        }
+        if (categoriaRepuesto.getNombre().trim().length() > 80) {
+            throw new BusinessException("El nombre de la categoría de repuesto no debe exceder los ochenta caracteres");
         }
         Pattern patDoc = Pattern.compile("[0-9]+");
         boolean matDoc = patDoc.matcher(categoriaRepuesto.getNombre().trim()).find();
@@ -138,20 +143,24 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
             throw new BusinessException("Nombre de categoría no debe contener números ఠ_ఠ");
         }
         Pattern dobleEspacio = Pattern.compile("\\s{2,}");
-        if (dobleEspacio.matcher(categoriaRepuesto.getNombre()).find()) {
+        if (dobleEspacio.matcher(categoriaRepuesto.getNombre().trim()).find()) {
             throw new BusinessException("Nombre de categoría no debe contener espacios dobles ఠ_ఠ");
         }
-        if (categoriaRepuesto.getNombre().trim().length() > 80) {
-            throw new BusinessException("El nombre de la categoría de repuesto no debe exceder los ochenta caracteres");
+        String[] nombre = categoriaRepuesto.getNombre().trim().split(" ");
+        for (String item: nombre) {
+            if(item.matches("(.)\\1{2,}")) {
+                throw new BusinessException("El nombre no debe tener tantas letras repetidas ఠ_ఠ");
+            }
         }
         List<CategoriaRepuesto> categorias = getCategoriasRepuesto();
         for (CategoriaRepuesto item : categorias) {
-            if ((item.getNombre().equals(categoriaRepuesto.getNombre())) && (item.getIdCategoria() != categoriaRepuesto.getIdCategoria())) {
+            if ((item.getNombre().equals(categoriaRepuesto.getNombre().trim())) &&
+                    (item.getIdCategoria() != categoriaRepuesto.getIdCategoria())) {
                 throw new BusinessException("El nombre de la categoría de repuesto ya está en uso");
             }
         }
         //descripcion
-        if (categoriaRepuesto.getDescripcion().isEmpty()) {
+        if (categoriaRepuesto.getDescripcion().trim().isEmpty()) {
             throw new BusinessException("La descripción es requerida");
         }
         if (categoriaRepuesto.getDescripcion().trim().length() < 5) {
@@ -160,8 +169,14 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
         if (categoriaRepuesto.getDescripcion().trim().length() > 100) {
             throw new BusinessException("La descripción no debe exceder los cien caracteres");
         }
-        if (dobleEspacio.matcher(categoriaRepuesto.getDescripcion()).find()) {
+        if (dobleEspacio.matcher(categoriaRepuesto.getDescripcion().trim()).find()) {
             throw new BusinessException("Descripción de categoría no debe contener espacios dobles ఠ_ఠ");
+        }
+        String[] descripcion = categoriaRepuesto.getDescripcion().trim().split(" ");
+        for (String item: descripcion) {
+            if(item.matches("(.)\\1{2,}")) {
+                throw new BusinessException("La descripción no debe tener tantas letras repetidas ఠ_ఠ");
+            }
         }
     }
 }

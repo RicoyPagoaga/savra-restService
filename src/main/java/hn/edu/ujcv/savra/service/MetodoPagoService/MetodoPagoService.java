@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -20,7 +21,7 @@ public class MetodoPagoService implements IMetodoPagoService {
     @Override
     public MetodoPago saveMetodoPago(MetodoPago metodoPago) throws BusinessException {
         try {
-            metodoPago.setNombre(metodoPago.getNombre().toUpperCase());
+            metodoPago.setNombre(metodoPago.getNombre().trim().toUpperCase());
             validarMetodoPago(metodoPago);
             return repository.save(metodoPago);
         } catch (Exception e) {
@@ -114,7 +115,7 @@ public class MetodoPagoService implements IMetodoPagoService {
             throw new NotFoundException("No se encontró el método de pago " + metodoPago.getIdMetodoPago());
         } else{
             try {
-                metodoPago.setNombre(metodoPago.getNombre().toUpperCase());
+                metodoPago.setNombre(metodoPago.getNombre().trim().toUpperCase());
                 validarMetodoPago(metodoPago);
                 MetodoPago metodoExistente = new MetodoPago(
                         metodoPago.getIdMetodoPago(), metodoPago.getNombre()
@@ -136,14 +137,13 @@ public class MetodoPagoService implements IMetodoPagoService {
         if (metodoPago.getNombre().trim().length() > 50) {
             throw new BusinessException("El nombre del método de pago no debe exceder los cincuenta caracteres");
         }
-        Pattern patDoc = Pattern.compile("[0-9]+");
-        boolean matDoc = patDoc.matcher(metodoPago.getNombre().trim()).find();
-        if(matDoc){
-            throw new BusinessException("Nombre de método de pago no debe contener números ఠ_ఠ");
+        Pattern pat = Pattern.compile("[a-zA-Z]*");
+        Matcher mat = pat.matcher(metodoPago.getNombre().trim());
+        if (!mat.matches()){
+            throw new BusinessException("Nombre de método de pago no debe tener espacios, números ni caracteres especiales");
         }
-        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
-        if (dobleEspacio.matcher(metodoPago.getNombre()).find()) {
-            throw new BusinessException("Nombre de método de pago no debe contener espacios dobles ఠ_ఠ");
+        if(metodoPago.getNombre().trim().matches("(.)\\1{2,}")) {
+            throw new BusinessException("Nombre de método de pago no debe tener tantas letras repetidas ఠ_ఠ");
         }
         List<MetodoPago> metodos = getMetodosPago();
         for (MetodoPago item : metodos) {

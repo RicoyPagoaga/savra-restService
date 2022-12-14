@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -20,7 +21,8 @@ public class TipoEntregaService implements ITipoEntregaService {
     @Override
     public TipoEntrega saveTipoEntrega(TipoEntrega tipoEntrega) throws BusinessException {
         try {
-            tipoEntrega.setNombre(tipoEntrega.getNombre().toUpperCase());
+            tipoEntrega.setNombre(tipoEntrega.getNombre().trim().toUpperCase());
+            tipoEntrega.setDescripcion(tipoEntrega.getDescripcion().trim());
             validarTipoEntrega(tipoEntrega);
             return repository.save(tipoEntrega);
         } catch (Exception e) {
@@ -114,11 +116,11 @@ public class TipoEntregaService implements ITipoEntregaService {
             throw new NotFoundException("No se encontró el tipo de entrega: " + tipoEntrega.getIdTipoEntrega());
         } else {
             try {
-                tipoEntrega.setNombre(tipoEntrega.getNombre().toUpperCase());
+                tipoEntrega.setNombre(tipoEntrega.getNombre().trim().toUpperCase());
                 validarTipoEntrega(tipoEntrega);
                 TipoEntrega tipoEntregaExiste = new TipoEntrega(
                         tipoEntrega.getIdTipoEntrega(), tipoEntrega.getNombre(),
-                        tipoEntrega.getDescripcion()
+                        tipoEntrega.getDescripcion().trim()
                 );
                 return repository.save(tipoEntregaExiste);
             } catch (Exception e) {
@@ -138,14 +140,13 @@ public class TipoEntregaService implements ITipoEntregaService {
         if (tipoEntrega.getNombre().trim().length() > 50) {
             throw new BusinessException("El nombre del tipo de entrega no debe exceder los cincuenta caracteres");
         }
-        Pattern patDoc = Pattern.compile("[0-9]+");
-        boolean matDoc = patDoc.matcher(tipoEntrega.getNombre().trim()).find();
-        if(matDoc){
-            throw new BusinessException("Nombre de tipo de entrega no debe contener números ఠ_ఠ");
+        Pattern pat = Pattern.compile("[a-zA-Z]*");
+        Matcher mat = pat.matcher(tipoEntrega.getNombre().trim());
+        if (!mat.matches()){
+            throw new BusinessException("Nombre del tipo de entrega no debe tener espacios, números ni caracteres especiales");
         }
-        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
-        if (dobleEspacio.matcher(tipoEntrega.getNombre()).find()) {
-            throw new BusinessException("Nombre de tipo de entrega no debe contener espacios dobles ఠ_ఠ");
+        if(tipoEntrega.getNombre().trim().matches("(.)\\1{2,}")) {
+            throw new BusinessException("Nombre del tipo de entrega no debe tener tantas letras repetidas ఠ_ఠ");
         }
         List<TipoEntrega> tipos = getTiposEntrega();
         for (TipoEntrega item : tipos) {
@@ -164,8 +165,15 @@ public class TipoEntregaService implements ITipoEntregaService {
         if (tipoEntrega.getDescripcion().trim().length() > 80) {
             throw new BusinessException("La descripción no debe exceder los ochenta caracteres");
         }
-        if (dobleEspacio.matcher(tipoEntrega.getDescripcion()).find()) {
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+        if (dobleEspacio.matcher(tipoEntrega.getDescripcion().trim()).find()) {
             throw new BusinessException("Descripción de tipo de entrega no debe contener espacios dobles ఠ_ఠ");
+        }
+        String[] descripcion = tipoEntrega.getDescripcion().trim().split(" ");
+        for (String item: descripcion) {
+            if(item.matches("(.)\\1{2,}")) {
+                throw new BusinessException("La descripción no debe tener tantas letras repetidas ఠ_ఠ");
+            }
         }
     }
 }

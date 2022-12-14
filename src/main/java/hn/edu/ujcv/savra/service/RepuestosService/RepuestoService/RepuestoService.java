@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -28,6 +29,7 @@ public class RepuestoService implements IRepuestoService {
     public Repuesto saveRepuesto(Repuesto repuesto, boolean stockA,
                                  boolean stockM, boolean stockMa, double precio) throws BusinessException {
         try {
+            repuesto.setNombre(repuesto.getNombre().trim());
             validarRepuesto(repuesto, stockA, stockM, stockMa, precio);
             return repository.save(repuesto);
         } catch (Exception e) {
@@ -118,7 +120,7 @@ public class RepuestoService implements IRepuestoService {
             try {
                 validarRepuesto(repuesto, stockA, stockM, stockMa, precio);
                 Repuesto repuestoExistente = new Repuesto(
-                        repuesto.getIdRepuesto(), repuesto.getNombre(), repuesto.getAnio_referenciaInicio(),
+                        repuesto.getIdRepuesto(), repuesto.getNombre().trim(), repuesto.getAnio_referenciaInicio(),
                         repuesto.getAnio_referenciaFinal(), repuesto.getIdCategoria(), repuesto.getStockActual(),
                         repuesto.getStockMinimo(), repuesto.getStockMaximo(), repuesto.getIdProveedor(),
                         repuesto.getIdModelo(), repuesto.getIdTransmision(), repuesto.getIdImpuesto()
@@ -145,6 +147,20 @@ public class RepuestoService implements IRepuestoService {
         Pattern dobleEspacio = Pattern.compile("\\s{2,}");
         if (dobleEspacio.matcher(repuesto.getNombre()).find()) {
             throw new BusinessException("Nombre de repuesto no debe contener espacios dobles ఠ_ఠ");
+        }
+        Pattern pat = Pattern.compile("[\\d]*");
+        Matcher mat_ = pat.matcher(repuesto.getNombre().trim());
+        if(mat_.matches()) {
+            throw new BusinessException("El nombre de repuesto no debe contener solo números ఠ_ఠ");
+        }
+        String[] nombre = repuesto.getNombre().trim().split(" ");
+        for (String item: nombre) {
+            if(item.matches("(.)\\1{2,}")) {
+                throw new BusinessException("El nombre no debe tener tantas letras repetidas ఠ_ఠ");
+            }
+            if(item.length()==1) {
+                throw new BusinessException("Nombre inválido");
+            }
         }
         List<Repuesto> repuestos = getRepuestos();
         for (Repuesto item : repuestos) {
