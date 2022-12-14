@@ -120,7 +120,8 @@ public class CompraDetalleService implements ICompraDetalleService {
                         compraDetalle.getIdCompraDetalle(),
                         compraDetalle.getIdCompra(),
                         compraDetalle.getIdRepuesto(),
-                        compraDetalle.getCantidad()
+                        compraDetalle.getCantidad(),
+                        compraDetalle.getPrecio()
                 );
                 return repository.save(compraDetalleExistente);
             } catch (Exception e) {
@@ -149,6 +150,10 @@ public class CompraDetalleService implements ICompraDetalleService {
         if (compraDetalle.getCantidad() > valor) {
             throw new BusinessException("No puede comprar una cantidad mayor a la del stock máximo del repuesto "
                     + compraDetalle.getIdRepuesto());
+        }
+        //precio
+        if(compraDetalle.getPrecio() <= 0) {
+            throw new BusinessException("El precio no puede ser menor o igual a cero");
         }
     }
 

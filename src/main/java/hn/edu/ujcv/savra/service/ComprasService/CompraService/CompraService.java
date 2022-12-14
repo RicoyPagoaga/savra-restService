@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +23,7 @@ public class CompraService implements ICompraService {
     @Override
     public Compra saveCompra(Compra compra, boolean detalle) throws BusinessException {
         try {
+            compra.setNoComprobante(compra.getNoComprobante().trim());
             validarCompra(compra, detalle);
             return repository.save(compra);
         } catch (Exception e) {
@@ -105,7 +107,7 @@ public class CompraService implements ICompraService {
                         compra.getFechaCompra(),
                         compra.getFechaDespacho(),
                         compra.getFechaRecibido(),
-                        compra.getNoComprobante()
+                        compra.getNoComprobante().trim()
                 );
                 return repository.save(compraExistente);
             } catch (Exception e) {
@@ -125,50 +127,54 @@ public class CompraService implements ICompraService {
         if (compra.getFechaCompra() == null) {
             throw new BusinessException("La fecha de compra no debe estar vacía");
         }
-        if (!compra.getFechaCompra().equals(fechaActual)) {
-            throw new BusinessException("La fecha de la compra debe ser la fecha de hoy");
+        if(compra.getIdCompra()<=0) { //por si esta actualizando compra
+            if (!compra.getFechaCompra().equals(fechaActual)) {
+                throw new BusinessException("La fecha de la compra debe ser la fecha de hoy");
+            }
         }
         //fechaDespacho
-        /*if (compra.getFechaDespacho() == null) {
-            throw new BusinessException("La fecha de despacho no debe estar vacía");
-        }*/
         if (compra.getFechaDespacho() != null) {
-            if (compra.getFechaDespacho().isBefore(fechaActual)) {
+            if (compra.getFechaDespacho().isBefore(compra.getFechaCompra())) {
                 throw new BusinessException("La fecha de despacho no puede ser una fecha anterior a la fecha de compra");
             }
             if (compra.getFechaDespacho().isAfter(fechaActual)) {
                 throw new BusinessException("La fecha de despacho no puede ser a futuro");
             }
         }
+
         //fechaRecibido
-        /*if (compra.getFechaRecibido() == null) {
-            throw new BusinessException("La fecha de entrega no debe estar vacía");
-        }*/
         if (compra.getFechaRecibido() != null) {
-            if (compra.getFechaRecibido().isBefore(fechaActual)) {
-                throw new BusinessException("La fecha de entrega no puede ser una fecha anterior a la fecha de compra");
-            }
-            if (compra.getFechaRecibido().isBefore(compra.getFechaDespacho())) {
-                throw new BusinessException("La fecha de entrega no puede ser una fecha anterior a la fecha de despacho");
-            }
-            if (compra.getFechaRecibido().isAfter(fechaActual)) {
-                throw new BusinessException("La fecha de entrega no puede ser a futuro");
+            if(compra.getFechaDespacho()==null) {
+                throw new BusinessException("No debe indicar fecha de entrega sin fecha de despacho");
+            } else {
+                if (compra.getFechaRecibido().isBefore(compra.getFechaDespacho())) {
+                    throw new BusinessException("La fecha de entrega no puede ser una fecha anterior a la fecha de despacho");
+                }
+                if (compra.getFechaRecibido().isAfter(fechaActual)) {
+                    throw new BusinessException("La fecha de entrega no puede ser a futuro");
+                }
+                if(compra.getFechaRecibido().isAfter(compra.getFechaDespacho().plusDays(30))) {
+                    throw new BusinessException("La fecha de entrega no puede exceder los treinta días desde su despacho");
+                }
             }
         }
         //no. Comprobante
-        if(compra.getNoComprobante().isEmpty()) {
+        if(compra.getNoComprobante().trim().isEmpty()) {
             throw new BusinessException("Número de comprobante es requerido");
         }
-        if(compra.getNoComprobante().length() < 10) {
+        if(compra.getNoComprobante().trim().length() < 10) {
             throw new BusinessException("Número de comprobante debe tener más de diez digitos");
         }
-        if(compra.getNoComprobante().length() > 20) {
+        if(compra.getNoComprobante().trim().length() > 20) {
             throw new BusinessException("Número de comprobante no debe exceder los veinte digitos");
         }
         Pattern pat = Pattern.compile("[\\d]*");
         Matcher mat = pat.matcher(compra.getNoComprobante().trim());
         if(!mat.matches()){
             throw new BusinessException("Número de comprobante debe ser númerico");
+        }
+        if(compra.getNoComprobante().trim().matches("(.)\\1{2,}")) {
+            throw new BusinessException("Número de comprobante inválido ఠ_ఠ");
         }
         //detalle
         if(!detalle) {

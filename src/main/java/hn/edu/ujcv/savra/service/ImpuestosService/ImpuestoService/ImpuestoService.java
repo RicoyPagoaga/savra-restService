@@ -1,6 +1,7 @@
 package hn.edu.ujcv.savra.service.ImpuestosService.ImpuestoService;
 
 import hn.edu.ujcv.savra.entity.Impuesto.Impuesto;
+import hn.edu.ujcv.savra.entity.TipoEntrega;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.Impuesto.ImpuestoRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -20,6 +22,8 @@ public class ImpuestoService implements IImpuestoService {
     @Override
     public Impuesto saveImpuesto(Impuesto impuesto, int valor, boolean nulo) throws BusinessException {
         try {
+            impuesto.setNombre(impuesto.getNombre().trim());
+            impuesto.setDescripcion(impuesto.getDescripcion().trim());
             validarImpuesto(impuesto, valor, nulo);
             return repository.save(impuesto);
         } catch (Exception e) {
@@ -109,8 +113,8 @@ public class ImpuestoService implements IImpuestoService {
             try {
                 validarImpuesto(impuesto, valor, nulo);
                 Impuesto impuestoExistente = new Impuesto(
-                        impuesto.getIdImpuesto(), impuesto.getNombre(),
-                        impuesto.getDescripcion(), impuesto.getEstado()
+                        impuesto.getIdImpuesto(), impuesto.getNombre().trim(),
+                        impuesto.getDescripcion().trim(), impuesto.getEstado()
                 );
                 return repository.save(impuestoExistente);
             } catch (Exception e) {
@@ -121,7 +125,7 @@ public class ImpuestoService implements IImpuestoService {
 
     private void validarImpuesto(Impuesto impuesto, int valor, boolean nulo) throws BusinessException {
         //nombre
-        if (impuesto.getNombre().isEmpty()) {
+        if (impuesto.getNombre().trim().isEmpty()) {
             throw new BusinessException("El nombre del impuesto es requerido");
         }
         if (impuesto.getNombre().trim().length() < 3) {
@@ -130,18 +134,22 @@ public class ImpuestoService implements IImpuestoService {
         if (impuesto.getNombre().trim().length() > 30) {
             throw new BusinessException("El nombre no debe exceder los treinta caracteres");
         }
-        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
-        if (dobleEspacio.matcher(impuesto.getNombre()).find()) {
-            throw new BusinessException("Nombre de impuesto no debe contener espacios dobles ఠ_ఠ");
+        Pattern pat = Pattern.compile("[a-zA-Z0-9]*");
+        Matcher mat = pat.matcher(impuesto.getNombre().trim());
+        if (!mat.matches()){
+            throw new BusinessException("Nombre de impuesto no debe tener espacios ni caracteres especiales");
+        }
+        if(impuesto.getNombre().trim().matches("(.)\\1{2,}")) {
+            throw new BusinessException("Nombre de impuesto no debe tener tantas letras repetidas ఠ_ఠ");
         }
         List<Impuesto> impuestos = getImpuestos();
         for (Impuesto item : impuestos) {
-            if ((item.getNombre().equals(impuesto.getNombre())) && (item.getIdImpuesto() != impuesto.getIdImpuesto())) {
+            if ((item.getNombre().equals(impuesto.getNombre().trim())) && (item.getIdImpuesto() != impuesto.getIdImpuesto())) {
                 throw new BusinessException("El nombre del impuesto ya está en uso");
             }
         }
         //descripcion
-        if (impuesto.getDescripcion().isEmpty()) {
+        if (impuesto.getDescripcion().trim().isEmpty()) {
             throw new BusinessException("La descripción es requerida");
         }
         if (impuesto.getDescripcion().trim().length() < 5) {
@@ -150,8 +158,15 @@ public class ImpuestoService implements IImpuestoService {
         if (impuesto.getDescripcion().trim().length() > 50) {
             throw new BusinessException("La descripción no debe exceder los cincuenta caracteres");
         }
-        if (dobleEspacio.matcher(impuesto.getDescripcion()).find()) {
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+        if (dobleEspacio.matcher(impuesto.getDescripcion().trim()).find()) {
             throw new BusinessException("Descripción de categoría no debe contener espacios dobles ఠ_ఠ");
+        }
+        String[] descripcion = impuesto.getDescripcion().trim().split(" ");
+        for (String item: descripcion) {
+            if(item.matches("(.)\\1{2,}")) {
+                throw new BusinessException("La descripción no debe tener tantas letras repetidas ఠ_ఠ");
+            }
         }
         //valor
         if (nulo) {
