@@ -20,21 +20,25 @@ public class PaisService implements IPaisService{
     public Pais savePais(Pais pPais) throws BusinessException, SQLException {
         try{
             //cod_iso
-            if(pPais.getCod_iso().isEmpty()){
+            if(pPais.getCod_iso().trim().isEmpty()){
                 throw new BusinessException("Código ISO esta Vacío ఠ_ఠ");
             }
-            if(pPais.getCod_iso().length() != 2){
+            if(pPais.getCod_iso().trim().length() != 2){
                 throw new BusinessException("Utilice el código ISO de 2 letras ఠ_ఠ");
             }
             //nombre
             if(pPais.getNombre().isEmpty()){
                 throw new BusinessException("Nombre País esta vacío ఠ_ఠ");
             }
-            if(pPais.getNombre().length() < 4){
+            if(pPais.getNombre().trim().length() < 4){
                 throw new BusinessException("Nombre País debe contener más de 4 caracteres ఠ_ఠ");
             }
-            if(pPais.getNombre().length() >56){
+            if(pPais.getNombre().trim().length() >56){
                 throw new BusinessException("Nombre País debe contener menos de 56 caracteres ఠ_ఠ");
+            }
+            Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+            if (dobleEspacio.matcher(pPais.getNombre()).find()) {
+                throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
             }
 
             //cod_area
@@ -113,6 +117,10 @@ public class PaisService implements IPaisService{
             }
             if(pPais.getNombre().length() >56){
                 throw new BusinessException("Nombre País debe contener menos de 56 caracteres");
+            }
+            Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+            if (dobleEspacio.matcher(pPais.getNombre()).find()) {
+                throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
             }
             //cod_area
             if(pPais.getCod_area().isEmpty()){

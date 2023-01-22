@@ -1,5 +1,6 @@
 package hn.edu.ujcv.savra.service.TipoDocumentoService;
 
+import hn.edu.ujcv.savra.entity.MetodoPago;
 import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
@@ -41,7 +42,12 @@ public class TipoDocumentoService implements ITipoDocumentoService {
             if(!matDoc.matches()){
                 throw new BusinessException("Nombre Documento no debe contener números o letras con tildeఠ_ఠ");
             }
-
+            List<TipoDocumento> metodos = getTipoDocumento();
+            for (TipoDocumento item : metodos) {
+                if ((item.getNombreDocumento().equals(tipoDocumento.getNombreDocumento().trim())) && (item.getIdTipoDocumento() != tipoDocumento.getIdTipoDocumento())) {
+                    throw new BusinessException("El nombre del documento de pago ya está en uso");
+                }
+            }
             tipoDocumento.setNombreDocumento(tipoDocumento.getNombreDocumento().toUpperCase());
             return repository.save(tipoDocumento);
         }catch (Exception e){
@@ -153,6 +159,12 @@ public class TipoDocumentoService implements ITipoDocumentoService {
                 Matcher matDoc = patDoc.matcher(tipoDocumento.getNombreDocumento().trim());
                 if(!matDoc.matches()){
                     throw new BusinessException("Nombre Documento no debe contener números o caracteres especialesఠ_ఠ");
+                }
+                List<TipoDocumento> metodos = getTipoDocumento();
+                for (TipoDocumento item : metodos) {
+                    if ((item.getNombreDocumento().equals(tipoDocumento.getNombreDocumento().trim())) && (item.getIdTipoDocumento() != tipoDocumento.getIdTipoDocumento())) {
+                        throw new BusinessException("El nombre del documento ya está en uso");
+                    }
                 }
                 TipoDocumento existingtTipoDocumento =new TipoDocumento();
                 existingtTipoDocumento.setIdTipoDocumento(tipoDocumento.getIdTipoDocumento());

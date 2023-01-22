@@ -4,29 +4,30 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table(name = "factura")
 public class Factura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idFactura;
     private long idParametroFactura;
+    private String noFactura;
     private long idCliente;
     private long idEmpleado;
-    private LocalDate fechaFactura;
+    private LocalDate fechaFactura= null;
     private long idMetodoPago;
-    private long idImpuesto;
+    private double efectivo;
+    private String tarjeta = null;
+    private Long idCupon;
     private long idTipoEntrega;
-    private long idShipper;
-    private LocalDate fechaDespacho;
-    private LocalDate fechaEntrega;
-    private long idCupon;
+    private Long idShipper;
+    private double costoEnvio;
+    private LocalDate fechaDespacho = null;
+    private LocalDate fechaEntrega= null;
 }

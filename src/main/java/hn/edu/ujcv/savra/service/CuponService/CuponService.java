@@ -1,6 +1,7 @@
 package hn.edu.ujcv.savra.service.CuponService;
 
 import hn.edu.ujcv.savra.entity.Cupon;
+import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.CuponRepository;
@@ -49,7 +50,7 @@ public class CuponService implements ICuponService{
             try {
                 validarCupon(pCupon);
                 Cupon newCupon = new Cupon(pCupon.getIdCupon(),pCupon.getCodigo(),pCupon.getFechaEmision(),
-                        pCupon.getFechaCaducidad(),pCupon.getActivo(), pCupon.getPorcentajeDescuento());
+                        pCupon.getFechaCaducidad(),pCupon.getCantidadMaxima(), pCupon.getCantidadDisponible(), pCupon.getActivo(), pCupon.getPorcentajeDescuento());
                 return repository.save(newCupon);
             }catch (Exception e){
                 throw new BusinessException(e.getMessage());
@@ -126,6 +127,12 @@ public class CuponService implements ICuponService{
         if (!mat.matches()){
             throw new BusinessException("Código del cupon no debe tener espacios ni caracteres especiales");
         }
+        List<Cupon> metodos = obtenerCupones();
+        for (Cupon item : metodos) {
+            if ((item.getCodigo().equals(pCupon.getCodigo().trim())) && (item.getIdCupon() != pCupon.getIdCupon())) {
+                throw new BusinessException("El nombre del cupón de pago ya está en uso");
+            }
+        }
         //fechaEmision
         if (pCupon.getFechaEmision() == null){
             throw new BusinessException("Fecha de emisión esta vacía");
@@ -145,6 +152,20 @@ public class CuponService implements ICuponService{
         }
         if (pCupon.getFechaCaducidad().isAfter(pCupon.getFechaEmision().plusMonths(1))){
            throw new BusinessException("Fecha de caducidad no puede ser mayor de 1 mes de la fecha de emisión");}
+        //cantidadMaxima
+        if (pCupon.getCantidadMaxima()<=0){
+            throw new BusinessException("Cantidad Máxima no puede ser menor o igual cero");
+        }
+        if (pCupon.getCantidadMaxima() > 150){
+            throw new BusinessException("Cantidad Máxima no puede ser mayor a 150");
+        }
+        //cantidadDisponible
+        if (pCupon.getCantidadDisponible()< 0){
+            throw new BusinessException("Cantidad disponible no puede ser menor a cero");
+        }
+        if (pCupon.getCantidadDisponible() > pCupon.getCantidadMaxima()){
+            throw new BusinessException("Cantidad disponible no puede ser mayor a la cantidad máxima ");
+        }
         //porcentajeDescuento
         if (String.valueOf(pCupon.getPorcentajeDescuento()) == ""){
             throw new BusinessException("Porcentaje de descuento esta vacio");

@@ -35,23 +35,25 @@ public class CargoService implements ICargoService{
             if(!matDoc.matches()){
                 throw new BusinessException("Nombre Cargo no debe contener números o carácteres especiales ఠ_ఠ");
             }
-
             //Descripcion
-            if (cargo.getDescrpcion().trim().isEmpty()){
+            if (cargo.getDescripcion().trim().isEmpty()){
                 throw new BusinessException("La descripción no debe estar vacía");
             }
-            if(cargo.getDescrpcion().trim().length() < 3){
+            if(cargo.getDescripcion().trim().length() < 3){
                 throw new BusinessException("la descripción debe contener mínimo 3 carácteres ఠ_ఠ");
             }
-            if(cargo.getDescrpcion().trim().length() >80){
+            if(cargo.getDescripcion().trim().length() >80){
                 throw new BusinessException("la descripción no debe contener más de 80 carácteres ఠ_ఠ");
             }
             //salario
-            if (String.valueOf(cargo.getSalario()).isEmpty()){
+            if (String.valueOf(cargo.getSalarioBase()).isEmpty()){
                 throw new BusinessException("Salario esta vacío");
             }
-            if (cargo.getSalario() <= 0){
-                throw new BusinessException("Salario no debe ser menor o igual a 0");
+            if (cargo.getSalarioBase() < 6000){
+                throw new BusinessException("Salario no debe ser menor de L. 6,000.00");
+            }
+            if (cargo.getSalarioBase() > 150000){
+                throw new BusinessException("Salario no debe ser mayor a 150,000 L. ఠ_ఠ");
             }
             cargo.setNombre(cargo.getNombre().toUpperCase());
             return repository.save(cargo);
@@ -141,7 +143,7 @@ public class CargoService implements ICargoService{
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
-            throw new NotFoundException("no se encontro el cargo"+ cargo.getIdCargo());
+            throw new NotFoundException("No se encontró el cargo"+ cargo.getIdCargo());
         }
         else {
             try {
@@ -153,30 +155,46 @@ public class CargoService implements ICargoService{
                 if(cargo.getNombre().trim().length() <5){
                     throw new BusinessException("Nombre Cargo debe contener mínimo 5 carácteres ఠ_ఠ");
                 }
-                if(cargo.getNombre().trim().length() >25){
-                    throw new BusinessException("Nombre Cargo no debe contener mas de 25 carácteres ఠ_ఠ");
+                if(cargo.getNombre().trim().length() >50){
+                    throw new BusinessException("Nombre Cargo no debe contener mas de 50 carácteres ఠ_ఠ");
                 }
-                Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+                Pattern patDoc = Pattern.compile("^([a-zA-ZÀ]+)(\\s[a-zA-ZÀ]+)*$");
                 Matcher matDoc = patDoc.matcher(cargo.getNombre().trim());
                 if(!matDoc.matches()){
                     throw new BusinessException("Nombre Cargo no debe contener números o carácteres especiales ఠ_ఠ");
                 }
-
+                Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+                if (dobleEspacio.matcher(cargo.getNombre()).find()) {
+                    throw new BusinessException("El nombre del cargo no debe contener espacios dobles");
+                }
                 //Descripcion
-                if (cargo.getDescrpcion().trim().isEmpty()){
+                if (cargo.getDescripcion().trim().isEmpty()){
                     throw new BusinessException("La descripción no debe estar vacía");
                 }
-                if(cargo.getDescrpcion().trim().length() < 3){
-                    throw new BusinessException("Descripción Cargo debe contener mínimo 3 carácteres ఠ_ఠ");
+                if(cargo.getDescripcion().trim().length() < 3){
+                    throw new BusinessException("la descripción debe contener mínimo 3 carácteres ఠ_ఠ");
                 }
-                if(cargo.getDescrpcion().trim().length() >50){
-                    throw new BusinessException("Descripción Cargo debe contener menos de 50 carácteres ఠ_ఠ");
+                if(cargo.getDescripcion().trim().length() >80){
+                    throw new BusinessException("La descripción no debe contener más de 80 carácteres ఠ_ఠ");
+                }
+                if (dobleEspacio.matcher(cargo.getDescripcion().trim()).find()) {
+                    throw new BusinessException("La descripción no debe contener espacios dobles");
+                }
+                //salario
+                if (String.valueOf(cargo.getSalarioBase()).isEmpty()){
+                    throw new BusinessException("Salario esta vacío");
+                }
+                if (cargo.getSalarioBase() < 6000){
+                    throw new BusinessException("Salario no debe ser menor de L. 6,000.00");
+                }
+                if (cargo.getSalarioBase() > 150000){
+                    throw new BusinessException("Salario no debe ser mayor a 150,000 L. ఠ_ఠ");
                 }
                 Cargo existingCargo=new Cargo();
                 existingCargo.setIdCargo(cargo.getIdCargo());
                 existingCargo.setNombre(cargo.getNombre());
-                existingCargo.setDescrpcion(cargo.getDescrpcion());
-                existingCargo.setSalario(cargo.getSalario());
+                existingCargo.setDescripcion(cargo.getDescripcion());
+                existingCargo.setSalarioBase(cargo.getSalarioBase());
                 return repository.save(existingCargo);
             }catch (Exception e){
                 throw new BusinessException(e.getMessage());

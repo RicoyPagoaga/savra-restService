@@ -139,15 +139,19 @@ public class ArqueoService implements IArqueoService {
         if (arqueo.getTotalRecuento()>1000000){
             throw new BusinessException("Total recuento no debe ser mayor a un millon");
         }
-        if (arqueo.getTotalRecuento()<0){
-            throw new BusinessException("Total recuento no debe ser menor a 0");
+        if (arqueo.getTotalRecuento()<=0){
+            throw new BusinessException("Total recuento no debe ser menor o igual a 0");
         }
         //observacion
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
         if (arqueo.getObservacion().trim().isEmpty()){
-            throw new BusinessException("La observacion no debe estar vacía");
+            throw new BusinessException("La observación no debe estar vacía");
         }
         if(arqueo.getObservacion().trim().length() < 3){
             throw new BusinessException("Observación debe contener mínimo 3 carácteres ఠ_ఠ");
+        }
+        if (dobleEspacio.matcher(arqueo.getObservacion().trim()).find()) {
+            throw new BusinessException("Nombre de categoría no debe contener espacios dobles ఠ_ఠ");
         }
         if(arqueo.getObservacion().trim().length() >80){
             throw new BusinessException("Observación no debe contener mas de 80 carácteres ఠ_ఠ");

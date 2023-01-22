@@ -19,6 +19,8 @@ public class Cupon {
     private String codigo;
     private LocalDate fechaEmision = null;
     private LocalDate fechaCaducidad = null;
+    private int cantidadMaxima;
+    private int cantidadDisponible;
     private int activo;
     private int porcentajeDescuento ;
 }
