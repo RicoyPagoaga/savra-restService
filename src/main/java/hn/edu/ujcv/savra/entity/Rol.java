@@ -10,17 +10,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "usuario")
-
-public class Usuario {
+@Table(name = "rol")
+public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long   idUsuario;
-    private String username;
-    private String password;
+    private long idRol;
     private String nombre;
-    private String apellido;
-    private int    activo;
-    private int    bloqueado;
-    private long   idRol;
+    private String descripcion;
 }

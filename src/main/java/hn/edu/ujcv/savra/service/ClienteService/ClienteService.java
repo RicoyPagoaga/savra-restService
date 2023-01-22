@@ -39,6 +39,10 @@ public class ClienteService implements IClienteService{
             if(!matDoc.matches()){
                 throw new BusinessException("Nombre Cliente no debe contener números o caracteres especialesఠ_ఠ");
             }
+            Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+            if (dobleEspacio.matcher(pCliente.getNombre().trim()).find()) {
+                throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
+            }
             //documento
             if(pCliente.getDocumento().trim().isEmpty()){
                 throw new BusinessException("Documento esta vacío ఠ_ఠ");
@@ -74,6 +78,9 @@ public class ClienteService implements IClienteService{
             }
             if (pCliente.getDireccion().trim().length() > 50){
                 throw new BusinessException("Direccion debe ser menor a 50 Carácteres ఠ_ఠ");
+            }
+            if (dobleEspacio.matcher(pCliente.getDireccion().trim()).find()) {
+                throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
             }
             //idCategoria
             if (pCliente.getIdCategoria() < 1){
@@ -135,6 +142,10 @@ public class ClienteService implements IClienteService{
             if(!matDoc.matches()){
                 throw new BusinessException("Nombre Cliente no debe contener números o letras con tilde ఠ_ఠ");
             }
+            Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+            if (dobleEspacio.matcher(pCliente.getNombre().trim()).find()) {
+                throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
+            }
             //documento
             if(pCliente.getDocumento().trim().isEmpty()){
                 throw new BusinessException("Documento esta vacío ఠ_ఠ");
@@ -170,6 +181,9 @@ public class ClienteService implements IClienteService{
             }
             if (pCliente.getDireccion().trim().length() > 50){
                 throw new BusinessException("Direccion debe ser menor a 50 Carácteres ఠ_ఠ");
+            }
+            if (dobleEspacio.matcher(pCliente.getDireccion().trim()).find()) {
+                throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
             }
             //idCategoria
             if (pCliente.getIdCategoria() < 1){
@@ -214,11 +228,12 @@ public class ClienteService implements IClienteService{
     }
     private void contiene(long id, String nombreDoc) throws BusinessException {
         try {
+            String valorInicial = nombreDoc.substring(0,2);
             Pattern pat = Pattern.compile("[\\d]*");
             Matcher mat = pat.matcher(nombreDoc);
             Pattern patron=Pattern.compile("[01]");
             Matcher validarNumero = patron.matcher(nombreDoc.substring(0,1));
-            if (buscarDocumento(id).getNombreDocumento().contains("DNI")){
+            if (id == 1){
                 if(!mat.matches()){
                     throw new BusinessException("DNI debe ser númerico");
                 }
@@ -228,7 +243,13 @@ public class ClienteService implements IClienteService{
                 if (!validarNumero.matches()){
                     throw new BusinessException("DNI invalido! debe comenzar con 0 u 1");
                 }
-            }else if (buscarDocumento(id).getNombreDocumento().contains("RTN")){
+                if(Integer.parseInt(valorInicial) < 1){
+                    throw new BusinessException("DNI invalido! código depto no existe!");
+                }
+                if(Integer.parseInt(valorInicial) > 18){
+                    throw new BusinessException("DNI invalido! código depto no existe!");
+                }
+            }else if (id == 2){
                 if(!mat.matches()){
                     throw new BusinessException("RTN debe ser númerico");
                 }
@@ -242,6 +263,18 @@ public class ClienteService implements IClienteService{
                 if (nombreDoc.length() < 7){
                     System.out.println(nombreDoc.length());
                     throw new BusinessException("Documento no debe ser menor a 7 de caracteres !");
+                }
+                if (nombreDoc.length() > 11){
+                    //System.out.println(nombreDoc.length());  imporimir en consola
+                    throw new BusinessException("Documento no debe ser mayor a 11 de caracteres !");
+                }
+                Pattern numerosCai = Pattern.compile("[0-9]+");
+                if(!numerosCai.matcher(nombreDoc.trim()).find()){
+                    throw new BusinessException("Pasaporte debe contener almenos un número");
+                }
+                Pattern letrasCai = Pattern.compile("[a-zA-Z]+");
+                if(!letrasCai.matcher(nombreDoc.trim()).find()){
+                    throw new BusinessException("Pasaporte debe contener almenos una letra");
                 }
             }
         }catch (Exception e){

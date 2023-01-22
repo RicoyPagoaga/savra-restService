@@ -23,7 +23,7 @@ public class Factura {
     private LocalDate fechaFactura= null;
     private long idMetodoPago;
     private double efectivo;
-    private String tarjeta;
+    private String tarjeta = null;
     private Long idCupon;
     private long idTipoEntrega;
     private Long idShipper;

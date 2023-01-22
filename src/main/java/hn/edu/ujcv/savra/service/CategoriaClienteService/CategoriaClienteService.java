@@ -28,6 +28,10 @@ public class CategoriaClienteService implements ICategoriaClienteService{
             if(pCategoriaCliente.getNombre().trim().length() < 3){
                 throw new BusinessException("Nombre Categoría debe tener mínimo 3 caracteres");
             }
+            Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+            if (dobleEspacio.matcher(pCategoriaCliente.getNombre().trim()).find()) {
+                throw new BusinessException("El nombre no debe contener espacios dobles");
+            }
             if(pCategoriaCliente.getNombre().trim().length() >20){
                 throw new BusinessException("Nombre Categoría debe contener menos de 20 caracteres");
             }
@@ -42,6 +46,9 @@ public class CategoriaClienteService implements ICategoriaClienteService{
             }
             if(pCategoriaCliente.getDescripcion().trim().length() < 3){
                 throw new BusinessException("Descripción debe tener mínimo 3 caracteres");
+            }
+            if (dobleEspacio.matcher(pCategoriaCliente.getDescripcion().trim()).find()) {
+                throw new BusinessException("La Descripción no debe contener espacios dobles");
             }
             if(pCategoriaCliente.getDescripcion().trim().length() > 50){
                 throw new BusinessException("Descripción debe debe contener menos de 50 caracteres");
@@ -106,6 +113,10 @@ public class CategoriaClienteService implements ICategoriaClienteService{
             if(pCategoriaCliente.getNombre().trim().length() < 3){
                 throw new BusinessException("Nombre Categoría debe tener mínimo 3 caracteres");
             }
+            Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+            if (dobleEspacio.matcher(pCategoriaCliente.getNombre().trim()).find()) {
+                throw new BusinessException("El nombre no debe contener espacios dobles");
+            }
             if(pCategoriaCliente.getNombre().trim().length() >20){
                 throw new BusinessException("Nombre Categoría debe contener menos de 20 caracteres");
             }
@@ -120,6 +131,9 @@ public class CategoriaClienteService implements ICategoriaClienteService{
             }
             if(pCategoriaCliente.getDescripcion().trim().length() < 3){
                 throw new BusinessException("Descripción debe tener mínimo 3 caracteres");
+            }
+            if (dobleEspacio.matcher(pCategoriaCliente.getDescripcion().trim()).find()) {
+                throw new BusinessException("La Descripción no debe contener espacios dobles");
             }
             if(pCategoriaCliente.getDescripcion().trim().length() > 50){
                 throw new BusinessException("Descripción debe debe contener menos de 50 caracteres");

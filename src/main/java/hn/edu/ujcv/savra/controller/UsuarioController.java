@@ -3,7 +3,7 @@ package hn.edu.ujcv.savra.controller;
 import hn.edu.ujcv.savra.entity.Usuario;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
-import hn.edu.ujcv.savra.service.Usuario.UsuarioService;
+import hn.edu.ujcv.savra.service.UsuarioService.UsuarioService;
 import hn.edu.ujcv.savra.utils.Constants;
 import hn.edu.ujcv.savra.utils.RestApiError;
 import org.hibernate.mapping.Any;
@@ -22,10 +22,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioService service;
 
-    @PostMapping("/addUsuario")
-    public ResponseEntity<Object> addUsuario(@RequestBody Usuario usuario) {
+    @PostMapping("/addUsuario/{coinciden}")
+    public ResponseEntity<Object> addUsuario(@RequestBody Usuario usuario,
+                                             @PathVariable boolean coinciden) {
         try {
-            service.saveUsuario(usuario);
+            service.saveUsuario(usuario, coinciden);
             HttpHeaders responseHeader = new HttpHeaders();
             responseHeader.set("location", Constants.URL_BASE_USUARIOS + usuario.getIdUsuario());
             return new ResponseEntity(usuario, responseHeader, HttpStatus.CREATED);
@@ -80,13 +81,102 @@ public class UsuarioController {
 
     @GetMapping("/username/{username}")
     public ResponseEntity<Usuario> findUsuarioByUsername(@PathVariable String username) {
-        return null;
+        try {
+            return new ResponseEntity(service.getUsuarioByUsername(username), HttpStatus.OK);
+        } catch (BusinessException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PutMapping("")
-    public ResponseEntity<Any> updateUsuario(@RequestBody Usuario usuario) {
+    @GetMapping("/validar/{username}/{password}")
+    public ResponseEntity<Any> validarUsuarioLogin(@PathVariable String username, @PathVariable String password) {
         try {
-            service.updateUsuario(usuario);
+            boolean x = service.validarLogin(username, password);
+            if(x)
+                return new ResponseEntity(HttpStatus.OK);
+            else
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+        } catch (BusinessException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/validarUsuarioBloqueado/{username}")
+    public ResponseEntity<Any> validarUsuarioBloqueado(@PathVariable String username) {
+        try {
+            boolean x = service.validarUsuarioBloqueado(username);
+            if(x)
+                return new ResponseEntity(HttpStatus.OK);
+            else
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+        } catch (BusinessException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/activarDesactivar/{estado}/{id}")
+    public ResponseEntity<Any> activarDesactivarUsuario(@PathVariable int estado,@PathVariable long id){
+        try{
+            service.activarDesactivarUsuario(estado,id);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (BusinessException e){
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Cupón no válido!",e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (NotFoundException e){
+            RestApiError apiError = new RestApiError(HttpStatus.NOT_FOUND,
+                    "No se encontró el cupon!",e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/bloquearDesbloquearUsuario/{estado}/{username}")
+    public ResponseEntity<Any> bloquearDesbloquearUsuario(@PathVariable int estado,@PathVariable String username){
+        try{
+            service.bloquearUsuario(estado,username);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (BusinessException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{coinciden}")
+    public ResponseEntity<Any> updateUsuario(@RequestBody Usuario usuario,
+                                             @PathVariable boolean coinciden) {
+        try {
+            service.updateUsuario(usuario, coinciden);
             return new ResponseEntity(usuario, HttpStatus.OK);
         } catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,

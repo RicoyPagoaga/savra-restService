@@ -164,7 +164,7 @@ public class ParametroFacturaService implements IParametroFacturaService{
         if (pParametro.getFechaLimiteEmision() == null){
             throw new BusinessException("Fecha límite de emisión esta vacía");
         }
-        if (pParametro.getFechaLimiteEmision().isBefore(LocalDate.now().plusMonths(5))){
+        if (pParametro.getFechaLimiteEmision().isBefore(pParametro.getFechaInicio().plusMonths(5))){
             throw new BusinessException("Fecha límite de emisión no debe ser menor de 5 meses");
         }
         if (pParametro.getFechaLimiteEmision().isAfter(LocalDate.now().plusMonths(7))){

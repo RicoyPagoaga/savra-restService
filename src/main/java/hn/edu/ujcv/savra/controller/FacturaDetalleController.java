@@ -52,7 +52,7 @@ public class FacturaDetalleController {
             return new ResponseEntity<>(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/idFactura/{idFactura}")
+    @GetMapping("/idFacturaNormal/{idFactura}")
     public ResponseEntity<List<FacturaDetalle>> obtenerDetalleFacturaByNoFactura(@PathVariable long idFactura){
         try{
             return new ResponseEntity(service.obtenerFacturaDetallesByIdFactura(idFactura),HttpStatus.OK);
@@ -61,6 +61,24 @@ public class FacturaDetalleController {
                     "Informacion enviada no es valida",
                     e.getMessage());
             return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/idFactura/{id}")
+    public ResponseEntity<List<Object>> findReciboById (@PathVariable Long id){
+        try {
+            return new ResponseEntity(service.obtenerDetallesRecibo(id),HttpStatus.OK);
+        }catch (BusinessException e){
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }catch (NotFoundException e){
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -1,7 +1,9 @@
 package hn.edu.ujcv.savra.service.FacturaDetalleService;
 
 import hn.edu.ujcv.savra.entity.FacturaDetalle;
+import hn.edu.ujcv.savra.entity.FacturaDetalleRecibo;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
+import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.FacturaDetalleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,16 @@ public class FacturaDetalleService implements IFacturaDetalleService{
             throw new BusinessException(e.getMessage());
         }
     }
+
+    @Override
+    public List<FacturaDetalleRecibo> obtenerDetallesRecibo(long idFactura) throws BusinessException, NotFoundException {
+        try{
+            return repository.getReciboDetalle(idFactura);
+        }catch (Exception e){
+            throw new BusinessException(e.getMessage());
+        }
+    }
+
     void validarFacturaDetalle(FacturaDetalle pFactura){
 
     }

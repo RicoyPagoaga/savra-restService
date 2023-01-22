@@ -10,4 +10,5 @@ public interface IFacturaService {
     Factura guardarFactura(Factura pFactura)throws BusinessException;
     List<Factura> obtenerFacturas()throws BusinessException;
     Factura obtenerFacturaByNoFactura(String idFactura)throws BusinessException, NotFoundException;
+    Object obtenerRecibo(long idFactura) throws BusinessException, NotFoundException;
 }

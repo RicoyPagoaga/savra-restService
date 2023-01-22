@@ -1,6 +1,7 @@
 package hn.edu.ujcv.savra.service.CuponService;
 
 import hn.edu.ujcv.savra.entity.Cupon;
+import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.CuponRepository;
@@ -125,6 +126,12 @@ public class CuponService implements ICuponService{
         Matcher mat = pat.matcher(pCupon.getCodigo().trim());
         if (!mat.matches()){
             throw new BusinessException("Código del cupon no debe tener espacios ni caracteres especiales");
+        }
+        List<Cupon> metodos = obtenerCupones();
+        for (Cupon item : metodos) {
+            if ((item.getCodigo().equals(pCupon.getCodigo().trim())) && (item.getIdCupon() != pCupon.getIdCupon())) {
+                throw new BusinessException("El nombre del cupón de pago ya está en uso");
+            }
         }
         //fechaEmision
         if (pCupon.getFechaEmision() == null){

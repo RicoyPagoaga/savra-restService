@@ -20,19 +20,19 @@ import java.util.List;
 @RequestMapping("/api/v1/facturas")
 public class FacturaController {
     @Autowired
-    FacturaService service;
+    private FacturaService service;
 
     @PostMapping("/addFactura")
-    public ResponseEntity<Object> agregarFactura(@RequestBody Factura pfactura){
+    public ResponseEntity<Object> agregarFactura(@RequestBody Factura factura){
         try{
-            service.guardarFactura(pfactura);
+            service.guardarFactura(factura);
             HttpHeaders responseHeader = new HttpHeaders();
-            responseHeader.set("location", Constants.URL_BASE_CATEGORIA_CLIENTES + pfactura.getIdFactura());
-            return new ResponseEntity(pfactura,responseHeader, HttpStatus.CREATED);
+            responseHeader.set("location", Constants.URL_BASE_CATEGORIA_CLIENTES + factura.getIdFactura());
+            return new ResponseEntity(factura,responseHeader, HttpStatus.CREATED);
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Información enviada no valida!",e.getMessage());
-            return new ResponseEntity<>(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("")
@@ -59,6 +59,24 @@ public class FacturaController {
                     "Informacion enviada no es valida",
                     e.getMessage());
             return new ResponseEntity(apiError, HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/idFactura/{id}")
+    public ResponseEntity<Object> findReciboById (@PathVariable Long id){
+        try {
+            return new ResponseEntity(service.obtenerRecibo(id),HttpStatus.OK);
+
+        }catch (BusinessException e){
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }catch (NotFoundException e){
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.NOT_FOUND);
         }
     }
 

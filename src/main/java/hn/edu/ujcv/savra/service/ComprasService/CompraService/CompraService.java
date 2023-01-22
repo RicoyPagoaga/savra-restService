@@ -164,7 +164,7 @@ public class CompraService implements ICompraService {
             if (compra.getFechaRecibido().isBefore(compra.getFechaDespacho())) {
                 throw new BusinessException("La fecha de entrega no puede ser una fecha anterior a la fecha de despacho");
             }
-            
+
 
         }
         //no. Comprobante
