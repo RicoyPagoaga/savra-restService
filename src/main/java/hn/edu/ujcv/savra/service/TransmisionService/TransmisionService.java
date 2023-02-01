@@ -33,7 +33,7 @@ public class TransmisionService implements ITransmisionService{
             Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
             Matcher matDoc = patDoc.matcher(pTransmision.getNombre().trim());
             if(!matDoc.matches()){
-                throw new BusinessException("Nombre Cliente no debe contener números o caracteres especialesఠ_ఠ");
+                throw new BusinessException("Nombre de la transmisión no debe contener números o caracteres especialesఠ_ఠ");
             }
             pTransmision.setNombre(pTransmision.getNombre().toUpperCase());
             return repository.save(pTransmision);

@@ -24,7 +24,7 @@ public class EmpleadosService implements IEmpleadosService{
         try {
             //nombre
             if (empleado.getNombre().trim().isEmpty()){
-                throw new BusinessException("El campo no debe estar vacio ఠ_ఠ");
+                throw new BusinessException("El nombre no debe estar vacio ఠ_ఠ");
             }
             if(empleado.getNombre().trim().length()<3){
                 throw new BusinessException("El nombre debe tener mas de 3 caracteres ఠ_ఠ");
@@ -57,6 +57,13 @@ public class EmpleadosService implements IEmpleadosService{
             }
             if (empleado.getFechaNacimiento().isBefore(LocalDate.now().minusYears(60))){
                 throw new BusinessException("El empleado no debe ser mayor de 60 años");
+            }
+            //Fecha ingreso
+            if (empleado.getFechaIngreso()==null){
+                throw new BusinessException("Fecha de ingreso esta vacía");
+            }
+            if(!empleado.getFechaIngreso().equals(LocalDate.now())){
+                throw new BusinessException("La fecha de ingreso no puede ser distinta a la de hoy ");
             }
             //telefono
             if (empleado.getTelefono().trim().isEmpty()){
@@ -193,7 +200,7 @@ public class EmpleadosService implements IEmpleadosService{
             try {
                 //nombre
                 if (empleado.getNombre().trim().isEmpty()){
-                    throw new BusinessException("El campo no debe estar vacio ఠ_ఠ");
+                    throw new BusinessException("El nombre no debe estar vacio ఠ_ఠ");
                 }
                 if(empleado.getNombre().trim().length()<3){
                     throw new BusinessException("El nombre debe tener mas de 3 caracteres ఠ_ఠ");
@@ -205,7 +212,7 @@ public class EmpleadosService implements IEmpleadosService{
                 Pattern patDoc = Pattern.compile("^[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s[a-zA-ZÀ-ÿ\\u00f1\\u00d1])*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+$");
                 Matcher matDoc = patDoc.matcher(empleado.getNombre().trim());
                 if(!matDoc.matches()){
-                    throw new BusinessException("Nombre Empleado no debe contener números o caracteres especiales ni espacios dobles ఠ_ఠ");
+                    throw new BusinessException("Nombre no debe contener números o caracteres especiales ni espacios duplicados ఠ_ఠ");
                 }
                 if (empleado.getDocumento().trim().isEmpty()){
                     throw new BusinessException("El documento está vacío");
@@ -224,6 +231,18 @@ public class EmpleadosService implements IEmpleadosService{
                 if (empleado.getFechaNacimiento().isAfter( LocalDate.now().minusYears(18))){
                     throw new BusinessException("El empleado debe ser mayor de 18 años");
                 }
+                if (empleado.getFechaNacimiento().isBefore(LocalDate.now().minusYears(60))){
+                    throw new BusinessException("El empleado no debe ser mayor de 60 años");
+                }
+                //Fecha ingreso
+                if (empleado.getFechaIngreso()==null){
+                    throw new BusinessException("Fecha de ingreso esta vacía");
+                }
+                //if (empleado.getFechaIngreso().)
+
+                //if(!empleado.getFechaIngreso().equals(LocalDate.now())){
+                    //throw new BusinessException("La fecha de ingreso no puede ser distinta a la de hoy ");
+                //}
                 //telefono
                 if (empleado.getTelefono().trim().isEmpty()){
                     throw new BusinessException("Teléfono esta vacío");
@@ -252,7 +271,7 @@ public class EmpleadosService implements IEmpleadosService{
                     throw new BusinessException("Debe ingresar menos de 75 caracteres en el correo");
                 }
                 if (!validarCorreo(empleado.getCorreo())) {
-                    throw new BusinessException("La dirección de correo es inválida");
+                    throw new BusinessException("La dirección de correo electrónico es inválida");
                 }
                 //direccion
                 if (empleado.getDireccion().trim().isEmpty()){
@@ -264,6 +283,7 @@ public class EmpleadosService implements IEmpleadosService{
                 if (empleado.getDireccion().trim().length() > 100){
                     throw new BusinessException("Dirección no debe ser mayor a 100 caracteres ఠ_ఠ");
                 }
+                empleado.setNombre(empleado.getNombre().trim().toUpperCase());
 
                 Empleado existingEmpleado =new Empleado();
                 existingEmpleado.setIdEmpleado(empleado.getIdEmpleado());

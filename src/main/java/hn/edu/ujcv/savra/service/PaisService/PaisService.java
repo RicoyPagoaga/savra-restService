@@ -1,6 +1,7 @@
 package hn.edu.ujcv.savra.service.PaisService;
 
 import hn.edu.ujcv.savra.entity.Pais;
+import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.PaisRepository;
@@ -26,9 +27,23 @@ public class PaisService implements IPaisService{
             if(pPais.getCod_iso().trim().length() != 2){
                 throw new BusinessException("Utilice el código ISO de 2 letras ఠ_ఠ");
             }
+            //Pattern patDoc = Pattern.compile("[a-zA-Z]*");
+
+            //Pattern pat = Pattern.compile("[\\d]*");
+            Pattern pat = Pattern.compile("[a-zA-Z]*");
+            Matcher mat = pat.matcher(pPais.getCod_iso());
+            if(!mat.matches()){
+                throw new BusinessException("Código ISO no debe ser númerico, ni caracteres especiales");
+            }
+
             //nombre
             if(pPais.getNombre().isEmpty()){
                 throw new BusinessException("Nombre País esta vacío ఠ_ఠ");
+            }
+            Pattern pat3 = Pattern.compile("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*");
+            Matcher mat1 = pat3.matcher(pPais.getNombre());
+            if(!mat1.matches()){
+                throw new BusinessException("Nombre no debe contener números, ni caracteres especiales");
             }
             if(pPais.getNombre().trim().length() < 4){
                 throw new BusinessException("Nombre País debe contener más de 4 caracteres ఠ_ఠ");
@@ -48,16 +63,31 @@ public class PaisService implements IPaisService{
             if(pPais.getCod_area().length() < 1){
                 throw new BusinessException("Código de área debe contener al menos un caracterఠ_ఠ");
             }
+            if (pPais.getCod_area().charAt(0)=='0'){
+                throw new BusinessException("Código de área inválido, no debe comenzar con '0' ");
+            }
             if(pPais.getCod_area().length() > 3){
                 throw new BusinessException("Código de área no debe contener mas de 3 caracteresఠ_ఠ");
             }
-            Pattern pat = Pattern.compile("[\\d]*");
-            Matcher mat = pat.matcher(pPais.getCod_area());
-            if(!mat.matches()){
+            Pattern pat1 = Pattern.compile("[\\d]*");
+            Matcher mat2 = pat1.matcher(pPais.getCod_area());
+            if(!mat2.matches()){
                 throw new BusinessException("Código de área debe ser númerico (no es necesario utilizar '+')");
             }
             pPais.setCod_iso(pPais.getCod_iso().toUpperCase());
             pPais.setNombre(pPais.getNombre().toUpperCase());
+            List<Pais> paises = getPaises();
+            for (Pais item : paises) {
+                if (item.getNombre().equals(pPais.getNombre().trim())){
+                    throw new BusinessException("Ya existe un registro, con este nombre");
+                }
+                if (item.getCod_iso().equals(pPais.getCod_iso())){
+                    throw new BusinessException("Ya existe un registro, con este código ISO");
+                }
+                if ( item.getCod_area().equals(pPais.getCod_area())) {
+                    throw new BusinessException("Ya existe un registro, con este código de área");
+                }
+            }
             return repository.save(pPais);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());

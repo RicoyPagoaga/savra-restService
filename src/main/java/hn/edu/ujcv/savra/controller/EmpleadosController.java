@@ -94,10 +94,15 @@ public class EmpleadosController {
             return new ResponseEntity(empleado,HttpStatus.OK);
 
         }catch (BusinessException e){
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "La informacion enviada no es valida ;V ",
+                    e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
         }catch (NotFoundException e){
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            RestApiError apiError = new RestApiError(HttpStatus.NOT_FOUND,
+                    "No se encontró el empleado V; ",
+                    e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.NOT_FOUND);
         }
     }
 
