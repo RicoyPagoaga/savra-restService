@@ -21,6 +21,7 @@ public class CategoriaClienteService implements ICategoriaClienteService{
     @Override
     public CategoriaCliente saveCategoriaCliente(CategoriaCliente pCategoriaCliente) throws BusinessException, SqlExceptions {
         try{
+            pCategoriaCliente.setNombre(pCategoriaCliente.getNombre().trim().toUpperCase());
             //nombre
             if(pCategoriaCliente.getNombre().trim().isEmpty()){
                 throw new BusinessException("Nombre Categoría esta Vacío");
@@ -40,6 +41,13 @@ public class CategoriaClienteService implements ICategoriaClienteService{
             if(!matDoc.matches()){
                 throw new BusinessException("Nombre Categoría no debe contener números ఠ_ఠ");
             }
+            List<CategoriaCliente> categorias = getCategoriaClientes();
+            for (CategoriaCliente item : categorias) {
+                if ((item.getNombre().equals(pCategoriaCliente.getNombre().trim())) &&
+                        (item.getIdCategoria() != pCategoriaCliente.getIdCategoria())) {
+                    throw new BusinessException("El nombre de la categoría de cliente ya está en uso");
+                }
+            }
             //descripcion
             if(pCategoriaCliente.getDescripcion().trim().isEmpty()){
                 throw new BusinessException("Descripción de categoría esta vacío");
@@ -53,7 +61,7 @@ public class CategoriaClienteService implements ICategoriaClienteService{
             if(pCategoriaCliente.getDescripcion().trim().length() > 50){
                 throw new BusinessException("Descripción debe debe contener menos de 50 caracteres");
             }
-            pCategoriaCliente.setNombre(pCategoriaCliente.getNombre().trim().toUpperCase());
+
             return repository.save(pCategoriaCliente);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
@@ -124,6 +132,13 @@ public class CategoriaClienteService implements ICategoriaClienteService{
             Matcher matDoc = patDoc.matcher(pCategoriaCliente.getNombre().trim());
             if(!matDoc.matches()){
                 throw new BusinessException("Nombre Categoría no debe contener números ఠ_ఠ");
+            }
+            List<CategoriaCliente> categorias = getCategoriaClientes();
+            for (CategoriaCliente item : categorias) {
+                if ((item.getNombre().toUpperCase().equals(pCategoriaCliente.getNombre().trim())) &&
+                        (item.getIdCategoria() != pCategoriaCliente.getIdCategoria())) {
+                    throw new BusinessException("El nombre de la categoría de cliente ya está en uso");
+                }
             }
             //descripcion
             if(pCategoriaCliente.getDescripcion().trim().isEmpty()){
