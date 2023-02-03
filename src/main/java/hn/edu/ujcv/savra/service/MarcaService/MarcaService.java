@@ -156,7 +156,7 @@ public class MarcaService implements IMarcaService {
         }
         List<Marca> marcas = getMarcas();
         for (Marca item : marcas) {
-            if ((item.getNombre().equals(marca.getNombre().trim())) && (item.getIdMarca() != marca.getIdMarca())) {
+            if ((item.getNombre().toUpperCase().equals(marca.getNombre().toUpperCase().trim())) && (item.getIdMarca() != marca.getIdMarca())) {
                 throw new BusinessException("El nombre de la marca ya está en uso");
             }
         }
