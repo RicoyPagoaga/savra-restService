@@ -8,11 +8,16 @@ import hn.edu.ujcv.savra.utils.Constants;
 import hn.edu.ujcv.savra.utils.RestApiError;
 import org.hibernate.mapping.Any;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -206,6 +211,18 @@ public class UsuarioController {
                     "Informacion enviada no es valida",
                     e.getMessage());
             return new ResponseEntity(apiError, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/cerrarSesion/{clientes}/{ultimaV}/{userName}")
+    public ResponseEntity<Any> activarDesactivarUsuario(@PathVariable int clientes, @PathVariable String ultimaV, @PathVariable String userName){
+        try{
+            service.cerrarSesion(clientes, ultimaV,userName);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (BusinessException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Cierre Sesion Errónea!", e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

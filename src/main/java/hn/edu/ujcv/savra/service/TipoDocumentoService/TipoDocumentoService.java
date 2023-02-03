@@ -44,8 +44,8 @@ public class TipoDocumentoService implements ITipoDocumentoService {
             }
             List<TipoDocumento> metodos = getTipoDocumento();
             for (TipoDocumento item : metodos) {
-                if ((item.getNombreDocumento().equals(tipoDocumento.getNombreDocumento().trim())) && (item.getIdTipoDocumento() != tipoDocumento.getIdTipoDocumento())) {
-                    throw new BusinessException("El nombre del documento de pago ya está en uso");
+                if ((item.getNombreDocumento().equals(tipoDocumento.getNombreDocumento().trim().toUpperCase())) && (item.getIdTipoDocumento() != tipoDocumento.getIdTipoDocumento())) {
+                    throw new BusinessException("El nombre del Documento ya está en uso");
                 }
             }
             tipoDocumento.setNombreDocumento(tipoDocumento.getNombreDocumento().toUpperCase());
@@ -162,7 +162,7 @@ public class TipoDocumentoService implements ITipoDocumentoService {
                 }
                 List<TipoDocumento> metodos = getTipoDocumento();
                 for (TipoDocumento item : metodos) {
-                    if ((item.getNombreDocumento().equals(tipoDocumento.getNombreDocumento().trim())) && (item.getIdTipoDocumento() != tipoDocumento.getIdTipoDocumento())) {
+                    if ((item.getNombreDocumento().equals(tipoDocumento.getNombreDocumento().trim().toUpperCase())) && (item.getIdTipoDocumento() != tipoDocumento.getIdTipoDocumento())) {
                         throw new BusinessException("El nombre del documento ya está en uso");
                     }
                 }

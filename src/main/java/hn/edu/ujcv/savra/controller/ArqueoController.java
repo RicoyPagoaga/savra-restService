@@ -80,10 +80,16 @@ public class ArqueoController {
             return new ResponseEntity(arqueo,HttpStatus.OK);
 
         }catch (BusinessException e){
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "La Informacion enviada no es valida ",
+                    e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
 
         }catch (NotFoundException e){
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            RestApiError apiError = new RestApiError(HttpStatus.NOT_FOUND,
+                    "La Información enviada no es valida ",
+                    e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.NOT_FOUND);
         }
     }
 

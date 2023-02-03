@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -23,4 +25,6 @@ public class Usuario {
     private int    activo;
     private int    bloqueado;
     private long   idRol;
+    private Integer    clientesVista;
+    private LocalDateTime ultimaVisita;
 }

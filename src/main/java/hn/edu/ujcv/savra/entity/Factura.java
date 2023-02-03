@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +22,7 @@ public class Factura {
     private String noFactura;
     private long idCliente;
     private long idEmpleado;
-    private LocalDate fechaFactura= null;
+    private Timestamp fechaFactura= null;
     private long idMetodoPago;
     private double efectivo;
     private String tarjeta = null;

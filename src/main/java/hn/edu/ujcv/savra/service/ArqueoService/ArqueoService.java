@@ -108,7 +108,7 @@ public class ArqueoService implements IArqueoService {
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
-            throw new NotFoundException("no se encontro el empleado"+arqueo.getIdArqueo());
+            throw new NotFoundException("no se encontro el Arqueo"+arqueo.getIdArqueo());
         }
         else {
             try {
@@ -116,7 +116,7 @@ public class ArqueoService implements IArqueoService {
                 Arqueo existingArqueo = new Arqueo();
                 existingArqueo.setIdArqueo(arqueo.getIdArqueo());
                 existingArqueo.setFecha(arqueo.getFecha());
-                existingArqueo.setIdEmpleado(arqueo.getIdEmpleado());
+                existingArqueo.setEmpleado(arqueo.getEmpleado());
                 existingArqueo.setTotalRecuento(arqueo.getTotalRecuento());
                 existingArqueo.setObservacion(arqueo.getObservacion());
                 return repository.save(existingArqueo);
@@ -130,11 +130,11 @@ public class ArqueoService implements IArqueoService {
         if (arqueo.getFecha()==null){
             throw new BusinessException("Fecha no debe estar vacio");
         }
-        if (!arqueo.getFecha().equals(LocalDate.now())){
-            throw new BusinessException("La fecha del arqueo debe ser del dia actual");
+        if(arqueo.getIdArqueo() < 0){
+            if (!arqueo.getFecha().equals(LocalDate.now())){
+                throw new BusinessException("La fecha del arqueo debe ser del dia actual");
+            }
         }
-
-
         //total recuento
         if (arqueo.getTotalRecuento()>1000000){
             throw new BusinessException("Total recuento no debe ser mayor a un millon");

@@ -26,6 +26,7 @@ public class FacturaService implements IFacturaService{
     public Factura guardarFactura(Factura pFactura) throws BusinessException {
         try{
             validarFactura(pFactura);
+            System.out.println("Hola " + pFactura.getFechaFactura());
             return repository.save(pFactura);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
@@ -76,7 +77,6 @@ public class FacturaService implements IFacturaService{
         if (pFactura.getFechaFactura() == null){
             throw new BusinessException("Fecha factura esta vacía!");
         }
-        System.out.println(pFactura.getFechaFactura());
         if (pFactura.getIdCliente() < 1){
             throw new BusinessException("Cliente esta vacío!");
         }
@@ -148,7 +148,7 @@ public class FacturaService implements IFacturaService{
         }
         ParametroFactura param = validarParametro(pFactura.getIdParametroFactura());
 
-        if(param.getFechaLimiteEmision().isBefore(pFactura.getFechaFactura())){
+        if(param.getFechaLimiteEmision().isBefore(pFactura.getFechaFactura().toLocalDateTime().toLocalDate())){
             throw new BusinessException("se ha sobrepasado la fecha límite de emisión del parámetro seleccionado");
         }
         if(pFactura.getNoFactura() != null){
