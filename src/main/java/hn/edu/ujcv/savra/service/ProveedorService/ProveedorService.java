@@ -9,7 +9,6 @@ import hn.edu.ujcv.savra.repository.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.BufferUnderflowException;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -39,7 +38,6 @@ public class ProveedorService implements IProveedorService {
     @Override
     public List<Proveedor> saveProveedores(List<Proveedor> proveedores) throws BusinessException {
         try {
-
             for (Proveedor item : proveedores) {
                 validarProvedor(item);
             }
@@ -131,9 +129,6 @@ public class ProveedorService implements IProveedorService {
     }
 
     private void validarProvedor(Proveedor proveedor) throws BusinessException {
-        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
-        Pattern patron=Pattern.compile("[27389]");
-        Pattern pat = Pattern.compile("[\\d]*");
         //nombre
         if (proveedor.getNombre().trim().isEmpty()) {
             throw new BusinessException("El nombre del proveedor es requerido");
@@ -144,9 +139,11 @@ public class ProveedorService implements IProveedorService {
         if (proveedor.getNombre().trim().length() > 100) {
             throw new BusinessException("El nombre no debe exceder los cien caracteres");
         }
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
         if (dobleEspacio.matcher(proveedor.getNombre().trim()).find()) {
             throw new BusinessException("Nombre de proveedor no debe contener espacios dobles ఠ_ఠ");
         }
+        Pattern pat = Pattern.compile("[\\d]*");
         Matcher mat_ = pat.matcher(proveedor.getNombre().trim());
         if(mat_.matches()) {
             throw new BusinessException("El nombre de proveedor no debe contener solo números ఠ_ఠ");
@@ -195,6 +192,7 @@ public class ProveedorService implements IProveedorService {
         if(!mat.matches()){
             throw new BusinessException("No. de teléfono debe ser númerico ఠ_ఠ");
         }
+        Pattern patron=Pattern.compile("[27389]");
         Matcher validarNumero = patron.matcher(proveedor.getTelefono().substring(0,1));
         if (!validarNumero.matches()){
             throw new BusinessException("No. de teléfono no pertenece a una operadora válida");
@@ -252,7 +250,7 @@ public class ProveedorService implements IProveedorService {
         if (!validarSitioWeb(proveedor.getSitioWeb().trim())) {
             throw new BusinessException("EL sitio web es inválido");
         }
-        String[] web= proveedor.getSitioWeb().trim().split(".");
+        String[] web= proveedor.getSitioWeb().trim().split("\\.");
         if(web[0].matches("(.)\\1{2,}")) {
             throw new BusinessException("El sitio web no debe tener tantas letras repetidas ఠ_ఠ");
         }

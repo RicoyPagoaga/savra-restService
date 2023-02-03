@@ -43,9 +43,25 @@ public class ClienteService implements IClienteService{
             if (dobleEspacio.matcher(pCliente.getNombre().trim()).find()) {
                 throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
             }
+            String[] cliente = pCliente.getNombre().trim().split(" ");
+            for (String item: cliente) {
+                if (item.matches("(.)\\1{2,}")) {
+                    throw new BusinessException("El nombre de cliente no debe tener tantas letras repetidas ఠ_ఠ");
+                }
+                if (item.length() == 1) {
+                    throw new BusinessException("Nombre de cliente inválido");
+                }
+            }
             //documento
             if(pCliente.getDocumento().trim().isEmpty()){
                 throw new BusinessException("Documento esta vacío ఠ_ఠ");
+            }
+            List<Cliente> clientes = getClientes();
+            for (Cliente item : clientes) {
+                if ((item.getDocumento().trim().equals(pCliente.getDocumento().trim())) &&
+                        (item.getIdCliente() != pCliente.getIdCliente())) {
+                    throw new BusinessException("El documento ya está en uso");
+                }
             }
             //idTipoDocumento
             if(pCliente.getIdTipoDocumento() < 1) {
@@ -146,9 +162,25 @@ public class ClienteService implements IClienteService{
             if (dobleEspacio.matcher(pCliente.getNombre().trim()).find()) {
                 throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
             }
+            String[] cliente = pCliente.getNombre().trim().split(" ");
+            for (String item: cliente) {
+                if (item.matches("(.)\\1{2,}")) {
+                    throw new BusinessException("El nombre de cliente no debe tener tantas letras repetidas ఠ_ఠ");
+                }
+                if (item.length() == 1) {
+                    throw new BusinessException("Nombre de cliente inválido");
+                }
+            }
             //documento
             if(pCliente.getDocumento().trim().isEmpty()){
                 throw new BusinessException("Documento esta vacío ఠ_ఠ");
+            }
+            List<Cliente> clientes = getClientes();
+            for (Cliente item : clientes) {
+                if ((item.getDocumento().trim().equals(pCliente.getDocumento().trim())) &&
+                        (item.getIdCliente() != pCliente.getIdCliente())) {
+                    throw new BusinessException("El documento ya está en uso");
+                }
             }
             //idTipoDocumento
             if(pCliente.getIdTipoDocumento() < 1) {
