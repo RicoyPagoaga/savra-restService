@@ -56,13 +56,7 @@ public class ClienteService implements IClienteService{
             if(pCliente.getDocumento().trim().isEmpty()){
                 throw new BusinessException("Documento esta vacío ఠ_ఠ");
             }
-            List<Cliente> clientes = getClientes();
-            for (Cliente item : clientes) {
-                if ((item.getDocumento().trim().equals(pCliente.getDocumento().trim())) &&
-                        (item.getIdCliente() != pCliente.getIdCliente())) {
-                    throw new BusinessException("El documento ya está en uso");
-                }
-            }
+//
             //idTipoDocumento
             if(pCliente.getIdTipoDocumento() < 1) {
                 throw new BusinessException("Id Documento vacío");

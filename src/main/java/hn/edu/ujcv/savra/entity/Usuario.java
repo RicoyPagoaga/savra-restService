@@ -26,5 +26,7 @@ public class Usuario {
     private int    bloqueado;
     private long   idRol;
     private Integer    clientesVista;
-    private LocalDateTime ultimaVisita;
+    private Timestamp ultimaVisita;
+    private Integer    ventasVista;
+    private Integer repuestosVista;
 }

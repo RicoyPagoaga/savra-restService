@@ -208,11 +208,14 @@ public class EmpleadosService implements IEmpleadosService{
                 if(empleado.getNombre().trim().length()>50){
                     throw new BusinessException("El nombre no debe tener mas de 50 caracteres ఠ_ఠ");
                 }
-//            Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
-                Pattern patDoc = Pattern.compile("^[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s[a-zA-ZÀ-ÿ\\u00f1\\u00d1])*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+$");
-                Matcher matDoc = patDoc.matcher(empleado.getNombre().trim());
+                Pattern pat3 = Pattern.compile("[a-zA-ZñÑáéíóúÁÉÍÓÚ ]*");
+                Matcher matDoc = pat3.matcher(empleado.getNombre().trim());
                 if(!matDoc.matches()){
-                    throw new BusinessException("Nombre no debe contener números o caracteres especiales ni espacios duplicados ఠ_ఠ");
+                    throw new BusinessException("Nombre no debe contener números o caracteres especiales.");
+                }
+                Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+                if (dobleEspacio.matcher(empleado.getNombre().trim()).find()) {
+                    throw new BusinessException("Nombre no debe contener espacios dobles.");
                 }
                 if (empleado.getDocumento().trim().isEmpty()){
                     throw new BusinessException("El documento está vacío");
@@ -323,7 +326,7 @@ public class EmpleadosService implements IEmpleadosService{
             Matcher mat = pat.matcher(nombreDoc);
             Pattern patron=Pattern.compile("[01]");
             Matcher validarNumero = patron.matcher(nombreDoc.substring(0,1));
-            if (id == 1){
+            if (buscarDocumento(id).getNombreDocumento().contains("DNI")){
                 if(!mat.matches()){
                     throw new BusinessException("DNI debe ser númerico");
                 }

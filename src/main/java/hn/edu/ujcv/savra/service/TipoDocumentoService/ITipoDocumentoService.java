@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface ITipoDocumentoService {
     TipoDocumento       saveTipoDocumento( TipoDocumento tipoDocumento) throws BusinessException;
-    List<TipoDocumento> saveTipoDocumento (List<TipoDocumento> tipoDocumentos) throws BusinessException;
-    List<TipoDocumento> getTipoDocumento() throws BusinessException;
+    List<TipoDocumento> saveTipoDocumentos (List<TipoDocumento> tipoDocumentos) throws BusinessException;
+    List<TipoDocumento> getTipoDocumentos() throws BusinessException;
     TipoDocumento       getTipoDocumentoById(long id) throws BusinessException, NotFoundException;
     TipoDocumento       getTipoDocumentoByNombre(String nombre) throws BusinessException,NotFoundException;
     void                deleteTipoDocumento(long id) throws BusinessException,NotFoundException;

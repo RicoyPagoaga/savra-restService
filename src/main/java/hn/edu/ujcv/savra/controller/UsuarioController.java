@@ -214,7 +214,7 @@ public class UsuarioController {
         }
     }
 
-    @PutMapping("/cerrarSesion/{clientes}/{ultimaV}/{userName}")
+    @PutMapping("/cerrarSesion/{userName}/{clientes}/{ventas}/{repuestos}/{ultimaV}")
     public ResponseEntity<Any> activarDesactivarUsuario(@PathVariable int clientes, @PathVariable String ultimaV, @PathVariable String userName){
         try{
             service.cerrarSesion(clientes, ultimaV,userName);

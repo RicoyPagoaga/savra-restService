@@ -41,7 +41,7 @@ public class TipoDocumentoController {
     @PostMapping("/addTipoDocumentos")
     public ResponseEntity<Any> addTipoDocumentos (@RequestBody List<TipoDocumento> tipoDocumentos){
         try {
-            return new ResponseEntity(service.saveTipoDocumento(tipoDocumentos),HttpStatus.CREATED);
+            return new ResponseEntity(service.saveTipoDocumentos(tipoDocumentos),HttpStatus.CREATED);
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "La nformacion enviada no es valida V; ",
@@ -53,7 +53,7 @@ public class TipoDocumentoController {
     @GetMapping("")
     public ResponseEntity<List<TipoDocumento>> findAllTipoDocumentos(){
         try {
-            return new ResponseEntity(service.getTipoDocumento(),HttpStatus.OK);
+            return new ResponseEntity(service.getTipoDocumentos(),HttpStatus.OK);
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "La nformacion enviada no es valida V; ",

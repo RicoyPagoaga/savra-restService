@@ -126,11 +126,12 @@ public class ArqueoService implements IArqueoService {
         }
     }
     private void validarArqueo(Arqueo arqueo) throws BusinessException{
+
         //Fecha
         if (arqueo.getFecha()==null){
             throw new BusinessException("Fecha no debe estar vacio");
         }
-        if(arqueo.getIdArqueo() < 0){
+        if(arqueo.getIdArqueo() == 0){
             if (!arqueo.getFecha().equals(LocalDate.now())){
                 throw new BusinessException("La fecha del arqueo debe ser del dia actual");
             }

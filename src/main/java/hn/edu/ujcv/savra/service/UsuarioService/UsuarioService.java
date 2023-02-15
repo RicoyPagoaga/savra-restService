@@ -132,7 +132,8 @@ public class UsuarioService implements IUsuarioService {
                         usuario.getIdUsuario(), usuario.getUsername().trim(), usuario.getPassword().trim(),
                         usuario.getNombre().trim().toUpperCase(), usuario.getApellido().trim().toUpperCase(),
                         usuario.getActivo(), usuario.getBloqueado(),
-                        usuario.getIdRol(), usuario.getClientesVista(), usuario.getUltimaVisita()
+                        usuario.getIdRol(), usuario.getClientesVista(), usuario.getUltimaVisita(), usuario.getVentasVista(),
+                        usuario.getRepuestosVista()
                 );
                 return repository.save(usuarioExistente);
             } catch (Exception e) {
