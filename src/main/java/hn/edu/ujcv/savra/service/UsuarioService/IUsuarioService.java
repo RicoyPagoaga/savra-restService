@@ -4,6 +4,8 @@ import hn.edu.ujcv.savra.entity.Usuario;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IUsuarioService {
@@ -16,4 +18,5 @@ public interface IUsuarioService {
     Usuario       updateUsuario(Usuario usuario, boolean coinciden) throws BusinessException, NotFoundException;
     void          activarDesactivarUsuario(int estado , long id)throws BusinessException,NotFoundException;
     void          bloquearUsuario(int estado , String username)throws BusinessException,NotFoundException;
+    void          cerrarSesion(int clientes, String ultimaV, String nombreUsuario)throws BusinessException;
 }

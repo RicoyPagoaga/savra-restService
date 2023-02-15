@@ -1,5 +1,6 @@
 package hn.edu.ujcv.savra.service.TransmisionService;
 
+import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.entity.Transmision;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
@@ -20,27 +21,14 @@ public class TransmisionService implements ITransmisionService{
     @Override
     public Transmision saveTransmision(Transmision pTransmision) throws BusinessException, SQLException {
         try {
-            //nombre
-            if (pTransmision.getNombre().trim().isEmpty()){
-                throw new BusinessException("Nombre de la transmisión esta vacío!");
-            }
-            if (pTransmision.getNombre().length() > 12) {
-                throw new BusinessException("Nombre de la transmisión muy larga!");
-            }
-            if (pTransmision.getNombre().length() < 6) {
-                throw new BusinessException("Nombre de la transmisión debe contener minimo 6 carácteres!");
-            }
-            Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
-            Matcher matDoc = patDoc.matcher(pTransmision.getNombre().trim());
-            if(!matDoc.matches()){
-                throw new BusinessException("Nombre de la transmisión no debe contener números o caracteres especialesఠ_ఠ");
-            }
             pTransmision.setNombre(pTransmision.getNombre().toUpperCase());
+            validarTransmision(pTransmision);
             return repository.save(pTransmision);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
         }
     }
+
 
     @Override
     public List<Transmision> getTransmisiones() throws BusinessException {
@@ -88,27 +76,42 @@ public class TransmisionService implements ITransmisionService{
             throw new NotFoundException("No se encontró la transmision: " + pTransmision.getIdTransmision());
         }else {
             try {
-                //nombre
-                if (pTransmision.getNombre().isEmpty()){
-                    throw new BusinessException("Nombre de la transmisión esta vacío!");
-                }
-                if (pTransmision.getNombre().length() > 12) {
-                    throw new BusinessException("Nombre de la transmisión muy larga!");
-                }
-                if (pTransmision.getNombre().length() < 6) {
-                    throw new BusinessException("Nombre de la transmisión debe contener minimo 6 carácteres!");
-                }
-                Pattern pat = Pattern.compile("[\\d]*");
-                Matcher mat = pat.matcher(pTransmision.getNombre().trim());
-                if (mat.matches()){
-                    throw new BusinessException("Nombre de la transmisión no debe contener digitos");
-                }
+                pTransmision.setNombre(pTransmision.getNombre().toUpperCase());
+
+                validarTransmision(pTransmision);
                 Transmision nuevaTransmison = new Transmision();
                 nuevaTransmison.setIdTransmision(pTransmision.getIdTransmision());
-                nuevaTransmison.setNombre(pTransmision.getNombre().toUpperCase());
                 return repository.save(nuevaTransmison);
             }catch (Exception e){
                 throw new BusinessException(e.getMessage());
+            }
+        }
+    }
+    private void validarTransmision(Transmision pTransmision)throws BusinessException {
+        //nombre
+        if (pTransmision.getNombre().trim().isEmpty()){
+            throw new BusinessException("Nombre de la transmisión esta vacío!");
+        }
+        if (pTransmision.getNombre().trim().length() > 18) {
+            throw new BusinessException("Nombre de la transmisión muy largo! no debe contener más de 18 caracteres");
+        }
+        if (pTransmision.getNombre().trim().length() < 6) {
+            throw new BusinessException("Nombre de la transmisión debe contener minimo 6 carácteres!");
+        }
+        Pattern pat3 = Pattern.compile("[a-zA-Z ]*");
+        Matcher matDoc = pat3.matcher(pTransmision.getNombre().trim());
+        if(!matDoc.matches()){
+            throw new BusinessException("Nombre no debe contener números o caracteres especiales.");
+        }
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+        if (dobleEspacio.matcher(pTransmision.getNombre().trim()).find()) {
+            throw new BusinessException("Nombre no debe contener espacios dobles.");
+        }
+        List<Transmision> transmisiones = getTransmisiones();
+
+        for (Transmision item : transmisiones) {
+            if (item.getNombre().equalsIgnoreCase(pTransmision.getNombre().trim()) && item.getIdTransmision() != pTransmision.getIdTransmision()) {
+                throw new BusinessException("El nombre de la transmisión ya está en uso");
             }
         }
     }

@@ -1,9 +1,9 @@
 package hn.edu.ujcv.savra.controller;
 
-import hn.edu.ujcv.savra.entity.Arqueo;
+import hn.edu.ujcv.savra.entity.EmpleadoCargo.EmpleadoCargo;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
-import hn.edu.ujcv.savra.service.ArqueoService.ArqueoService;
+import hn.edu.ujcv.savra.service.EmpleadoCargo.EmpleadoCargoService;
 import hn.edu.ujcv.savra.utils.Constants;
 import hn.edu.ujcv.savra.utils.RestApiError;
 import org.hibernate.mapping.Any;
@@ -12,22 +12,24 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/arqueos")
-public class ArqueoController {
+@RequestMapping("/api/v1/empleado_cargos")
+public class EmpleadoCargoController {
 
     @Autowired
-    private ArqueoService service;
+    private EmpleadoCargoService service;
 
-    @PostMapping("/addArqueo")
-    public ResponseEntity<Object> addArqueo (@RequestBody Arqueo arqueo){
+    @PostMapping("/addEmpleadoCargo")
+    public ResponseEntity<Object> addEmpleadoCargo (@RequestBody EmpleadoCargo empleadoCargo){
         try {
-            service.saveArqueo(arqueo);
+            service.saveEmpleadoCargo(empleadoCargo);
             HttpHeaders responseHeader = new HttpHeaders();
-            responseHeader.set("location", Constants.URL_BASE_ARQUEO + arqueo.getIdArqueo());
-            return new ResponseEntity(arqueo,responseHeader, HttpStatus.CREATED);
+            responseHeader.set("location", Constants.URL_BASE_EMPLEADO_CARGO + empleadoCargo.getIdEmpleado());
+            return new ResponseEntity(empleadoCargo,responseHeader, HttpStatus.CREATED);
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "La nformacion enviada no es valida ;V ",
@@ -35,11 +37,10 @@ public class ArqueoController {
             return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PostMapping("/addArqueos")
-    public ResponseEntity<Any> addArqueos (@RequestBody List<Arqueo> arqueos){
+    @PostMapping("/addEmpleadoCargos")
+    public ResponseEntity<Any> addEmpleadoCargos (@RequestBody List<EmpleadoCargo> empleadoCargos){
         try {
-            return new ResponseEntity(service.saveArqueos(arqueos),HttpStatus.CREATED);
+            return new ResponseEntity(service.saveEmpleadoCargos(empleadoCargos),HttpStatus.CREATED);
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "La nformacion enviada no es valida XD ",
@@ -49,9 +50,9 @@ public class ArqueoController {
     }
 
     @GetMapping("")
-    public ResponseEntity <List<Arqueo>> findAllArqueos(){
+    public ResponseEntity <List<EmpleadoCargo>> findAllEmpleadoCargos(){
         try {
-            return new ResponseEntity(service.getArqueos(),HttpStatus.OK);
+            return new ResponseEntity(service.getEmpleadoCargos(),HttpStatus.OK);
 
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -61,10 +62,10 @@ public class ArqueoController {
         }
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity <Arqueo> findArqueoById (@PathVariable Long id){
+    @GetMapping("/id/{id}/{fechaInicio}")
+    public ResponseEntity <EmpleadoCargo> findEmpleadoCargoById (@PathVariable Long id, @PathVariable String fechaInicio){
         try {
-            return new ResponseEntity(service.getArqueoById(id),HttpStatus.OK);
+            return new ResponseEntity(service.getEmpleadoCargoById(id,fechaInicio),HttpStatus.OK);
 
         }catch (BusinessException e){
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -74,29 +75,27 @@ public class ArqueoController {
         }
     }
     @PutMapping("")
-    public ResponseEntity<Any> updateArqueo (@RequestBody Arqueo arqueo){
+    public ResponseEntity<Any> updateEmpleadoCargo (@RequestBody EmpleadoCargo empleadoCargo){
         try {
-            service.udateArqueo(arqueo);
-            return new ResponseEntity(arqueo,HttpStatus.OK);
+            service.updateEmpleadoCargo(empleadoCargo);
+            return new ResponseEntity(empleadoCargo,HttpStatus.OK);
 
         }catch (BusinessException e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "La Informacion enviada no es valida ",
-                    e.getMessage());
+                    "Empleado Cargo no válido",e.getMessage());
             return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
 
-        }catch (NotFoundException e){
+
+        }catch (NotFoundException e) {
             RestApiError apiError = new RestApiError(HttpStatus.NOT_FOUND,
-                    "La Información enviada no es valida ",
-                    e.getMessage());
-            return new ResponseEntity(apiError,HttpStatus.NOT_FOUND);
+                    "No se encontró el Empleado cargo", e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.NOT_FOUND);
         }
     }
-
-    @DeleteMapping("/delete/{id}")
-    public  ResponseEntity<Any> deleteArqueo (@PathVariable Long id){
+    @DeleteMapping("/delete/{id}/{fechaInicio}")
+    public  ResponseEntity<Any> deleteEmpleadoCargo (@PathVariable long id, @PathVariable String fechaInicio){
         try {
-            service.deleteArqueo(id);
+            service.deleteEmpleadoCargo(id,fechaInicio);
             return new ResponseEntity(HttpStatus.OK);
 
         }catch (BusinessException e){
@@ -106,4 +105,6 @@ public class ArqueoController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
+
+
 }

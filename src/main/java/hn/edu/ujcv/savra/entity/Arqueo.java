@@ -1,5 +1,6 @@
 package hn.edu.ujcv.savra.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,9 @@ public class Arqueo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idArqueo;
     private LocalDate fecha=null;
-    private long idEmpleado;
+    @ManyToOne
+    @JoinColumn(name = "idEmpleado",referencedColumnName="idEmpleado")
+    private Empleado empleado;
     private double totalRecuento;
     private String observacion;
 }

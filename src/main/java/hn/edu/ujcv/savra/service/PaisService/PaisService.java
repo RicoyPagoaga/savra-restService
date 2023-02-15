@@ -22,26 +22,26 @@ public class PaisService implements IPaisService{
         try{
             //cod_iso
             if(pPais.getCod_iso().trim().isEmpty()){
-                throw new BusinessException("Código ISO esta Vacío ఠ_ఠ");
+                throw new BusinessException("Código ISO esta Vacío.");
             }
             if(pPais.getCod_iso().trim().length() != 2){
-                throw new BusinessException("Utilice el código ISO de 2 letras ఠ_ఠ");
+                throw new BusinessException("Utilice el código ISO de 2 letras.");
             }
             //Pattern patDoc = Pattern.compile("[a-zA-Z]*");
 
             //Pattern pat = Pattern.compile("[\\d]*");
             Pattern pat = Pattern.compile("[a-zA-Z]*");
-            Matcher mat = pat.matcher(pPais.getCod_iso());
+            Matcher mat = pat.matcher(pPais.getCod_iso().trim());
             if(!mat.matches()){
-                throw new BusinessException("Código ISO no debe ser númerico, ni caracteres especiales");
+                throw new BusinessException("Código ISO no debe ser númerico, ni caracteres especiales.");
             }
 
             //nombre
-            if(pPais.getNombre().isEmpty()){
-                throw new BusinessException("Nombre País esta vacío ఠ_ఠ");
+            if(pPais.getNombre().trim().isEmpty()){
+                throw new BusinessException("Nombre País esta vacío.");
             }
-            Pattern pat3 = Pattern.compile("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*");
-            Matcher mat1 = pat3.matcher(pPais.getNombre());
+            Pattern pat3 = Pattern.compile("[a-zA-ZñÑáéíóúÁÉÍÓÚ ]*");
+            Matcher mat1 = pat3.matcher(pPais.getNombre().trim());
             if(!mat1.matches()){
                 throw new BusinessException("Nombre no debe contener números, ni caracteres especiales");
             }
@@ -52,25 +52,25 @@ public class PaisService implements IPaisService{
                 throw new BusinessException("Nombre País debe contener menos de 56 caracteres ఠ_ఠ");
             }
             Pattern dobleEspacio = Pattern.compile("\\s{2,}");
-            if (dobleEspacio.matcher(pPais.getNombre()).find()) {
+            if (dobleEspacio.matcher(pPais.getNombre().trim()).find()) {
                 throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
             }
 
             //cod_area
-            if(pPais.getCod_area().isEmpty()){
+            if(pPais.getCod_area().trim().isEmpty()){
                 throw new BusinessException("Código de área esta vacío ఠ_ఠ");
             }
-            if(pPais.getCod_area().length() < 1){
+            if(pPais.getCod_area().trim().length() < 1){
                 throw new BusinessException("Código de área debe contener al menos un caracterఠ_ఠ");
             }
-            if (pPais.getCod_area().charAt(0)=='0'){
+            if (pPais.getCod_area().trim().charAt(0)=='0'){
                 throw new BusinessException("Código de área inválido, no debe comenzar con '0' ");
             }
-            if(pPais.getCod_area().length() > 3){
+            if(pPais.getCod_area().trim().length() > 3){
                 throw new BusinessException("Código de área no debe contener mas de 3 caracteresఠ_ఠ");
             }
             Pattern pat1 = Pattern.compile("[\\d]*");
-            Matcher mat2 = pat1.matcher(pPais.getCod_area());
+            Matcher mat2 = pat1.matcher(pPais.getCod_area().trim());
             if(!mat2.matches()){
                 throw new BusinessException("Código de área debe ser númerico (no es necesario utilizar '+')");
             }
@@ -78,13 +78,13 @@ public class PaisService implements IPaisService{
             pPais.setNombre(pPais.getNombre().toUpperCase());
             List<Pais> paises = getPaises();
             for (Pais item : paises) {
+                if (item.getCod_iso().equals(pPais.getCod_iso().trim())){
+                    throw new BusinessException("Ya existe un registro, con este código ISO");
+                }
                 if (item.getNombre().equals(pPais.getNombre().trim())){
                     throw new BusinessException("Ya existe un registro, con este nombre");
                 }
-                if (item.getCod_iso().equals(pPais.getCod_iso())){
-                    throw new BusinessException("Ya existe un registro, con este código ISO");
-                }
-                if ( item.getCod_area().equals(pPais.getCod_area())) {
+                if ( item.getCod_area().equals(pPais.getCod_area().trim())) {
                     throw new BusinessException("Ya existe un registro, con este código de área");
                 }
             }
