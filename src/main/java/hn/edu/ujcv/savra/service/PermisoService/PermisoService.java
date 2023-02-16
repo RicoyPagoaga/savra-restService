@@ -146,12 +146,6 @@ public class PermisoService implements IPermisoService{
         }
 
         //Descripcion
-        //Pattern expresion= Pattern.compile("^[a-zA-Z]+(.|\\s)*$");
-        Pattern patDocc = Pattern.compile("/[A-Z]+$/");
-        Matcher matDocc = patDocc.matcher(permiso.getDescripcion().trim());
-        if(!matDocc.matches()){
-            throw new BusinessException("Descripción no debe contener caracteres especiales ni espacios duplicados ఠ_ఠ");
-        }
         if(permiso.getDescripcion().trim().isEmpty()){
             throw new BusinessException("La descripción no debe estar vacia ఠ_ఠ");
         }
@@ -160,6 +154,15 @@ public class PermisoService implements IPermisoService{
         }
         if (permiso.getDescripcion().trim().length()<3){
             throw new BusinessException("La descripción no debe contener menos de 3 caracteres ఠ_ఠ");
+        }
+        Pattern pat3 = Pattern.compile("[a-zA-ZñÑáéíóúÁÉÍÓÚ ]*");
+        Matcher matDoc1 = pat3.matcher(permiso.getDescripcion().trim());
+        if(!matDoc1.matches()){
+            throw new BusinessException("Descripción no debe contener números o caracteres especiales.");
+        }
+        Pattern dobleEspacio = Pattern.compile("\\s{2,}");
+        if (dobleEspacio.matcher(permiso.getDescripcion().trim()).find()) {
+            throw new BusinessException("Descripción no debe contener espacios dobles.");
         }
     }
 }

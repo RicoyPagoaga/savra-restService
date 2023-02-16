@@ -1,5 +1,6 @@
 package hn.edu.ujcv.savra.service.PaisService;
 
+import hn.edu.ujcv.savra.entity.Modelo;
 import hn.edu.ujcv.savra.entity.Pais;
 import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
@@ -101,12 +102,30 @@ public class PaisService implements IPaisService{
 
     @Override
     public Pais getPaisById(long iso) throws BusinessException, NotFoundException {
-        return null;
+        Optional<Pais> opt=null;
+        try {
+            opt = repository.findById(iso);
+        } catch (Exception e) {
+            throw new BusinessException(e.getMessage());
+        }
+        if (!opt.isPresent()) {
+            throw new NotFoundException("No se encontró el pais " + iso);
+        }
+        return opt.get();
     }
 
     @Override
     public Pais getPaisByNombre(String nombre) throws BusinessException, NotFoundException {
-        return null;
+        Optional<Pais> opt=null;
+        try {
+            opt = repository.findByNombre(nombre);
+        } catch (Exception e) {
+            throw new BusinessException(e.getMessage());
+        }
+        if (!opt.isPresent()) {
+            throw new NotFoundException("No se encontró el país " + nombre);
+        }
+        return opt.get();
     }
 
     @Override

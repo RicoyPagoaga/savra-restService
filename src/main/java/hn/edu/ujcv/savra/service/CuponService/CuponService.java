@@ -1,6 +1,7 @@
 package hn.edu.ujcv.savra.service.CuponService;
 
 import hn.edu.ujcv.savra.entity.Cupon;
+import hn.edu.ujcv.savra.entity.Modelo;
 import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
@@ -90,7 +91,16 @@ public class CuponService implements ICuponService{
 
     @Override
     public Cupon getCuponByCodigo(String codigo) throws BusinessException, NotFoundException {
-        return null;
+        Optional<Cupon> opt=null;
+        try {
+            opt = repository.findByCodigo(codigo);
+        } catch (Exception e) {
+            throw new BusinessException(e.getMessage());
+        }
+        if (!opt.isPresent()) {
+            throw new NotFoundException("No se encontró el cupón: " + codigo);
+        }
+        return opt.get();
     }
 
     @Override
