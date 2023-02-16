@@ -152,7 +152,7 @@ public class ArqueoService implements IArqueoService {
             throw new BusinessException("Observación debe contener mínimo 3 carácteres ఠ_ఠ");
         }
         if (dobleEspacio.matcher(arqueo.getObservacion().trim()).find()) {
-            throw new BusinessException("Nombre de categoría no debe contener espacios dobles ఠ_ఠ");
+            throw new BusinessException("Observación no debe contener espacios dobles ఠ_ఠ");
         }
         if(arqueo.getObservacion().trim().length() >80){
             throw new BusinessException("Observación no debe contener mas de 80 carácteres ఠ_ఠ");

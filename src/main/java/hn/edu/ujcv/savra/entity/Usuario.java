@@ -24,7 +24,9 @@ public class Usuario {
     private String apellido;
     private int    activo;
     private int    bloqueado;
-    private long   idRol;
+    @ManyToOne
+    @JoinColumn(name = "idRol",referencedColumnName="idRol")
+    private Rol   rol;
     private Integer    clientesVista;
     private Timestamp ultimaVisita;
     private Integer    ventasVista;

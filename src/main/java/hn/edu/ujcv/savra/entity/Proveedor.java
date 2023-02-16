@@ -19,7 +19,9 @@ public class Proveedor {
     private String nombre;
     private String correo;
     private String telefono;
-    private long   idPais;
+    @ManyToOne
+    @JoinColumn(name = "idPais",referencedColumnName="idPais")
+    private Pais pais;
     private String nombreContacto;
     private String sitioWeb;
 }

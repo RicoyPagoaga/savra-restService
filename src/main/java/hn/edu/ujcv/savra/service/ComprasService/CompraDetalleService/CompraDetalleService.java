@@ -46,7 +46,7 @@ public class CompraDetalleService implements ICompraDetalleService {
     }
 
     @Override
-    public List<CompraDetalle> updateComprasDetalle(List<CompraDetalle> comprasDetalle) throws BusinessException {
+    public List<CompraDetalle> updateComprasDetalles(List<CompraDetalle> comprasDetalle) throws BusinessException {
         try {
             //List<CompraDetalle> lista = repository.findAll();
             for (CompraDetalle item: comprasDetalle) {
@@ -189,7 +189,7 @@ public class CompraDetalleService implements ICompraDetalleService {
     @Autowired
     private CompraRepository compraRepository;
     private long getCompraID() {
-        ArrayList<Compra> compras = (ArrayList<Compra>) compraRepository.findAll();
+        List<Compra> compras = compraRepository.findAll();
         int x = compras.size() - 1;
         return compras.get(x).getIdCompra();
     }

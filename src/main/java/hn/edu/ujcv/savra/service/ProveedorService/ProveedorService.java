@@ -23,11 +23,6 @@ public class ProveedorService implements IProveedorService {
     @Override
     public Proveedor saveProveedor(Proveedor proveedor) throws BusinessException {
         try {
-            proveedor.setNombre(proveedor.getNombre().trim());
-            proveedor.setCorreo(proveedor.getCorreo().trim());
-            proveedor.setTelefono(proveedor.getTelefono().trim());
-            proveedor.setNombreContacto(proveedor.getNombreContacto().trim());
-            proveedor.setSitioWeb(proveedor.getSitioWeb().trim());
             validarProvedor(proveedor);
             return repository.save(proveedor);
         } catch (Exception e) {
@@ -119,7 +114,7 @@ public class ProveedorService implements IProveedorService {
                 Proveedor proveedorExistente = new Proveedor(
                         proveedor.getIdProveedor(), proveedor.getNombre().trim(), proveedor.getCorreo().trim(),
                         proveedor.getTelefono().trim(),
-                        proveedor.getIdPais(), proveedor.getNombreContacto().trim(), proveedor.getSitioWeb().trim()
+                        proveedor.getPais(), proveedor.getNombreContacto().trim(), proveedor.getSitioWeb().trim()
                 );
                 return repository.save(proveedorExistente);
             } catch (Exception e) {
@@ -148,22 +143,22 @@ public class ProveedorService implements IProveedorService {
         if(mat_.matches()) {
             throw new BusinessException("El nombre de proveedor no debe contener solo números ఠ_ఠ");
         }
-        String[] nombre= proveedor.getNombre().trim().split(" ");
-        for (String item: nombre) {
-            if(item.matches("(.)\\1{2,}")) {
-                throw new BusinessException("El nombre de proveedor no debe tener tantas letras repetidas ఠ_ఠ");
-            }
-            if(item.length()==1) {
-                throw new BusinessException("Nombre de proveedor inválido");
-            }
-        }
-        List<Proveedor> proveedores = getProveedores();
-        for (Proveedor item : proveedores) {
-            if ((item.getNombre().equals(proveedor.getNombre().trim())) &&
-                    (item.getIdProveedor() != proveedor.getIdProveedor())) {
-                throw new BusinessException("El nombre del proveedor ya está en uso");
-            }
-        }
+//        String[] nombre= proveedor.getNombre().trim().split(" ");
+//        for (String item: nombre) {
+//            if(item.matches("(.)\\1{2,}")) {
+//                throw new BusinessException("El nombre de proveedor no debe tener tantas letras repetidas ఠ_ఠ");
+//            }
+//            if(item.length()==1) {
+//                throw new BusinessException("Nombre de proveedor inválido");
+//            }
+//        }
+//        List<Proveedor> proveedores = getProveedores();
+//        for (Proveedor item : proveedores) {
+//            if ((item.getNombre().equals(proveedor.getNombre().trim())) &&
+//                    (item.getIdProveedor() != proveedor.getIdProveedor())) {
+//                throw new BusinessException("El nombre del proveedor ya está en uso");
+//            }
+//        }
         //correo
         if (proveedor.getCorreo().trim().isEmpty()) {
             throw new BusinessException("El correo no debe estar vacío");
@@ -201,15 +196,15 @@ public class ProveedorService implements IProveedorService {
             throw new BusinessException("No. de teléfono inválido");
         }
         //idPais
-        if (String.valueOf(proveedor.getIdPais()).isEmpty()) {
+        if (proveedor.getPais() == null) {
             throw new BusinessException("El Código ISO no debe estar vacío");
         }
-        if (proveedor.getIdPais() <= 0) {
-            throw new BusinessException("Código ISO inválido");
-        }
-        if (!validarPais(proveedor.getIdPais())) {
-            throw new BusinessException("Indique Código ISO válido");
-        }
+//        if (proveedor.getIdPais() <= 0) {
+//            throw new BusinessException("Código ISO inválido");
+//        }
+//        if (!validarPais(proveedor.getIdPais())) {
+//            throw new BusinessException("Indique Código ISO válido");
+//        }
         //nombreContacto
         if (proveedor.getNombreContacto().trim().isEmpty()) {
             throw new BusinessException("El nombre de contacto no debe estar vacío");
@@ -250,10 +245,10 @@ public class ProveedorService implements IProveedorService {
         if (!validarSitioWeb(proveedor.getSitioWeb().trim())) {
             throw new BusinessException("EL sitio web es inválido");
         }
-        String[] web= proveedor.getSitioWeb().trim().split("\\.");
-        if(web[0].matches("(.)\\1{2,}")) {
-            throw new BusinessException("El sitio web no debe tener tantas letras repetidas ఠ_ఠ");
-        }
+//        String[] web= proveedor.getSitioWeb().trim().split("\\.");
+//        if(web[0].matches("(.)\\1{2,}")) {
+//            throw new BusinessException("El sitio web no debe tener tantas letras repetidas ఠ_ఠ");
+//        }
     }
 
     private boolean validarCorreo(String correo) {

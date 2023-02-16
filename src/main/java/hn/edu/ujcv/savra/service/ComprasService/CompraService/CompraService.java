@@ -150,9 +150,6 @@ public class CompraService implements ICompraService {
                 if (compra.getFechaRecibido().isBefore(compra.getFechaDespacho())) {
                     throw new BusinessException("La fecha de entrega no puede ser una fecha anterior a la fecha de despacho");
                 }
-                if (compra.getFechaRecibido().isAfter(fechaActual)) {
-                    throw new BusinessException("La fecha de entrega no puede ser a futuro");
-                }
                 if(compra.getFechaRecibido().isAfter(compra.getFechaDespacho().plusDays(30))) {
                     throw new BusinessException("La fecha de entrega no puede exceder los treinta días desde su despacho");
                 }
@@ -186,8 +183,8 @@ public class CompraService implements ICompraService {
             throw new BusinessException("Número de comprobante inválido ఠ_ఠ");
         }
         //detalle
-        if(!detalle) {
-            throw new BusinessException("Detalles de la compra no debe estar vacío");
-        }
+//        if(!detalle) {
+//            throw new BusinessException("Detalles de la compra no debe estar vacío");
+//        }
     }
 }
