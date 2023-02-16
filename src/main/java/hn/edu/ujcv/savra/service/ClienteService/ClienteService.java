@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class ClienteService implements IClienteService{
+
     @Autowired
     private ClienteRepository repository;
     @Override
@@ -58,10 +59,8 @@ public class ClienteService implements IClienteService{
             }
 //
             //idTipoDocumento
-            if(pCliente.getIdTipoDocumento() < 1) {
-                throw new BusinessException("Id Documento vacío");
-            }
-            contiene(pCliente.getIdTipoDocumento(), pCliente.getDocumento().trim());
+            contiene(pCliente.getTipoDocumento() ,pCliente.getDocumento().trim());
+
             //telefono
             if (pCliente.getTelefono().trim().isEmpty()){
                 throw new BusinessException("Teléfono esta vacío");
@@ -93,9 +92,7 @@ public class ClienteService implements IClienteService{
                 throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
             }
             //idCategoria
-            if (pCliente.getIdCategoria() < 1){
-                throw new BusinessException("Id Categoría vacío");
-            }
+
             pCliente.setNombre(pCliente.getNombre().trim().toUpperCase());
             return repository.save(pCliente);
         }catch (Exception e){
@@ -177,10 +174,8 @@ public class ClienteService implements IClienteService{
                 }
             }
             //idTipoDocumento
-            if(pCliente.getIdTipoDocumento() < 1) {
-                throw new BusinessException("Id Documento vacío");
-            }
-            contiene(pCliente.getIdTipoDocumento(), pCliente.getDocumento().trim());
+
+            contiene(pCliente.getTipoDocumento(), pCliente.getDocumento().trim());
             //telefono
             if (pCliente.getTelefono().trim().isEmpty()){
                 throw new BusinessException("Teléfono esta vacío");
@@ -212,9 +207,7 @@ public class ClienteService implements IClienteService{
                 throw new BusinessException("Nombre no debe contener espacios dobles ఠ_ఠ");
             }
             //idCategoria
-            if (pCliente.getIdCategoria() < 1){
-                throw new BusinessException("Id Categoría vacío");
-            }
+
             opt = repository.findById(pCliente.getIdCliente());
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
@@ -227,10 +220,10 @@ public class ClienteService implements IClienteService{
                 newCliente.setIdCliente(pCliente.getIdCliente());
                 newCliente.setNombre(pCliente.getNombre().toUpperCase());
                 newCliente.setDocumento(pCliente.getDocumento());
-                newCliente.setIdTipoDocumento(pCliente.getIdTipoDocumento());
+                newCliente.setTipoDocumento(pCliente.getTipoDocumento());
                 newCliente.setTelefono(pCliente.getTelefono());
                 newCliente.setDireccion(pCliente.getDireccion());
-                newCliente.setIdCategoria(pCliente.getIdCategoria());
+                newCliente.setCategoria(pCliente.getCategoria());
                 return repository.save(newCliente);
             }catch (Exception e1){
                 throw new BusinessException(e1.getMessage());
@@ -252,19 +245,19 @@ public class ClienteService implements IClienteService{
         System.out.println(opt.get().getNombreDocumento());
         return opt.get();
     }
-    private void contiene(long id, String nombreDoc) throws BusinessException {
+    private void contiene(TipoDocumento tipoDocumento, String nombreDoc) throws BusinessException {
         try {
             String valorInicial = nombreDoc.substring(0,2);
             Pattern pat = Pattern.compile("[\\d]*");
             Matcher mat = pat.matcher(nombreDoc);
             Pattern patron=Pattern.compile("[01]");
             Matcher validarNumero = patron.matcher(nombreDoc.substring(0,1));
-            if (id == 1){
+            if (tipoDocumento.getNombreDocumento().contains("DNI")){
                 if(!mat.matches()){
                     throw new BusinessException("DNI debe ser númerico");
                 }
                 if (nombreDoc.length() != 13){
-                    throw new BusinessException("Cantidad de caracteres DNI invalido!");
+                    throw new BusinessException("Cantidad de digitos DNI invalido! requeridos:13");
                 }
                 if (!validarNumero.matches()){
                     throw new BusinessException("DNI invalido! debe comenzar con 0 u 1");
@@ -275,19 +268,24 @@ public class ClienteService implements IClienteService{
                 if(Integer.parseInt(valorInicial) > 18){
                     throw new BusinessException("DNI invalido! código depto no existe!");
                 }
-            }else if (id == 2){
+            }else if (tipoDocumento.getNombreDocumento().contains("RTN")){
                 if(!mat.matches()){
                     throw new BusinessException("RTN debe ser númerico");
                 }
                 if (nombreDoc.length() != 14){
-                    throw new BusinessException("Cantidad de caracteres RTN invalido!");
+                    throw new BusinessException("Cantidad de digitos RTN invalido! requeridos:14");
                 }
                 if (!validarNumero.matches()){
                     throw new BusinessException("RTN invalido! debe comenzar con 0 u 1");
                 }
+
             }else {
+                Pattern patDoc = Pattern.compile("[a-zA-Z\\d]]*");
+                Matcher matDoc = patDoc.matcher(nombreDoc.trim());
+//                if (!matDoc.matches()){
+//                    throw new BusinessException("Documento no debe contener espacios ni caracteres especiales");
+//                }
                 if (nombreDoc.length() < 7){
-                    System.out.println(nombreDoc.length());
                     throw new BusinessException("Documento no debe ser menor a 7 de caracteres !");
                 }
                 if (nombreDoc.length() > 11){

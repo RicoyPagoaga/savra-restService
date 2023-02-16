@@ -42,11 +42,11 @@ public class EmpleadosService implements IEmpleadosService{
                 throw new BusinessException("El documento está vacío");
             }
             //idTipoDocumento
-            if(empleado.getIdTipoDocumento() < 1) {
+            if(empleado.getIdEmpleado() < 1) {
                 throw new BusinessException("Id Documento vacío");
             }
             //documento
-            contiene(empleado.getIdTipoDocumento(), empleado.getDocumento().trim());
+            contiene(empleado.getTipoDocumento(), empleado.getDocumento().trim());
 
             //fecha nacimiento
             if (empleado.getFechaNacimiento()==null){
@@ -221,11 +221,9 @@ public class EmpleadosService implements IEmpleadosService{
                     throw new BusinessException("El documento está vacío");
                 }
                 //idTipoDocumento
-                if(empleado.getIdTipoDocumento() < 1) {
-                    throw new BusinessException("Id Documento vacío");
-                }
+
                 //documento
-                contiene(empleado.getIdTipoDocumento(), empleado.getDocumento().trim());
+                contiene(empleado.getTipoDocumento(),empleado.getDocumento().trim());
 
                 //fecha nacimiento
                 if (empleado.getFechaNacimiento()==null){
@@ -292,7 +290,7 @@ public class EmpleadosService implements IEmpleadosService{
                 existingEmpleado.setIdEmpleado(empleado.getIdEmpleado());
                 existingEmpleado.setNombre(empleado.getNombre());
                 existingEmpleado.setDocumento(empleado.getDocumento());
-                existingEmpleado.setIdTipoDocumento(empleado.getIdTipoDocumento());
+                existingEmpleado.setTipoDocumento(empleado.getTipoDocumento());
                 existingEmpleado.setFechaNacimiento(empleado.getFechaNacimiento());
                 existingEmpleado.setTelefono(empleado.getTelefono());
                 existingEmpleado.setFechaIngreso(empleado.getFechaIngreso());
@@ -319,14 +317,14 @@ public class EmpleadosService implements IEmpleadosService{
         System.out.println(opt.get().getNombreDocumento());
         return opt.get();
     }
-    private void contiene(long id, String nombreDoc) throws BusinessException {
+    private void contiene(TipoDocumento tipoDocumento, String nombreDoc) throws BusinessException {
         try {
             String valorInicial = nombreDoc.substring(0,2);
             Pattern pat = Pattern.compile("[\\d]*");
             Matcher mat = pat.matcher(nombreDoc);
             Pattern patron=Pattern.compile("[01]");
             Matcher validarNumero = patron.matcher(nombreDoc.substring(0,1));
-            if (buscarDocumento(id).getNombreDocumento().contains("DNI")){
+            if (tipoDocumento.getNombreDocumento().contains("DNI")){
                 if(!mat.matches()){
                     throw new BusinessException("DNI debe ser númerico");
                 }
@@ -342,7 +340,7 @@ public class EmpleadosService implements IEmpleadosService{
                 if(Integer.parseInt(valorInicial) > 18){
                     throw new BusinessException("DNI invalido! código depto no existe!");
                 }
-            }else if (id == 2){
+            }else if (tipoDocumento.getNombreDocumento().contains("RTN")){
                 if(!mat.matches()){
                     throw new BusinessException("RTN debe ser númerico");
                 }

@@ -18,7 +18,9 @@ public class Empleado {
     private long idEmpleado;
     private String nombre;
     private String documento;
-    private long   idTipoDocumento;
+    @ManyToOne
+    @JoinColumn(name = "idTipoDocumento",referencedColumnName = "idTipoDocumento")
+    private TipoDocumento tipoDocumento;
     private LocalDate fechaNacimiento=null;
     private String telefono;
     private LocalDate   fechaIngreso;
