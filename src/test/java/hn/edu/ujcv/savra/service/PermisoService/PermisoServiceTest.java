@@ -30,17 +30,20 @@ class PermisoServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         permiso = new Permiso();
-        setPermiso = new Permiso(1,"guardia","cuidar");
+        setPermiso = new Permiso(1,"guardia","Vigilancia");
     }
 
     @Test
-    void savePermiso() throws BusinessException {
+    void savePermiso() throws BusinessException, NotFoundException {
+        setPermiso.setNombre("Conserje");
+        when(permisoRepository.saveAll(Arrays.asList(any(Permiso.class)))).thenReturn(Arrays.asList(setPermiso));
         when(permisoRepository.save(any(Permiso.class))).thenReturn(permiso);
         assertNotNull(permisoService.savePermiso(setPermiso));
     }
 
     @Test
-    void savePermisos() throws BusinessException {
+    void savePermisos() throws BusinessException, NotFoundException {
+        getPermisoByNombre();
         when(permisoRepository.saveAll(Arrays.asList(any(Permiso.class)))).thenReturn(Arrays.asList(permiso));
         assertNotNull(permisoService.savePermisos(Arrays.asList(setPermiso)));
     }

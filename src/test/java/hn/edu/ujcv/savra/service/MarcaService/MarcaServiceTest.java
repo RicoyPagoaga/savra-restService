@@ -24,24 +24,24 @@ class MarcaServiceTest {
     @InjectMocks
     private MarcaService marcaService;
     private Marca marca;
-    private Marca setMarca;
+    private Marca marcaEnviada;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
         marca = new Marca();
-        setMarca = new Marca(1,"Datsun");
+        marcaEnviada = new Marca(1,"Datsun");
     }
 
     @Test
     void saveMarca() throws BusinessException {
         when(marcaRepository.save(any(Marca.class))).thenReturn(marca);
-        assertNotNull(marcaService.saveMarca(setMarca));
+        assertNotNull(marcaService.saveMarca(marcaEnviada));
     }
 
     @Test
     void saveMarcas() throws BusinessException {
         when(marcaRepository.saveAll(Arrays.asList(any(Marca.class)))).thenReturn(Arrays.asList(marca));
-        assertNotNull(marcaService.saveMarcas(Arrays.asList(setMarca)));
+        assertNotNull(marcaService.saveMarcas(Arrays.asList(marcaEnviada)));
     }
 
     @Test
@@ -59,7 +59,7 @@ class MarcaServiceTest {
     @Test
     void getMarcaByNombre() throws BusinessException, NotFoundException {
         when(marcaRepository.findFirstByNombre(anyString())).thenReturn(Optional.of(marca));
-        assertNotNull(marcaService.getMarcaByNombre(marca.getNombre()));
+        assertNotNull(marcaService.getMarcaByNombre(marcaEnviada.getNombre()));
     }
 
     @Test
@@ -72,6 +72,6 @@ class MarcaServiceTest {
     void updateMarca() throws BusinessException, NotFoundException {
         getMarcaById();
         when(marcaRepository.save(any(Marca.class))).thenReturn(marca);
-        assertNotNull(marcaService.updateMarca(setMarca));
+        assertNotNull(marcaService.updateMarca(marcaEnviada));
     }
 }

@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,39 +31,32 @@ class CuponServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         cupon = new Cupon();
-        cuponEnviado = new Cupon(1,"navidad", LocalDate.now(),LocalDate.now().plusMonths(1),20,10,1,10);
-
+        cuponEnviado = new Cupon(1,"NAVIDAD", LocalDate.now(),LocalDate.now().plusMonths(1),20,10,1,10);
     }
 
     @Test
     void saveCupon() throws BusinessException {
         when(cuponRepository.save(any(Cupon.class))).thenReturn(cupon);
         assertNotNull(cuponService.saveCupon(cuponEnviado));
-
     }
 
     @Test
     void actualizarCupon() throws BusinessException, NotFoundException {
-        getCuponById();
+        when(cuponRepository.findById(anyLong())).thenReturn(Optional.of(cupon));
         when(cuponRepository.save(any(Cupon.class))).thenReturn(cupon);
         assertNotNull(cuponService.actualizarCupon(cuponEnviado));
     }
 
     @Test
-    void obtenerCupones() {
-
+    void obtenerCupones() throws BusinessException {
+        when(cuponRepository.findAll()).thenReturn(Arrays.asList(cupon));
+        assertNotNull(cuponService.obtenerCupones());
     }
 
     @Test
     void eliminarCupon() throws BusinessException, NotFoundException {
-        getCuponById();
-        cuponService.eliminarCupon(new Long(1));
-    }
-
-    @Test
-    void getCuponById() throws BusinessException, NotFoundException {
         when(cuponRepository.findById(anyLong())).thenReturn(Optional.of(cupon));
-        assertNotNull(cuponService.getCuponById(new Long(1)));
+        cuponService.eliminarCupon(new Long(1));
     }
 
     @Test
@@ -72,7 +66,9 @@ class CuponServiceTest {
     }
 
     @Test
-    void activarDesactivarcupon() {
+    void activarDesactivarcupon() throws BusinessException, NotFoundException {
+        when(cuponRepository.findById(anyLong())).thenReturn(Optional.of(cupon));
+        cuponService.activarDesactivarcupon(0,cuponEnviado.getIdCupon());
 
     }
 }

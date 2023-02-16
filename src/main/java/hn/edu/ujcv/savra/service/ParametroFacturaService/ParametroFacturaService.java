@@ -124,8 +124,7 @@ public class ParametroFacturaService implements IParametroFacturaService{
         }
         String[] item = pParametro.getRangoFinal().split("-");
         String[] item2 = pParametro.getRangoInicial().split("-");
-        System.out.println(item2[3]);
-        System.out.println(Integer.parseInt(item2[3]));
+
         if(Integer.parseInt(item2[0]) > 20){
             throw new BusinessException("Punto de Emisión en Rango Inicial no debe ser mayor de 020 , verifique 1er segmento!");
         }

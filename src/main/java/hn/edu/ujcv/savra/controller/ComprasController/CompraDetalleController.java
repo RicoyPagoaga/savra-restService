@@ -50,9 +50,9 @@ public class CompraDetalleController {
     }
 
     @PutMapping("/updateComprasDetalle")
-    public ResponseEntity<Any> updateComprasDetalle(@RequestBody List<CompraDetalle> compras) {
+    public ResponseEntity<Any> updateComprasDetalles(@RequestBody List<CompraDetalle> compras) {
         try {
-            service.updateComprasDetalle(compras);
+            service.updateComprasDetalles(compras);
             return new ResponseEntity(compras, HttpStatus.OK);
         } catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,

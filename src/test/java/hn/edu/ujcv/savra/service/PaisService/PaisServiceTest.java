@@ -37,7 +37,7 @@ class PaisServiceTest {
     @Test
     void savePais() throws BusinessException, SQLException {
         when(paisRepository.save(any(Pais.class))).thenReturn(pais);
-        assertNotNull(paisService.savePais(paisenviado  ));
+        assertNotNull(paisService.savePais(paisenviado));
     }
 
     @Test
@@ -52,11 +52,11 @@ class PaisServiceTest {
         assertNotNull(paisService.getPaisById(new Long(1)));
     }
 
-    //@Test
-    //void getPaisByNombre() {
-       // when(paisRepository.findPByNombre(anyString())).thenReturn(Optional.of(pais));
-        //assertNotNull(paisService.getPaisByNombre(paisenviado.getNombre()));
-    //}
+    @Test
+    void getPaisByNombre() throws BusinessException, NotFoundException {
+        when(paisRepository.findByNombre(anyString())).thenReturn(Optional.of(pais));
+        assertNotNull(paisService.getPaisByNombre(paisenviado.getNombre()));
+    }
 
     @Test
     void detelePais() throws BusinessException, NotFoundException {

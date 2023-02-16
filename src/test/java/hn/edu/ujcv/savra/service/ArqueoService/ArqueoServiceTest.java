@@ -2,7 +2,6 @@ package hn.edu.ujcv.savra.service.ArqueoService;
 
 import hn.edu.ujcv.savra.entity.Arqueo;
 import hn.edu.ujcv.savra.entity.Empleado;
-import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.ArqueoRepository;
@@ -35,9 +34,7 @@ class ArqueoServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         arqueo = new Arqueo();
-        Empleado empleado = new Empleado();
-        empleado.setIdEmpleado(2);
-        arqueoEnviado = new Arqueo(7,LocalDate.now(),empleado,2578,"N/A");
+        arqueoEnviado = new Arqueo(7,LocalDate.now(),new Empleado(),2578,"N/A");
     }
 
     @Test

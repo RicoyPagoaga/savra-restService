@@ -40,9 +40,9 @@ public class RepuestoService implements IRepuestoService {
     @Override
     public List<Repuesto> saveRepuestos(List<Repuesto> repuestos) throws BusinessException {
         try {
-            for (Repuesto item : repuestos) {
-                validarRepuesto(item, true, true, true,0);
-            }
+//            for (Repuesto item : repuestos) {
+//                validarRepuesto(item, true, true, true,0);
+//            }
             return repository.saveAll(repuestos);
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
@@ -133,7 +133,7 @@ public class RepuestoService implements IRepuestoService {
     }
 
     private void validarRepuesto(Repuesto repuesto, boolean stockA, boolean stockM, boolean stockMa,
-                                 double precio) throws BusinessException, NotFoundException, ParseException {
+                                 double precio) throws BusinessException, NotFoundException {
         //nombre
         if (repuesto.getNombre().trim().isEmpty()) {
             throw new BusinessException("El nombre del repuesto es requerido");
@@ -162,12 +162,12 @@ public class RepuestoService implements IRepuestoService {
                 throw new BusinessException("Nombre inválido");
             }
         }
-        List<Repuesto> repuestos = getRepuestos();
-        for (Repuesto item : repuestos) {
-            if ((item.getNombre().equals(repuesto.getNombre().trim())) && (item.getIdRepuesto() != repuesto.getIdRepuesto())) {
-                throw new BusinessException("El nombre del repuesto ya está en uso");
-            }
-        }
+//        List<Repuesto> repuestos = getRepuestos();
+//        for (Repuesto item : repuestos) {
+//            if ((item.getNombre().equals(repuesto.getNombre().trim())) && (item.getIdRepuesto() != repuesto.getIdRepuesto())) {
+//                throw new BusinessException("El nombre del repuesto ya está en uso");
+//            }
+//        }
         LocalDate fechaActual = LocalDate.now();
         //referencia inicio
         if (String.valueOf(repuesto.getAnio_referenciaInicio()).trim().isEmpty()) {

@@ -75,7 +75,7 @@ public class ImpuestoHistoricoService implements IImpuestoHistoricoService {
         //fecha
         LocalDate fechaActual = LocalDate.now();
         //fecha final
-        if (impuestoHistorico.getFechaFinal().isAfter(fechaActual)) {
+        if (impuestoHistorico.getFechaFinal() != null &&impuestoHistorico.getFechaFinal().isAfter(fechaActual)) {
             throw new BusinessException("La fecha final es inválida");
         }
         //valor
@@ -155,25 +155,27 @@ public class ImpuestoHistoricoService implements IImpuestoHistoricoService {
         LocalDate fechaAyer = LocalDate.now().minusDays(1); //mindate
 
         try {
-            if (impuestoHistorico.getFechaFinal().isEqual(fechaAyer) || impuestoHistorico.getFechaFinal().isEqual(fechaActual)) {
-                //Actualizar fecha de Inicio de siguiente registro
-                LocalDate fechaActualizar = impuestoHistorico.getFechaFinal().plusDays(1); //para fecha inicio
-                ImpuestoHistorico impuestoHistoricoActualizar;
-                for (ImpuestoHistorico item : impuestos) {
-                    if (item.getIdImpuesto() == impuestoHistorico.getIdImpuesto() && item.getFechaFinal() == null) {
-                        impuestoHistoricoActualizar = new ImpuestoHistorico(
-                                item.getIdImpuesto(),
-                                fechaActualizar,
-                                null,
-                                item.getValor());
-                        repository.save(impuestoHistoricoActualizar);
-                        if (!item.getFechaInicio().isEqual(fechaActualizar)) {
-                            repository.delete(item);
+            if (impuestoHistorico.getFechaFinal() != null){
+                if (impuestoHistorico.getFechaFinal().isEqual(fechaAyer) || impuestoHistorico.getFechaFinal().isEqual(fechaActual)) {
+                    //Actualizar fecha de Inicio de siguiente registro
+                    LocalDate fechaActualizar = impuestoHistorico.getFechaFinal().plusDays(1); //para fecha inicio
+                    ImpuestoHistorico impuestoHistoricoActualizar;
+                    for (ImpuestoHistorico item : impuestos) {
+                        if (item.getIdImpuesto() == impuestoHistorico.getIdImpuesto() && item.getFechaFinal() == null) {
+                            impuestoHistoricoActualizar = new ImpuestoHistorico(
+                                    item.getIdImpuesto(),
+                                    fechaActualizar,
+                                    null,
+                                    item.getValor());
+                            repository.save(impuestoHistoricoActualizar);
+                            if (!item.getFechaInicio().isEqual(fechaActualizar)) {
+                                repository.delete(item);
+                            }
                         }
                     }
+                } else {
+                    throw new BusinessException("Fecha Final inválida");
                 }
-            } else {
-                throw new BusinessException("Fecha Final inválida");
             }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());

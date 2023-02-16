@@ -9,7 +9,7 @@ import java.util.List;
 public interface ICompraDetalleService {
     CompraDetalle        saveCompraDetalle(CompraDetalle compraDetalle) throws BusinessException;
     List<CompraDetalle>  saveComprasDetalle (List<CompraDetalle> comprasDetalle) throws BusinessException;
-    List<CompraDetalle>  updateComprasDetalle (List<CompraDetalle> comprasDetalle) throws BusinessException;
+    List<CompraDetalle>  updateComprasDetalles (List<CompraDetalle> comprasDetalle) throws BusinessException;
     List <CompraDetalle> getComprasDetalle() throws BusinessException;
     CompraDetalle        getCompraDetalleById(long id)throws BusinessException, NotFoundException;
     void                 deleteCompraDetalle(long id) throws BusinessException,NotFoundException;

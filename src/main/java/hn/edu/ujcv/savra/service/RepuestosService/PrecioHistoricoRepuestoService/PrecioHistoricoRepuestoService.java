@@ -126,22 +126,24 @@ public class PrecioHistoricoRepuestoService implements IPrecioHistoricoRepuestoS
         LocalDate fechaAyer = LocalDate.now().minusDays(1); //mindate
 
         try {
-            if (precioHistorico.getFechaFinal().isEqual(fechaAyer) || precioHistorico.getFechaFinal().isEqual(fechaActual)) {
-                //Actualizar fecha de Inicio de siguiente registro
-                LocalDate fechaActualizar = precioHistorico.getFechaFinal().plusDays(1); //para fecha inicio
-                PrecioHistoricoRepuesto precioActualizar;
-                for (PrecioHistoricoRepuesto item : precios) {
-                    if (item.getIdRepuesto() == precioHistorico.getIdRepuesto() && item.getFechaFinal() == null) {
-                        precioActualizar = new PrecioHistoricoRepuesto(item.getIdRepuesto(), fechaActualizar,
-                                null, item.getPrecio());
-                        repository.save(precioActualizar);
-                        if (!item.getFechaInicio().isEqual(fechaActualizar)) {
-                            repository.delete(item);
+            if(precioHistorico.getFechaFinal() != null){
+                if (precioHistorico.getFechaFinal().isEqual(fechaAyer) || precioHistorico.getFechaFinal().isEqual(fechaActual)) {
+                    //Actualizar fecha de Inicio de siguiente registro
+                    LocalDate fechaActualizar = precioHistorico.getFechaFinal().plusDays(1); //para fecha inicio
+                    PrecioHistoricoRepuesto precioActualizar;
+                    for (PrecioHistoricoRepuesto item : precios) {
+                        if (item.getIdRepuesto() == precioHistorico.getIdRepuesto() && item.getFechaFinal() == null) {
+                            precioActualizar = new PrecioHistoricoRepuesto(item.getIdRepuesto(), fechaActualizar,
+                                    null, item.getPrecio());
+                            repository.save(precioActualizar);
+                            if (!item.getFechaInicio().isEqual(fechaActualizar)) {
+                                repository.delete(item);
+                            }
                         }
                     }
+                } else {
+                    throw new BusinessException("Fecha Final inválida");
                 }
-            } else {
-                throw new BusinessException("Fecha Final inválida");
             }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
@@ -206,7 +208,7 @@ public class PrecioHistoricoRepuestoService implements IPrecioHistoricoRepuestoS
         //fecha
         LocalDate fechaActual = LocalDate.now();
         //fecha final
-        if (precioHistorico.getFechaFinal().isAfter(fechaActual)) {
+        if (precioHistorico.getFechaFinal() != null && precioHistorico.getFechaFinal().isAfter(fechaActual)) {
             throw new BusinessException("La fecha final es inválida");
         }
         //precio

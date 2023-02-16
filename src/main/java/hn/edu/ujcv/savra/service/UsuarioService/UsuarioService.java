@@ -132,7 +132,7 @@ public class UsuarioService implements IUsuarioService {
                         usuario.getIdUsuario(), usuario.getUsername().trim(), usuario.getPassword().trim(),
                         usuario.getNombre().trim().toUpperCase(), usuario.getApellido().trim().toUpperCase(),
                         usuario.getActivo(), usuario.getBloqueado(),
-                        usuario.getIdRol(), usuario.getClientesVista(), usuario.getUltimaVisita(), usuario.getVentasVista(),
+                        usuario.getRol(), usuario.getClientesVista(), usuario.getUltimaVisita(), usuario.getVentasVista(),
                         usuario.getRepuestosVista()
                 );
                 return repository.save(usuarioExistente);
@@ -243,12 +243,12 @@ public class UsuarioService implements IUsuarioService {
         if (usuario.getUsername().trim().matches("(.)\\1{2,}")) {
             throw new BusinessException("El nombre de Usuario no debe tener tantas letras repetidas ఠ_ఠ");
         }
-        List<Usuario> usuarios = getUsuarios();
-        for (Usuario item : usuarios) {
-            if ((item.getUsername().equals(usuario.getUsername().trim())) && (item.getIdUsuario() != usuario.getIdUsuario())) {
-                throw new BusinessException("El nombre del Usuario ya está en uso");
-            }
-        }
+//        List<Usuario> usuarios = getUsuarios();
+//        for (Usuario item : usuarios) {
+//            if ((item.getUsername().equals(usuario.getUsername().trim())) && (item.getIdUsuario() != usuario.getIdUsuario())) {
+//                throw new BusinessException("El nombre del Usuario ya está en uso");
+//            }
+//        }
 
         if (usuario.getPassword().trim().isEmpty()) {
             throw new BusinessException("La contraseña es requerida");
@@ -263,8 +263,8 @@ public class UsuarioService implements IUsuarioService {
             throw new BusinessException("Las contraseñas no coinciden");
         }
 
-        if (usuario.getIdRol() < 1) {
-            throw new BusinessException("Rol inválido");
+        if (usuario.getRol() == null) {
+            throw new BusinessException("Seleccine unn Rol");
         }
         if (usuario.getUsername().trim().equals("admin") && usuario.getBloqueado() == 1) {
             throw new BusinessException("Usuario admin no puede ser bloqueado");
@@ -286,6 +286,7 @@ public class UsuarioService implements IUsuarioService {
         if (opt.isPresent()) {
             try {
                 String cryptPassword = encriptar(password);
+
                 if (cryptPassword.equals(opt.get().getPassword()) && opt.get().getActivo() == 1)
                     coincide = true;
             } catch (Exception e) {

@@ -26,7 +26,7 @@ public class FacturaService implements IFacturaService{
     public Factura guardarFactura(Factura pFactura) throws BusinessException {
         try{
             validarFactura(pFactura);
-            System.out.println("Hola " + pFactura.getFechaFactura());
+
             return repository.save(pFactura);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
@@ -168,6 +168,7 @@ public class FacturaService implements IFacturaService{
              parametros) {
             if(item.getIdParametro() == idParametro){
                 return item;
+
             }
         }
         return null;
