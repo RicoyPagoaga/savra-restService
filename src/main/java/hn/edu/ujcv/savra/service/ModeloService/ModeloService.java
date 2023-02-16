@@ -121,7 +121,7 @@ public class ModeloService implements IModeloService {
                 validarModelo(modelo);
                 Modelo modeloExistente = new Modelo(
                         modelo.getIdModelo(), modelo.getNombre(),
-                        modelo.getIdMarca()
+                        modelo.getMarca()
                 );
                 return repository.save(modeloExistente);
             } catch (Exception e) {
@@ -166,12 +166,7 @@ public class ModeloService implements IModeloService {
             }
         }
         //id marca
-        if (String.valueOf(modelo.getIdMarca()).isEmpty()) {
-            throw new BusinessException("La marca es requerida");
-        }
-        if (!validarMarca(modelo.getIdMarca())) {
-            throw new NotFoundException("Indique la marca");
-        }
+
 
     }
 

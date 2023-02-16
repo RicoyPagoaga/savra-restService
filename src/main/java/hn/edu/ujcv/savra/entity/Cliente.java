@@ -17,8 +17,12 @@ public class Cliente {
     private long idCliente;
     private String nombre;
     private String documento;
-    private Long idTipoDocumento;
+    @ManyToOne
+    @JoinColumn(name = "idTipoDocumento",referencedColumnName = "idTipoDocumento")
+    private TipoDocumento tipoDocumento;
     private String telefono;
     private String  direccion;
-    private Long idCategoria;
+    @ManyToOne
+    @JoinColumn(name = "idCategoria",referencedColumnName = "idCategoria")
+    private CategoriaCliente categoria;
 }

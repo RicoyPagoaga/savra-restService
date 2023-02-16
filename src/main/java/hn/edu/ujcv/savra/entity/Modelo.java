@@ -17,5 +17,7 @@ public class Modelo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long   idModelo;
     private String nombre;
-    private long   idMarca;
+    @ManyToOne
+    @JoinColumn(name = "idMarca",referencedColumnName = "idMarca")
+    private Marca marca;
 }
