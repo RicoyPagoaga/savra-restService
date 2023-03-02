@@ -18,17 +18,31 @@ public class Factura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idFactura;
-    private long idParametroFactura;
+    @ManyToOne
+    @JoinColumn(name = "idParametroFactura",referencedColumnName="idParametro")
+    private ParametroFactura parametroFactura;
     private String noFactura;
-    private long idCliente;
-    private long idEmpleado;
+    @ManyToOne
+    @JoinColumn(name = "idCliente",referencedColumnName="idCliente")
+    private Cliente cliente;
+    @ManyToOne
+    @JoinColumn(name = "idEmpleado",referencedColumnName="idEmpleado")
+    private Empleado empleado;
     private Timestamp fechaFactura= null;
-    private long idMetodoPago;
+    @ManyToOne
+    @JoinColumn(name = "idMetodoPago",referencedColumnName="idMetodoPago")
+    private MetodoPago metodoPago;
     private double efectivo;
     private String tarjeta = null;
-    private Long idCupon;
-    private long idTipoEntrega;
-    private Long idShipper;
+    @ManyToOne
+    @JoinColumn(name = "idCupon",referencedColumnName="idCupon")
+    private Cupon cupon;
+    @ManyToOne
+    @JoinColumn(name = "idTipoEntrega",referencedColumnName="idTipoEntrega")
+    private TipoEntrega tipoEntrega;
+    @ManyToOne
+    @JoinColumn(name = "idShipper",referencedColumnName="idShipper")
+    private Shipper shipper;
     private double costoEnvio;
     private LocalDate fechaDespacho = null;
     private LocalDate fechaEntrega= null;
