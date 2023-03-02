@@ -69,7 +69,6 @@ class RepuestoServiceTest {
         impuesto = new Impuesto();
         impuesto.setIdImpuesto(1);
     }
-
     @Test
     void saveRepuesto() throws BusinessException {
         getRepuestos();
@@ -79,8 +78,7 @@ class RepuestoServiceTest {
         when(transmisionRepository.findAll()).thenReturn(Arrays.asList(transmision));
         when(impuestoRepository.findAll()).thenReturn(Arrays.asList(impuesto));
         when(repuestoRepository.save(any(Repuesto.class))).thenReturn(repuesto);
-        assertNotNull(repuestoService.saveRepuesto(repuestoEnviado,false,false,
-                false,2500));
+        assertNotNull(repuestoService.saveRepuesto(repuestoEnviado,false,false, false,2500));
     }
 
     @Test

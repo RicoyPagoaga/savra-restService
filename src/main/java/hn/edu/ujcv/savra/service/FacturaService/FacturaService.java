@@ -71,22 +71,22 @@ public class FacturaService implements IFacturaService{
     }
 
     private void validarFactura(Factura pFactura)throws BusinessException{
-        if (pFactura.getIdParametroFactura() < 1){
+        if (pFactura.getParametroFactura() == null){
             throw new BusinessException("Parámetro de factura esta vacío");
         }
         if (pFactura.getFechaFactura() == null){
             throw new BusinessException("Fecha factura esta vacía!");
         }
-        if (pFactura.getIdCliente() < 1){
+        if (pFactura.getCliente() == null){
             throw new BusinessException("Cliente esta vacío!");
         }
-        if (pFactura.getIdEmpleado() < 1){
+        if (pFactura.getEmpleado() == null){
             throw new BusinessException("Empleado esta vacío!");
         }
-        if (pFactura.getIdMetodoPago() < 1){
+        if (pFactura.getMetodoPago() == null){
             throw new BusinessException("Forma de Pago esta vacío!");
         }
-        if (pFactura.getIdMetodoPago() == 2){
+        if (pFactura.getMetodoPago().getNombre().contains("TARJETA")){
             if (pFactura.getTarjeta().trim().isEmpty()){
                 throw new BusinessException("No. de Tarjeta vacío!");
             }
@@ -100,7 +100,7 @@ public class FacturaService implements IFacturaService{
             }
             pFactura.setTarjeta(pFactura.getTarjeta().substring(pFactura.getTarjeta().length()-4));
         }
-        if (pFactura.getIdMetodoPago() == 3){
+        if (pFactura.getMetodoPago().getNombre().contains("MIXTO")){
             if (pFactura.getTarjeta().trim().isEmpty()){
                 throw new BusinessException("No. de Tarjeta vacío!");
             }
@@ -114,17 +114,17 @@ public class FacturaService implements IFacturaService{
             }
             pFactura.setTarjeta(pFactura.getTarjeta().substring(pFactura.getTarjeta().length()-4));
         }
-        if (pFactura.getIdTipoEntrega()< 1){
+        if (pFactura.getTipoEntrega() == null){
             throw new BusinessException("Tipo de Entrega esta vacío!");
         }
-        if (pFactura.getIdCupon() != null){
-            Cupon miCupon = validarCupon(pFactura.getIdCupon());
+        if (pFactura.getCupon() != null){
+            Cupon miCupon = validarCupon(pFactura.getCupon().getIdCupon());
             if (miCupon.getFechaCaducidad().isBefore(LocalDate.now())){
                 throw new BusinessException("Código del cupón ha caducido :(");
             }
         }
-        if (pFactura.getIdTipoEntrega() == 2){
-            if(pFactura.getIdShipper().toString().isEmpty()){
+        if (pFactura.getTipoEntrega().getNombre().contains("ENVIO")){
+            if(pFactura.getShipper() == null){
                 throw new BusinessException("Shipper esta vacío");
             }
             if(pFactura.getCostoEnvio() < 50){
@@ -146,7 +146,7 @@ public class FacturaService implements IFacturaService{
                 throw new BusinessException("Fecha de entrega no puede ser mayor del mes de la fecha de despacho");
             }
         }
-        ParametroFactura param = validarParametro(pFactura.getIdParametroFactura());
+        ParametroFactura param = validarParametro(pFactura.getParametroFactura().getIdParametro());
 
         if(param.getFechaLimiteEmision().isBefore(pFactura.getFechaFactura().toLocalDateTime().toLocalDate())){
             throw new BusinessException("se ha sobrepasado la fecha límite de emisión del parámetro seleccionado");

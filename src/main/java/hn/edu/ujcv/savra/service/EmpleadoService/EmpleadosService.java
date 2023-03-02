@@ -41,10 +41,7 @@ public class EmpleadosService implements IEmpleadosService{
             if (empleado.getDocumento().trim().isEmpty()){
                 throw new BusinessException("El documento está vacío");
             }
-            //idTipoDocumento
-            if(empleado.getIdEmpleado() < 1) {
-                throw new BusinessException("Id Documento vacío");
-            }
+
             //documento
             contiene(empleado.getTipoDocumento(), empleado.getDocumento().trim());
 
