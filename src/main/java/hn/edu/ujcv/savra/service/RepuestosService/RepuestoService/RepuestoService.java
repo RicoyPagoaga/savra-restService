@@ -1,18 +1,13 @@
 package hn.edu.ujcv.savra.service.RepuestosService.RepuestoService;
 
 
-import hn.edu.ujcv.savra.entity.*;
-import hn.edu.ujcv.savra.entity.Impuesto.Impuesto;
 import hn.edu.ujcv.savra.entity.Repuesto.Repuesto;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
-import hn.edu.ujcv.savra.repository.*;
-import hn.edu.ujcv.savra.repository.Impuesto.ImpuestoRepository;
 import hn.edu.ujcv.savra.repository.Repuesto.RepuestoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -121,9 +116,9 @@ public class RepuestoService implements IRepuestoService {
                 validarRepuesto(repuesto, stockA, stockM, stockMa, precio);
                 Repuesto repuestoExistente = new Repuesto(
                         repuesto.getIdRepuesto(), repuesto.getNombre().trim(), repuesto.getAnio_referenciaInicio(),
-                        repuesto.getAnio_referenciaFinal(), repuesto.getIdCategoria(), repuesto.getStockActual(),
-                        repuesto.getStockMinimo(), repuesto.getStockMaximo(), repuesto.getIdProveedor(),
-                        repuesto.getIdModelo(), repuesto.getIdTransmision(), repuesto.getIdImpuesto()
+                        repuesto.getAnio_referenciaFinal(), repuesto.getCategoria(), repuesto.getStockActual(),
+                        repuesto.getStockMinimo(), repuesto.getStockMaximo(), repuesto.getProveedor(),
+                        repuesto.getModelo(), repuesto.getTransmision(), repuesto.getImpuesto()
                 );
                 return repository.save(repuestoExistente);
             } catch (Exception e) {
@@ -200,14 +195,8 @@ public class RepuestoService implements IRepuestoService {
             throw new BusinessException("El año de referencia inicial no debe ser mayor al año de referencia final");
         }
         //id Categoria
-        if (String.valueOf(repuesto.getIdCategoria()).isEmpty()) {
-            throw new BusinessException("La categoría es requerida");
-        }
-        if (repuesto.getIdCategoria() < 0) {
-            throw new BusinessException("Id de Categoría inválido");
-        }
-        if (!validarCategoria(repuesto.getIdCategoria())) {
-            throw new BusinessException("Indique una categoría válida");
+        if (repuesto.getCategoria() == null) {
+            throw new BusinessException("Indique la Categoría");
         }
         //stock Actual
         if(stockA) {
@@ -238,116 +227,24 @@ public class RepuestoService implements IRepuestoService {
             throw new BusinessException("El stock actual no debe ser mayor al stock máximo");
         }
         //id Proveedor
-        if (String.valueOf(repuesto.getIdProveedor()).isEmpty()) {
-            throw new BusinessException("El proveedor es requerido");
-        }
-        if (repuesto.getIdProveedor() < 0) {
+        if (repuesto.getProveedor() == null) {
             throw new BusinessException("Proveedor inválido");
         }
-        if (!validarProveedor(repuesto.getIdProveedor())) {
-            throw new NotFoundException("Indique el proveedor");
-        }
         //id Modelo
-        if (String.valueOf(repuesto.getIdModelo()).isEmpty()) {
-            throw new BusinessException("El modelo es requerido");
-        }
-        if (repuesto.getIdModelo() < 0) {
+        if (repuesto.getModelo() == null) {
             throw new BusinessException("Modelo inválido");
         }
-        if (!validarModelo(repuesto.getIdModelo())) {
-            throw new NotFoundException("Indique el modelo");
-        }
         //id Transmision
-        if (String.valueOf(repuesto.getIdTransmision()).isEmpty()) {
-            throw new BusinessException("La transmisión es requerida");
-        }
-        if (repuesto.getIdTransmision() < 0) {
+        if (repuesto.getTransmision() == null) {
             throw new BusinessException("Transmisión inválida");
-        }
-        if (validarTransmision(repuesto.getIdTransmision())) {
-            throw new NotFoundException("Indique transmisión válida");
         }
         //precio
         if (precio <= 0) {
             throw new BusinessException("El precio es requerido, no puede ser menor o igual a cero");
         }
         //idImpuesto
-        if (repuesto.getIdImpuesto() <= 0) {
+        if (repuesto.getImpuesto() == null) {
             throw new BusinessException("Impuesto inválido");
         }
-        if (!validarImpuesto(repuesto.getIdImpuesto())) {
-            throw new NotFoundException("Indique impuesto válido");
-        }
     }
-
-    @Autowired
-    private ProveedorRepository proveedorRepository;
-    private boolean validarProveedor(long id) {
-        boolean condicion=false;
-        List<Proveedor> proveedores = proveedorRepository.findAll();
-        for (Proveedor item : proveedores) {
-            if (item.getIdProveedor() == id) {
-                condicion=true;
-                break;
-            }
-        }
-        return condicion;
-    }
-
-    @Autowired
-    private ModeloRepository modeloRepository;
-    private boolean validarModelo(long id) {
-        boolean condicion=false;
-        List<Modelo> modelos = modeloRepository.findAll();
-        for (Modelo item : modelos) {
-            if (item.getIdModelo() == id) {
-                condicion=true;
-                break;
-            }
-        }
-        return condicion;
-    }
-
-    @Autowired
-    private CategoriaRepuestoRepository categoriaRepository;
-    private boolean validarCategoria(long id) {
-        boolean condicion=false;
-        List<CategoriaRepuesto> lista = categoriaRepository.findAll();
-        for (CategoriaRepuesto item : lista) {
-            if (item.getIdCategoria() == id) {
-                condicion=true;
-                break;
-            }
-        }
-        return condicion;
-    }
-
-    @Autowired
-    private TransmisionRepository transmisionRepository;
-    private boolean validarTransmision(long id) {
-        boolean condicion=false;
-        List<Transmision> lista = transmisionRepository.findAll();
-        for (Transmision item : lista) {
-            if (item.getIdTransmision() == id) {
-                condicion=true;
-                break;
-            }
-        }
-        return !condicion;
-    }
-
-    @Autowired
-    private ImpuestoRepository impuestoRepository;
-    private boolean validarImpuesto(long id) {
-        boolean condicion=false;
-        List<Impuesto> lista = impuestoRepository.findAll();
-        for (Impuesto item : lista) {
-            if (item.getIdImpuesto() == id) {
-                condicion=true;
-                break;
-            }
-        }
-        return condicion;
-    }
-
 }

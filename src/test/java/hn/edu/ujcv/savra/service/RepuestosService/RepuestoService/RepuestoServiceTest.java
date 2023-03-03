@@ -56,8 +56,8 @@ class RepuestoServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         repuesto = new Repuesto();
-        repuestoEnviado = new Repuesto(1,"Bujia",2000,2010,1,
-                500,80,800,1,1,1,1);
+        repuestoEnviado = new Repuesto(1,"Bujia",2000,2010,new CategoriaRepuesto(),
+                500,80,800,new Proveedor(),new Modelo(),new Transmision(),new Impuesto());
         categoria = new CategoriaRepuesto();
         categoria.setIdCategoria(1);
         proveedor = new Proveedor();

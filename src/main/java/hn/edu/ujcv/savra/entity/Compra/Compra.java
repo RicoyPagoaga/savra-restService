@@ -1,5 +1,6 @@
 package hn.edu.ujcv.savra.entity.Compra;
 
+import hn.edu.ujcv.savra.entity.Empleado;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,9 @@ public class Compra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long      idCompra;
-    private long      idEmpleado;
+    @ManyToOne
+    @JoinColumn(name = "idEmpleado", referencedColumnName = "idEmpleado")
+    private Empleado  empleado;
     private LocalDate fechaCompra;
     private LocalDate fechaDespacho;
     private LocalDate fechaRecibido;

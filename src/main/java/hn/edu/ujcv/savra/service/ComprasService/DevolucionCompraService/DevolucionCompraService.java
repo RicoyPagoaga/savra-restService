@@ -108,7 +108,7 @@ public class DevolucionCompraService implements IDevolucionCompraService{
                 validarDevolucion(devolucionCompra);
                 DevolucionCompra devolucionExistente = new DevolucionCompra(
                         devolucionCompra.getIdDevolucion(),
-                        devolucionCompra.getIdCompraDetalle(),
+                        devolucionCompra.getCompraDetalle(),
                         devolucionCompra.getFecha(),
                         devolucionCompra.getCantidad(),
                         devolucionCompra.getMotivo().trim()
@@ -122,7 +122,7 @@ public class DevolucionCompraService implements IDevolucionCompraService{
 
     private void validarDevolucion(DevolucionCompra devolucionCompra) throws BusinessException {
         //id detalle
-        if(devolucionCompra.getIdCompraDetalle()<=0) {
+        if(devolucionCompra.getCompraDetalle()==null) {
             throw new BusinessException("Indique detalle de compra válido");
         }
         //fecha
@@ -133,50 +133,50 @@ public class DevolucionCompraService implements IDevolucionCompraService{
         }
         if(devolucionCompra.getIdDevolucion()<=0) {
             if(!devolucionCompra.getFecha().equals(fechaActual)) {
-                throw new BusinessException("La fecha de la devolución en el detalle "+devolucionCompra.getIdCompraDetalle()+
+                throw new BusinessException("La fecha de la devolución en el detalle "+devolucionCompra.getCompraDetalle().getIdCompraDetalle()+
                         " debe ser la fecha de hoy");
             }
         }
         if(devolucionCompra.getFecha().isAfter(fechaEntrega.plusDays(30))) {
-            throw new BusinessException("La fecha de la devolución en el detalle "+devolucionCompra.getIdCompraDetalle()+
+            throw new BusinessException("La fecha de la devolución en el detalle "+devolucionCompra.getCompraDetalle().getIdCompraDetalle()+
                     " no debe exceder los treinta días de su fecha de Entrega");
         }
         //cantidad
         if(devolucionCompra.getCantidad()<=0) {
-            throw new BusinessException("La cantidad en el detalle " +devolucionCompra.getIdCompraDetalle() +
+            throw new BusinessException("La cantidad en el detalle " +devolucionCompra.getCompraDetalle().getIdCompraDetalle() +
                     " es requerida, no puede ser menor o igual a cero");
         }
         if(validarCantidad(devolucionCompra)) {
-            throw new BusinessException("La cantidad en el detalle "+devolucionCompra.getIdCompraDetalle()+
+            throw new BusinessException("La cantidad en el detalle "+devolucionCompra.getCompraDetalle().getIdCompraDetalle()+
                     " no puede ser mayor a la cantidad que se compró");
         }
         int x = validarStock(devolucionCompra);
         if(x!=-1) {
             if(devolucionCompra.getCantidad()>x) {
-                throw new BusinessException("La cantidad de devolución en el detalle "+devolucionCompra.getIdCompraDetalle()+
+                throw new BusinessException("La cantidad de devolución en el detalle "+devolucionCompra.getCompraDetalle().getIdCompraDetalle()+
                         " excede el Stock Actual del Repuesto!");
             }
         }
         //motivo
         if(devolucionCompra.getMotivo().trim().isEmpty()) {
-            throw new BusinessException("El motivo de devolución en el detalle "+devolucionCompra.getIdCompraDetalle()+
+            throw new BusinessException("El motivo de devolución en el detalle "+devolucionCompra.getCompraDetalle().getIdCompraDetalle()+
                     " es requerido");
         }
         if(devolucionCompra.getMotivo().trim().length() < 5) {
-            throw new BusinessException("Ingrese más de cinco caracteres en el motivo de devolución en el detalle "+devolucionCompra.getIdCompraDetalle());
+            throw new BusinessException("Ingrese más de cinco caracteres en el motivo de devolución en el detalle "+devolucionCompra.getCompraDetalle().getIdCompraDetalle());
         }
         if(devolucionCompra.getMotivo().trim().length() > 80) {
-            throw new BusinessException("El motivo de devolución en el detalle "+devolucionCompra.getIdCompraDetalle()+
+            throw new BusinessException("El motivo de devolución en el detalle "+devolucionCompra.getCompraDetalle().getIdCompraDetalle()+
                     " no debe exceder los ochenta caracteres");
         }
         Pattern dobleEspacio = Pattern.compile("\\s{2,}");
         if (dobleEspacio.matcher(devolucionCompra.getMotivo().trim()).find()) {
-            throw new BusinessException("Motivo de Devolución en el detalle "+devolucionCompra.getIdCompraDetalle()+" no debe contener espacios dobles ఠ_ఠ");
+            throw new BusinessException("Motivo de Devolución en el detalle "+devolucionCompra.getCompraDetalle().getIdCompraDetalle()+" no debe contener espacios dobles ఠ_ఠ");
         }
         String[] motivo = devolucionCompra.getMotivo().trim().split(" ");
         for (String item: motivo) {
             if(item.matches("(.)\\1{2,}")) {
-                throw new BusinessException("Motivo de Devolución en el detalle "+devolucionCompra.getIdCompraDetalle()+
+                throw new BusinessException("Motivo de Devolución en el detalle "+devolucionCompra.getCompraDetalle().getIdCompraDetalle()+
                         " no debe tener tantas letras repetidas ఠ_ఠ");
             }
         }
@@ -188,7 +188,7 @@ public class DevolucionCompraService implements IDevolucionCompraService{
         List<CompraDetalle> lista = detalleRepository.findAll();
         boolean condicion=false;
         for(CompraDetalle item: lista) {
-            if(devolucionCompra.getIdCompraDetalle() == item.getIdCompraDetalle() &&
+            if(devolucionCompra.getCompraDetalle().getIdCompraDetalle() == item.getIdCompraDetalle() &&
                     devolucionCompra.getCantidad() > item.getCantidad()) {
                 condicion=true;
             }
@@ -204,7 +204,7 @@ public class DevolucionCompraService implements IDevolucionCompraService{
         List<Repuesto> repuestos = repuestoRepository.findAll();
         for(Repuesto repuesto: repuestos) {
             for(CompraDetalle detalle: detalles) {
-                if(devolucionCompra.getIdCompraDetalle()==detalle.getIdCompraDetalle() &&
+                if(devolucionCompra.getCompraDetalle().getIdCompraDetalle()==detalle.getIdCompraDetalle() &&
                 detalle.getIdRepuesto()==repuesto.getIdRepuesto()) {
                     x=repuesto.getStockActual();
                     break;
@@ -222,7 +222,7 @@ public class DevolucionCompraService implements IDevolucionCompraService{
         LocalDate fecha=null;
         for(CompraDetalle detalle: detalles) {
             for(Compra compra: lista) {
-                if(devolucionCompra.getIdCompraDetalle()==detalle.getIdCompraDetalle() &&
+                if(devolucionCompra.getCompraDetalle().getIdCompraDetalle()==detalle.getIdCompraDetalle() &&
                 detalle.getIdCompra()==compra.getIdCompra()) {
                     fecha=compra.getFechaRecibido();
                 }

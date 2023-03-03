@@ -2,6 +2,7 @@ package hn.edu.ujcv.savra.service.ComprasService.CompraService;
 
 import hn.edu.ujcv.savra.entity.Arqueo;
 import hn.edu.ujcv.savra.entity.Compra.Compra;
+import hn.edu.ujcv.savra.entity.Empleado;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.Compra.CompraRepository;
@@ -35,7 +36,7 @@ class CompraServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         compra = new Compra();
-        compraEnviada = new Compra(1,2, LocalDate.now(),LocalDate.now()
+        compraEnviada = new Compra(1,new Empleado(), LocalDate.now(),LocalDate.now()
         ,LocalDate.now().plusDays(6),"12345678941");
     }
 

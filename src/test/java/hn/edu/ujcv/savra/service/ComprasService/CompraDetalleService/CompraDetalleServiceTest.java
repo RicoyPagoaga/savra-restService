@@ -1,8 +1,9 @@
 package hn.edu.ujcv.savra.service.ComprasService.CompraDetalleService;
 
-import hn.edu.ujcv.savra.entity.Arqueo;
+import hn.edu.ujcv.savra.entity.*;
 import hn.edu.ujcv.savra.entity.Compra.Compra;
 import hn.edu.ujcv.savra.entity.Compra.CompraDetalle;
+import hn.edu.ujcv.savra.entity.Impuesto.Impuesto;
 import hn.edu.ujcv.savra.entity.Repuesto.Repuesto;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
@@ -47,9 +48,10 @@ class CompraDetalleServiceTest {
         MockitoAnnotations.initMocks(this);
         compraDetalle = new CompraDetalle();
         compraDetalleEnviado = new CompraDetalle(1,2,3,5,25.63);
-        repuesto = new Repuesto(3,"Bujia",2000,2010,1,
-                500,80,800,1,1,1,1);
-        compra = new Compra(2,2, LocalDate.now(),LocalDate.now()
+        repuesto = new Repuesto(3,"Bujia",2000,2010,new CategoriaRepuesto(),
+                500,80,800,new Proveedor(),new Modelo(),new Transmision(),
+                new Impuesto());
+        compra = new Compra(2,new Empleado(), LocalDate.now(),LocalDate.now()
                 ,LocalDate.now().plusDays(6),"12345678941");
     }
 

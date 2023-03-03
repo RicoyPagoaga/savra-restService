@@ -1,5 +1,10 @@
 package hn.edu.ujcv.savra.entity.Repuesto;
 
+import hn.edu.ujcv.savra.entity.CategoriaRepuesto;
+import hn.edu.ujcv.savra.entity.Impuesto.Impuesto;
+import hn.edu.ujcv.savra.entity.Modelo;
+import hn.edu.ujcv.savra.entity.Proveedor;
+import hn.edu.ujcv.savra.entity.Transmision;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,12 +24,22 @@ public class Repuesto {
     private String nombre;
     private int    anio_referenciaInicio;
     private int    anio_referenciaFinal;
-    private long   idCategoria;
+    @ManyToOne
+    @JoinColumn(name = "idCategoria", referencedColumnName = "idCategoria")
+    private CategoriaRepuesto categoria;
     private int    stockActual;
     private int    stockMinimo;
     private int    stockMaximo;
-    private long   idProveedor;
-    private long   idModelo;
-    private long   idTransmision;
-    private long   idImpuesto;
+    @ManyToOne
+    @JoinColumn(name = "idProveedor", referencedColumnName = "idProveedor")
+    private Proveedor proveedor;
+    @ManyToOne
+    @JoinColumn(name = "idModelo", referencedColumnName = "idModelo")
+    private Modelo modelo;
+    @ManyToOne
+    @JoinColumn(name = "idTransmision", referencedColumnName = "idTransmision")
+    private Transmision transmision;
+    @ManyToOne
+    @JoinColumn(name = "idImpuesto", referencedColumnName = "idImpuesto")
+    private Impuesto impuesto;
 }

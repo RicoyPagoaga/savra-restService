@@ -16,8 +16,10 @@ public class DevolucionCompra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long      idDevolucion;
-    private long      idCompraDetalle;
-    private LocalDate fecha;
-    private int       cantidad;
-    private String    motivo;
+    @ManyToOne
+    @JoinColumn(name = "idCompraDetalle", referencedColumnName = "idCompraDetalle")
+    private CompraDetalle compraDetalle;
+    private LocalDate     fecha;
+    private int           cantidad;
+    private String        motivo;
 }

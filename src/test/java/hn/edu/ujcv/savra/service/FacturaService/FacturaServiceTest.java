@@ -42,8 +42,9 @@ class FacturaServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         factura = new Factura();
-        facturaEnviada = new Factura(1,1,"020-001-01-01000001",1,1, Timestamp.valueOf(LocalDateTime.now()),1
-                ,2500.00,null,null,1,null,0.00,
+        facturaEnviada = new Factura(1,new ParametroFactura(),"020-001-01-01000001",new Cliente(),new Empleado(),
+                Timestamp.valueOf(LocalDateTime.now()),new MetodoPago(),
+                2500.00,null,null,new TipoEntrega(),null,0.00,
                 LocalDate.now(),LocalDate.now().plusDays(3));
         parametroFacturaEnviado = new ParametroFactura(1,"C1D1E9-342413-FC4180-82F25E-C52983-BA","020-001-01-01000000"
                 ,"020-001-01-01060001", LocalDate.now().plusMonths(5),LocalDate.now(),15400);

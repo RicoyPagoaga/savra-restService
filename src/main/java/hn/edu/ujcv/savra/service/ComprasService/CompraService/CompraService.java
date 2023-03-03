@@ -103,7 +103,7 @@ public class CompraService implements ICompraService {
                 validarCompra(compra, detalle);
                 Compra compraExistente = new Compra(
                         compra.getIdCompra(),
-                        compra.getIdEmpleado(),
+                        compra.getEmpleado(),
                         compra.getFechaCompra(),
                         compra.getFechaDespacho(),
                         compra.getFechaRecibido(),
@@ -118,7 +118,7 @@ public class CompraService implements ICompraService {
 
     private void validarCompra(Compra compra, boolean detalle) throws BusinessException {
         //empleado
-        if (compra.getIdEmpleado() <= 0) {
+        if (compra.getEmpleado() == null) {
             throw new BusinessException("Indique empleado válido");
         }
         //fechas
