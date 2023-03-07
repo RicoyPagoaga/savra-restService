@@ -3,27 +3,26 @@ import hn.edu.ujcv.savra.entity.Arqueo;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.ArqueoRepository;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class ArqueoService implements IArqueoService {
     @Autowired
     private ArqueoRepository repository;
-
     @Override
     public Arqueo saveArqueo(Arqueo arqueo) throws BusinessException {
         try {
+
             validarArqueo(arqueo);
             return repository.save(arqueo);
         }catch (Exception e){
+
             throw new BusinessException(e.getMessage());
         }
     }
@@ -41,9 +40,7 @@ public class ArqueoService implements IArqueoService {
     @Override
     public List<Arqueo> getArqueos() throws BusinessException {
         try {
-
             return repository.findAll();
-
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
         }
