@@ -26,7 +26,6 @@ public class FacturaService implements IFacturaService{
     public Factura guardarFactura(Factura pFactura) throws BusinessException {
         try{
             validarFactura(pFactura);
-
             return repository.save(pFactura);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());

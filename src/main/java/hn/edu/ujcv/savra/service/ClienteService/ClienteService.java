@@ -7,6 +7,7 @@ import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.exceptions.SqlExceptions;
 import hn.edu.ujcv.savra.repository.ClienteRepository;
 import hn.edu.ujcv.savra.repository.TipoDocumentoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class ClienteService implements IClienteService{
-
+    private Log mi_log = new Log();
     @Autowired
     private ClienteRepository repository;
     @Override
@@ -96,6 +97,8 @@ public class ClienteService implements IClienteService{
             pCliente.setNombre(pCliente.getNombre().trim().toUpperCase());
             return repository.save(pCliente);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -117,14 +120,20 @@ public class ClienteService implements IClienteService{
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el cliente: " + id);
             throw new NotFoundException("No se encontró el cliente: " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e1) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -205,9 +214,13 @@ public class ClienteService implements IClienteService{
 
             opt = repository.findById(pCliente.getIdCliente());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el cliente:" + pCliente.getIdCliente());
             throw new NotFoundException("No se encontró el cliente:" + pCliente.getIdCliente());
         }else {
             try {
@@ -221,6 +234,8 @@ public class ClienteService implements IClienteService{
                 newCliente.setCategoria(pCliente.getCategoria());
                 return repository.save(newCliente);
             }catch (Exception e1){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -232,12 +247,15 @@ public class ClienteService implements IClienteService{
         try {
             opt = tipoDocumentoRepository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontro el documento" + id);
             throw new NotFoundException("No se encontro el documento" + id);
         }
-        System.out.println(opt.get().getNombreDocumento());
         return opt.get();
     }
     private void contiene(TipoDocumento tipoDocumento, String nombreDoc) throws BusinessException {
@@ -255,22 +273,28 @@ public class ClienteService implements IClienteService{
                     throw new BusinessException("Cantidad de digitos DNI invalido! requeridos:13");
                 }
                 if (!validarNumero.matches()){
+
                     throw new BusinessException("DNI invalido! debe comenzar con 0 u 1");
                 }
                 if(Integer.parseInt(valorInicial) < 1){
+
                     throw new BusinessException("DNI invalido! código depto no existe!");
                 }
                 if(Integer.parseInt(valorInicial) > 18){
+
                     throw new BusinessException("DNI invalido! código depto no existe!");
                 }
             }else if (tipoDocumento.getNombreDocumento().contains("RTN")){
                 if(!mat.matches()){
+
                     throw new BusinessException("RTN debe ser númerico");
                 }
                 if (nombreDoc.length() != 14){
+
                     throw new BusinessException("Cantidad de digitos RTN invalido! requeridos:14");
                 }
                 if (!validarNumero.matches()){
+
                     throw new BusinessException("RTN invalido! debe comenzar con 0 u 1");
                 }
 
@@ -281,14 +305,17 @@ public class ClienteService implements IClienteService{
 //                    throw new BusinessException("Documento no debe contener espacios ni caracteres especiales");
 //                }
                 if (nombreDoc.length() < 7){
+
                     throw new BusinessException("Documento no debe ser menor a 7 de caracteres !");
                 }
                 if (nombreDoc.length() > 11){
                     //System.out.println(nombreDoc.length());  imporimir en consola
+
                     throw new BusinessException("Documento no debe ser mayor a 11 de caracteres !");
                 }
                 Pattern numerosCai = Pattern.compile("[0-9]+");
                 if(!numerosCai.matcher(nombreDoc.trim()).find()){
+
                     throw new BusinessException("Pasaporte debe contener almenos un número");
                 }
                 Pattern letrasCai = Pattern.compile("[a-zA-Z]+");
@@ -297,6 +324,8 @@ public class ClienteService implements IClienteService{
                 }
             }
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
