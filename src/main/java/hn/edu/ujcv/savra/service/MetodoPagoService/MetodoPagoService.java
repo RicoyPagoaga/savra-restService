@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.MetodoPago;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.MetodoPagoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class MetodoPagoService implements IMetodoPagoService {
-
+    private Log mi_log = new Log();
     @Autowired
     private MetodoPagoRepository repository;
 
@@ -25,6 +26,8 @@ public class MetodoPagoService implements IMetodoPagoService {
             validarMetodoPago(metodoPago);
             return repository.save(metodoPago);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -37,6 +40,8 @@ public class MetodoPagoService implements IMetodoPagoService {
             }
             return repository.saveAll(metodosPago);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -46,6 +51,8 @@ public class MetodoPagoService implements IMetodoPagoService {
         try {
             return repository.findAll();
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -56,9 +63,13 @@ public class MetodoPagoService implements IMetodoPagoService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el método de pago " + id);
             throw new NotFoundException("No se encontró el método de pago " + id);
         }
         return opt.get();
@@ -70,9 +81,13 @@ public class MetodoPagoService implements IMetodoPagoService {
         try {
             opt = repository.findFirstByNombre(nombre);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el método de pago " + nombre);
             throw new NotFoundException("No se encontró el método de pago " + nombre);
         }
         return opt.get();
@@ -84,14 +99,20 @@ public class MetodoPagoService implements IMetodoPagoService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el método de pago " + id);
             throw new NotFoundException("No se encontró el método de pago " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e1) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -109,9 +130,13 @@ public class MetodoPagoService implements IMetodoPagoService {
             }
             opt = repository.findById(metodoPago.getIdMetodoPago());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el método de pago " + metodoPago.getIdMetodoPago());
             throw new NotFoundException("No se encontró el método de pago " + metodoPago.getIdMetodoPago());
         } else{
             try {
@@ -122,6 +147,8 @@ public class MetodoPagoService implements IMetodoPagoService {
                 );
                 return repository.save(metodoExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

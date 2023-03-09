@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.Rol;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.RolRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class RolService implements IRolService{
+    private Log mi_log = new Log();
     @Autowired
     private RolRepository repository;
     @Override
@@ -25,6 +27,8 @@ public class RolService implements IRolService{
 
             return repository.save(rol);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -39,6 +43,8 @@ public class RolService implements IRolService{
             }
             return repository.saveAll(rols);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -48,6 +54,8 @@ public class RolService implements IRolService{
         try {
             return repository.findAll();
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -58,8 +66,12 @@ public class RolService implements IRolService{
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el Rol"+id);
             throw new NotFoundException("no se encontro el Rol"+id);
         }
         return opt.get();
@@ -76,15 +88,21 @@ public class RolService implements IRolService{
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el Rol v;"+id);
             throw new NotFoundException("no se encontro el Rol v;"+id);
         }
         else {
             try {
                 repository.deleteById(id);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -96,9 +114,13 @@ public class RolService implements IRolService{
         try {
             opt=repository.findById(rol.getIdRol());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el documento v;"+ rol.getIdRol());
             throw new NotFoundException("no se encontro el documento v;"+ rol.getIdRol());
         }
         else {
@@ -110,6 +132,8 @@ public class RolService implements IRolService{
                 existingRol.setDescripcion(rol.getDescripcion());
                 return repository.save(existingRol);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

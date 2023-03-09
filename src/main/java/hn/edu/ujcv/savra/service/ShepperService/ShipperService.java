@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.Shipper;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.ShipperRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class ShipperService implements IShipperService{
+    private Log mi_log = new Log();
     @Autowired
     private ShipperRepository repository;
     @Override
@@ -23,6 +25,8 @@ public class ShipperService implements IShipperService{
             validarShipper(shipper);
             return repository.save(shipper);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -32,6 +36,8 @@ public class ShipperService implements IShipperService{
         try {
             return repository.saveAll(shippers);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -42,6 +48,8 @@ public class ShipperService implements IShipperService{
             return repository.findAll();
 
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -52,8 +60,12 @@ public class ShipperService implements IShipperService{
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el shipper"+id);
             throw new NotFoundException("No se encontró el shipper"+id);
         }
         return opt.get();
@@ -66,9 +78,13 @@ public class ShipperService implements IShipperService{
         try {
             opt=repository.findShipperByCorreo(nombre);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el shipper :v"+nombre);
             throw new NotFoundException("no se encontro el shipper :v"+nombre);
         }
         return opt.get();
@@ -80,15 +96,21 @@ public class ShipperService implements IShipperService{
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el shipper"+id);
             throw new NotFoundException("no se encontro el shipper"+id);
         }
         else {
             try {
                 repository.deleteById(id);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -100,9 +122,13 @@ public class ShipperService implements IShipperService{
         try {
             opt=repository.findById(shipper.getIdShipper());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el shipper"+shipper.getIdShipper());
             throw new NotFoundException("no se encontro el shipper"+shipper.getIdShipper());
         }
         else {
@@ -117,6 +143,8 @@ public class ShipperService implements IShipperService{
                 existinShipper.setFechaContrato(shipper.getFechaContrato());
                 return repository.save(existinShipper);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

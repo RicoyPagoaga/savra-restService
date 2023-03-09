@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.ParametroFactura;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.ParametroFacturaRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class ParametroFacturaService implements IParametroFacturaService{
+    private Log mi_log = new Log();
     @Autowired
     private ParametroFacturaRepository repository;
 
@@ -27,6 +29,8 @@ public class ParametroFacturaService implements IParametroFacturaService{
             }
             return repository.save(pParametro);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -37,9 +41,13 @@ public class ParametroFacturaService implements IParametroFacturaService{
         try{
             opt = repository.findById(pParametro.getIdParametro());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el Parámetro: "+pParametro.getIdParametro());
             throw new NotFoundException("No se encontró el Parámetro: "+pParametro.getIdParametro());
         }else {
             try{
@@ -50,6 +58,8 @@ public class ParametroFacturaService implements IParametroFacturaService{
                         pParametro.getFechaInicio(), pParametro.getUltimaFactura());
                 return repository.save(newParametro);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
 
@@ -67,14 +77,20 @@ public class ParametroFacturaService implements IParametroFacturaService{
         try {
             opt = repository.findById(idParametro);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el parámetro: "+ idParametro);
             throw new NotFoundException("No se encontró el parámetro: "+ idParametro);
         }else {
             try {
                 repository.deleteById(idParametro);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -86,9 +102,13 @@ public class ParametroFacturaService implements IParametroFacturaService{
         try {
             opt = repository.findFirstByCai(pCai);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el parámetro: "+pCai);
             throw new NotFoundException("No se encontró el parámetro: "+pCai);
         }else {
             return opt.get();

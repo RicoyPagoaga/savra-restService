@@ -5,6 +5,7 @@ import hn.edu.ujcv.savra.entity.Transmision;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.TransmisionRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class TransmisionService implements ITransmisionService{
+    private Log mi_log = new Log();
     @Autowired
     TransmisionRepository repository;
     @Override
@@ -25,6 +27,8 @@ public class TransmisionService implements ITransmisionService{
             validarTransmision(pTransmision);
             return repository.save(pTransmision);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -51,14 +55,20 @@ public class TransmisionService implements ITransmisionService{
         try {
             opt = repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la transmision: " + id);
             throw new NotFoundException("No se encontró la transmision: " + id);
         }else {
             try {
                 repository.deleteById(id);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -70,9 +80,13 @@ public class TransmisionService implements ITransmisionService{
         try {
             opt = repository.findById(pTransmision.getIdTransmision());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la transmision: " + pTransmision.getIdTransmision());
             throw new NotFoundException("No se encontró la transmision: " + pTransmision.getIdTransmision());
         }else {
             try {
@@ -83,6 +97,8 @@ public class TransmisionService implements ITransmisionService{
                 nuevaTransmison.setIdTransmision(pTransmision.getIdTransmision());
                 return repository.save(nuevaTransmison);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

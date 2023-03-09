@@ -6,6 +6,7 @@ import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.MarcaRepository;
 import hn.edu.ujcv.savra.repository.ModeloRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class ModeloService implements IModeloService {
-
+    private Log mi_log = new Log();
     @Autowired
     private ModeloRepository repository;
 
@@ -27,6 +28,8 @@ public class ModeloService implements IModeloService {
             validarModelo(modelo);
             return repository.save(modelo);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -39,6 +42,8 @@ public class ModeloService implements IModeloService {
             }
             return repository.saveAll(modelos);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -48,6 +53,8 @@ public class ModeloService implements IModeloService {
         try {
             return repository.findAll();
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -58,9 +65,13 @@ public class ModeloService implements IModeloService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el modelo " + id);
             throw new NotFoundException("No se encontró el modelo " + id);
         }
         return opt.get();
@@ -72,9 +83,13 @@ public class ModeloService implements IModeloService {
         try {
             opt = repository.findFirstByNombre(nombre);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el modelo " + nombre);
             throw new NotFoundException("No se encontró el modelo " + nombre);
         }
         return opt.get();
@@ -86,14 +101,20 @@ public class ModeloService implements IModeloService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el modelo " + id);
             throw new NotFoundException("No se encontró el modelo " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e1) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -111,9 +132,13 @@ public class ModeloService implements IModeloService {
             }
             opt = repository.findById(modelo.getIdModelo());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el modelo " + modelo.getIdModelo());
             throw new NotFoundException("No se encontró el modelo " + modelo.getIdModelo());
         } else{
             try {
@@ -125,6 +150,8 @@ public class ModeloService implements IModeloService {
                 );
                 return repository.save(modeloExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
