@@ -5,6 +5,7 @@ import hn.edu.ujcv.savra.entity.Permiso;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.PermisoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class PermisoService implements IPermisoService{
+    private Log mi_log = new Log();
     @Autowired
     private PermisoRepository repository;
     @Override
@@ -29,6 +31,8 @@ public class PermisoService implements IPermisoService{
             validarPermisos(permiso);
             return repository.save(permiso);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -42,6 +46,8 @@ public class PermisoService implements IPermisoService{
             }
             return repository.saveAll(permisos);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -51,6 +57,8 @@ public class PermisoService implements IPermisoService{
         try {
             return repository.findAll();
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -63,6 +71,8 @@ public class PermisoService implements IPermisoService{
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
         }if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el permiso"+id);
             throw new NotFoundException("No se encontró el permiso"+id);
         }
         return opt.get();
@@ -74,9 +84,13 @@ public class PermisoService implements IPermisoService{
         try {
             opt=repository.findPermisoByNombre(nombre);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el cargo :v"+nombre);
             throw new NotFoundException("no se encontro el cargo :v"+nombre);
         }
         return opt.get();
@@ -88,15 +102,21 @@ public class PermisoService implements IPermisoService{
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el permiso"+id);
             throw new NotFoundException("no se encontro el permiso"+id);
         }
         else {
             try {
                 repository.deleteById(id);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -108,9 +128,13 @@ public class PermisoService implements IPermisoService{
         try {
             opt=repository.findById(permiso.getIdPermiso());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el permiso"+permiso.getIdPermiso());
             throw new NotFoundException("no se encontro el permiso"+permiso.getIdPermiso());
         }
         else {
@@ -123,6 +147,8 @@ public class PermisoService implements IPermisoService{
                 permiso.setNombre(permiso.getNombre().toUpperCase());
                 return repository.save(existingPermiso);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

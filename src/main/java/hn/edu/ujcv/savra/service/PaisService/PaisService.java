@@ -6,6 +6,7 @@ import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.PaisRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class PaisService implements IPaisService{
 
     @Autowired
     private PaisRepository repository;
+    private Log mi_log = new Log();
     @Override
     public Pais savePais(Pais pPais) throws BusinessException, SQLException {
         try{
@@ -92,6 +94,8 @@ public class PaisService implements IPaisService{
             }
             return repository.save(pPais);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -106,9 +110,13 @@ public class PaisService implements IPaisService{
         try {
             opt = repository.findById(iso);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el pais " + iso);
             throw new NotFoundException("No se encontró el pais " + iso);
         }
         return opt.get();
@@ -120,9 +128,13 @@ public class PaisService implements IPaisService{
         try {
             opt = repository.findByNombre(nombre);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el país " + nombre);
             throw new NotFoundException("No se encontró el país " + nombre);
         }
         return opt.get();
@@ -134,14 +146,20 @@ public class PaisService implements IPaisService{
         try{
             opt = repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el país: " + id);
             throw new NotFoundException("No se encontró el país: " + id);
         }else{
             try {
                 repository.deleteById(id);
             }catch (Exception e1){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -185,13 +203,19 @@ public class PaisService implements IPaisService{
             Pattern pat = Pattern.compile("[\\d]*");
             Matcher mat = pat.matcher(pPais.getCod_area());
             if(!mat.matches()){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe("Código de área debe ser númerico (no es necesario utilizar '+')");
                 throw new BusinessException("Código de área debe ser númerico (no es necesario utilizar '+')");
             }
             opt = repository.findById(pPais.getIdPais());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el país:" + pPais.getIdPais());
             throw new NotFoundException("No se encontró el país:" + pPais.getIdPais());
         }else {
             try {
@@ -202,6 +226,8 @@ public class PaisService implements IPaisService{
                 newPais.setCod_area(pPais.getCod_area());
                 return repository.save(newPais);
             }catch (Exception e1){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }

@@ -5,6 +5,7 @@ import hn.edu.ujcv.savra.entity.EmpleadoCargo.EmpleadoCargoPK;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.EmpleadoCargoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 public class EmpleadoCargoService implements IEmpleadoCargoService{
+    private Log mi_log = new Log();
     @Autowired
     private EmpleadoCargoRepository repository;
 
@@ -30,6 +32,8 @@ public class EmpleadoCargoService implements IEmpleadoCargoService{
             }*/
             return repository.save(empleadoCargo);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -39,6 +43,8 @@ public class EmpleadoCargoService implements IEmpleadoCargoService{
         try {
             return repository.saveAll(empleadoCargos);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -49,6 +55,8 @@ public class EmpleadoCargoService implements IEmpleadoCargoService{
             return repository.findAll();
 
         }catch (Exception e ){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -62,9 +70,13 @@ public class EmpleadoCargoService implements IEmpleadoCargoService{
         try {
             opt=repository.findById(pk);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el empleado cargo"+id);
             throw new NotFoundException("no se encontro el empleado cargo"+id);
         }
         return opt.get();
@@ -93,15 +105,21 @@ public class EmpleadoCargoService implements IEmpleadoCargoService{
         try {
             opt=repository.findById(pk);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el empleado"+id);
             throw new NotFoundException("no se encontro el empleado"+id);
         }
         else {
             try {
                 repository.deleteById(pk);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -114,9 +132,13 @@ public class EmpleadoCargoService implements IEmpleadoCargoService{
         try {
             opt=repository.findById(pk);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el empleado"+ empleadoCargo.getIdEmpleado());
             throw new NotFoundException("no se encontro el empleado"+ empleadoCargo.getIdEmpleado());
         }
         else {
@@ -128,6 +150,8 @@ public class EmpleadoCargoService implements IEmpleadoCargoService{
                 existingEmpleadoCargo.setIdCargo(empleadoCargo.getIdCargo());
                 return repository.save(existingEmpleadoCargo);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

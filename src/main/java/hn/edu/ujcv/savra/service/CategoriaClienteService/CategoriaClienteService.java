@@ -5,6 +5,7 @@ import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.exceptions.SqlExceptions;
 import hn.edu.ujcv.savra.repository.CategoriaClienteRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class CategoriaClienteService implements ICategoriaClienteService{
+    private Log mi_log = new Log();
     @Autowired
     private CategoriaClienteRepository repository;
 
@@ -64,6 +66,8 @@ public class CategoriaClienteService implements ICategoriaClienteService{
 
             return repository.save(pCategoriaCliente);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -79,8 +83,12 @@ public class CategoriaClienteService implements ICategoriaClienteService{
         try{
             opt = repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }if(!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la categoria: "+ id);
             throw new NotFoundException("No se encontró la categoria: "+ id);
         }
         return opt.get();
@@ -97,14 +105,20 @@ public class CategoriaClienteService implements ICategoriaClienteService{
         try{
             opt = repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la categoria: " + id);
             throw new NotFoundException("No se encontró la categoria: " + id);
         }else{
             try {
                 repository.deleteById(id);
             }catch (Exception e1){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -155,9 +169,13 @@ public class CategoriaClienteService implements ICategoriaClienteService{
             }
             opt = repository.findById(pCategoriaCliente.getIdCategoria());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la categoria:" + pCategoriaCliente.getIdCategoria());
             throw new NotFoundException("No se encontró la categoria:" + pCategoriaCliente.getIdCategoria());
         }else {
             try {
@@ -167,6 +185,8 @@ public class CategoriaClienteService implements ICategoriaClienteService{
                 newCategoria.setDescripcion(pCategoriaCliente.getDescripcion());
                 return repository.save(newCategoria);
             }catch (Exception e1){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }

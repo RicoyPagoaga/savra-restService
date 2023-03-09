@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.TipoEntrega;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.TipoEntregaRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class TipoEntregaService implements ITipoEntregaService {
+    private Log mi_log = new Log();
     @Autowired
     private TipoEntregaRepository repository;
 
@@ -26,6 +28,8 @@ public class TipoEntregaService implements ITipoEntregaService {
             validarTipoEntrega(tipoEntrega);
             return repository.save(tipoEntrega);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -38,6 +42,8 @@ public class TipoEntregaService implements ITipoEntregaService {
             }
             return repository.saveAll(tiposEntrega);
         } catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -47,6 +53,8 @@ public class TipoEntregaService implements ITipoEntregaService {
         try {
             return repository.findAll();
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -57,9 +65,13 @@ public class TipoEntregaService implements ITipoEntregaService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el tipo de entrega: " + id);
             throw new NotFoundException("No se encontró el tipo de entrega: " + id);
         }
         return opt.get();
@@ -71,9 +83,13 @@ public class TipoEntregaService implements ITipoEntregaService {
         try {
             opt = repository.findFirstByNombre(nombre);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el tipo de entrega: " + nombre);
             throw new NotFoundException("No se encontró el tipo de entrega: " + nombre);
         }
         return opt.get();
@@ -85,14 +101,20 @@ public class TipoEntregaService implements ITipoEntregaService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el tipo de entrega: " + id);
             throw new NotFoundException("No se encontró el tipo de entrega: " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -110,9 +132,13 @@ public class TipoEntregaService implements ITipoEntregaService {
             }
             opt = repository.findById(tipoEntrega.getIdTipoEntrega());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el tipo de entrega: " + tipoEntrega.getIdTipoEntrega());
             throw new NotFoundException("No se encontró el tipo de entrega: " + tipoEntrega.getIdTipoEntrega());
         } else {
             try {
@@ -124,6 +150,8 @@ public class TipoEntregaService implements ITipoEntregaService {
                 );
                 return repository.save(tipoEntregaExiste);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

@@ -6,6 +6,7 @@ import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.CuponRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class CuponService implements ICuponService{
-
+    private Log mi_log = new Log();
     @Autowired
     private CuponRepository repository;
     @Override
@@ -32,6 +33,8 @@ public class CuponService implements ICuponService{
             validarCupon(pCupon);
             return repository.save(pCupon);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -55,6 +58,8 @@ public class CuponService implements ICuponService{
                         pCupon.getFechaCaducidad(),pCupon.getCantidadMaxima(), pCupon.getCantidadDisponible(), pCupon.getActivo(), pCupon.getPorcentajeDescuento());
                 return repository.save(newCupon);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -74,11 +79,15 @@ public class CuponService implements ICuponService{
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el cupón: "+ id);
             throw new NotFoundException("No se encontró el cupón: "+ id);
         }else {
             try {
                 repository.deleteById(id);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -95,9 +104,13 @@ public class CuponService implements ICuponService{
         try {
             opt = repository.findByCodigo(codigo);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el cupón: " + codigo);
             throw new NotFoundException("No se encontró el cupón: " + codigo);
         }
         return opt.get();
@@ -109,14 +122,21 @@ public class CuponService implements ICuponService{
         try{
             opt = repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el cupón: "+ id);
             throw new NotFoundException("No se encontró el cupón: "+ id);
         }else {
             try {
                 repository.activoCupon(estado,id);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -175,7 +195,7 @@ public class CuponService implements ICuponService{
             throw new BusinessException("Cantidad disponible no puede ser menor a cero");
         }
         if (pCupon.getCantidadDisponible() > pCupon.getCantidadMaxima()){
-            throw new BusinessException("Cantidad disponible no puede ser mayor a la cantidad máxima ");
+            throw new BusinessException("Cantidad disponible no puede ser mayor a la cantidad máxima");
         }
         //porcentajeDescuento
         if (String.valueOf(pCupon.getPorcentajeDescuento()) == ""){

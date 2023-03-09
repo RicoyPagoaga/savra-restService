@@ -6,6 +6,7 @@ import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.PaisRepository;
 import hn.edu.ujcv.savra.repository.ProveedorRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class ProveedorService implements IProveedorService {
-
+    private Log mi_log = new Log();
     @Autowired
     private ProveedorRepository repository;
 
@@ -26,6 +27,8 @@ public class ProveedorService implements IProveedorService {
             validarProvedor(proveedor);
             return repository.save(proveedor);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -38,6 +41,8 @@ public class ProveedorService implements IProveedorService {
             }
             return repository.saveAll(proveedores);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -47,6 +52,8 @@ public class ProveedorService implements IProveedorService {
         try {
             return repository.findAll();
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -57,9 +64,13 @@ public class ProveedorService implements IProveedorService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el proveedor " + id);
             throw new NotFoundException("No se encontró el proveedor " + id);
         }
         return opt.get();
@@ -71,9 +82,13 @@ public class ProveedorService implements IProveedorService {
         try {
             opt = repository.findFirstByNombre(nombre);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el proveedor " + nombre);
             throw new NotFoundException("No se encontró el proveedor " + nombre);
         }
         return opt.get();
@@ -85,14 +100,20 @@ public class ProveedorService implements IProveedorService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el proveedor " + id);
             throw new NotFoundException("No se encontró el proveedor " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e1) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -104,9 +125,13 @@ public class ProveedorService implements IProveedorService {
         try {
             opt = repository.findById(proveedor.getIdProveedor());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el proveedor " + proveedor.getIdProveedor());
             throw new NotFoundException("No se encontró el proveedor " + proveedor.getIdProveedor());
         } else{
             try {
@@ -118,6 +143,8 @@ public class ProveedorService implements IProveedorService {
                 );
                 return repository.save(proveedorExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

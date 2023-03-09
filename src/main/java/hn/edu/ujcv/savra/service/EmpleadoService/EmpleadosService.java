@@ -5,6 +5,7 @@ import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.EmpleadosRepository;
 import hn.edu.ujcv.savra.repository.TipoDocumentoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class EmpleadosService implements IEmpleadosService{
 
     @Autowired
     private EmpleadosRepository repository;
-
+    private Log mi_log = new Log();
     @Override
     public Empleado saveEmpleados(Empleado empleado) throws BusinessException {
         try {
@@ -105,6 +106,8 @@ public class EmpleadosService implements IEmpleadosService{
             empleado.setNombre(empleado.getNombre().trim().toUpperCase());
             return repository.save(empleado);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -121,6 +124,8 @@ public class EmpleadosService implements IEmpleadosService{
             }
             return repository.saveAll(empleados);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -130,6 +135,8 @@ public class EmpleadosService implements IEmpleadosService{
         try {
             return repository.findAll();
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -140,9 +147,13 @@ public class EmpleadosService implements IEmpleadosService{
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el empleado"+id);
             throw new NotFoundException("no se encontro el empleado"+id);
         }
         return opt.get();
@@ -154,9 +165,13 @@ public class EmpleadosService implements IEmpleadosService{
         try {
             opt=repository.findByNombre(nombre);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el empleado :v"+nombre);
             throw new NotFoundException("no se encontro el empleado :v"+nombre);
         }
         return opt.get();
@@ -168,15 +183,21 @@ public class EmpleadosService implements IEmpleadosService{
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el empleado"+id);
             throw new NotFoundException("no se encontro el empleado"+id);
         }
         else {
             try {
                 repository.deleteById(id);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -188,33 +209,49 @@ public class EmpleadosService implements IEmpleadosService{
         try {
             opt=repository.findById(empleado.getIdEmpleado());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el empleado"+ empleado.getIdEmpleado());
             throw new NotFoundException("no se encontro el empleado"+ empleado.getIdEmpleado());
         }
         else {
             try {
                 //nombre
                 if (empleado.getNombre().trim().isEmpty()){
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("El nombre no debe estar vacio ఠ_ఠ");
                     throw new BusinessException("El nombre no debe estar vacio ఠ_ఠ");
                 }
                 if(empleado.getNombre().trim().length()<3){
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("El nombre debe tener mas de 3 caracteres ఠ_ఠ");
                     throw new BusinessException("El nombre debe tener mas de 3 caracteres ఠ_ఠ");
                 }
                 if(empleado.getNombre().trim().length()>50){
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("El nombre debe tener mas de 3 caracteres ఠ_ఠ");
                     throw new BusinessException("El nombre no debe tener mas de 50 caracteres ఠ_ఠ");
                 }
                 Pattern pat3 = Pattern.compile("[a-zA-ZñÑáéíóúÁÉÍÓÚ ]*");
                 Matcher matDoc = pat3.matcher(empleado.getNombre().trim());
                 if(!matDoc.matches()){
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("Nombre no debe contener números o caracteres especiales.");
                     throw new BusinessException("Nombre no debe contener números o caracteres especiales.");
                 }
                 Pattern dobleEspacio = Pattern.compile("\\s{2,}");
                 if (dobleEspacio.matcher(empleado.getNombre().trim()).find()) {
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("Nombre no debe contener espacios dobles.");
                     throw new BusinessException("Nombre no debe contener espacios dobles.");
                 }
                 if (empleado.getDocumento().trim().isEmpty()){
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("El documento está vacío");
                     throw new BusinessException("El documento está vacío");
                 }
                 //idTipoDocumento
@@ -224,9 +261,13 @@ public class EmpleadosService implements IEmpleadosService{
 
                 //fecha nacimiento
                 if (empleado.getFechaNacimiento()==null){
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("Fecha de nacimiento esta vacía");
                     throw new BusinessException("Fecha de nacimiento esta vacía");
                 }
                 if (empleado.getFechaNacimiento().isAfter( LocalDate.now().minusYears(18))){
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("Fecha de nacimiento esta vacía");
                     throw new BusinessException("El empleado debe ser mayor de 18 años");
                 }
                 if (empleado.getFechaNacimiento().isBefore(LocalDate.now().minusYears(60))){
@@ -295,6 +336,8 @@ public class EmpleadosService implements IEmpleadosService{
                 existingEmpleado.setDireccion(empleado.getDireccion());
                 return repository.save(existingEmpleado);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -306,9 +349,13 @@ public class EmpleadosService implements IEmpleadosService{
         try {
             opt = tipoDocumentoRepository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontro el documento" + id);
             throw new NotFoundException("No se encontro el documento" + id);
         }
         System.out.println(opt.get().getNombreDocumento());
@@ -371,6 +418,8 @@ public class EmpleadosService implements IEmpleadosService{
                 }
             }
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -382,6 +431,5 @@ public class EmpleadosService implements IEmpleadosService{
         return matcher.find();
     }
     private void validarEmpleado(Empleado empleado) throws BusinessException{
-
     }
 }

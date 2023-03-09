@@ -5,6 +5,7 @@ import hn.edu.ujcv.savra.entity.TipoDocumento;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.TipoDocumentoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class TipoDocumentoService implements ITipoDocumentoService {
+    private Log mi_log = new Log();
     @Autowired
     private TipoDocumentoRepository repository;
 
@@ -45,6 +47,8 @@ public class TipoDocumentoService implements ITipoDocumentoService {
             tipoDocumento.setNombreDocumento(tipoDocumento.getNombreDocumento().toUpperCase());
             return repository.save(tipoDocumento);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -59,6 +63,8 @@ public class TipoDocumentoService implements ITipoDocumentoService {
             }
             return repository.saveAll(tipoDocumentos);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -69,6 +75,8 @@ public class TipoDocumentoService implements ITipoDocumentoService {
             return repository.findAll();
 
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -78,8 +86,12 @@ public class TipoDocumentoService implements ITipoDocumentoService {
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el documento"+id);
             throw new NotFoundException("no se encontro el documento"+id);
         }
         return opt.get();
@@ -91,9 +103,13 @@ public class TipoDocumentoService implements ITipoDocumentoService {
         try {
             opt=repository.findByNombreDocumento(nombre);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el documento :v"+nombre);
             throw new NotFoundException("no se encontro el documento :v"+nombre);
         }
         return opt.get();
@@ -105,15 +121,21 @@ public class TipoDocumentoService implements ITipoDocumentoService {
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el documento v;"+id);
             throw new NotFoundException("no se encontro el documento v;"+id);
         }
         else {
             try {
                 repository.deleteById(id);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -126,9 +148,13 @@ public class TipoDocumentoService implements ITipoDocumentoService {
         try {
             opt=repository.findById(tipoDocumento.getIdTipoDocumento());
         }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("no se encontro el documento v;"+ tipoDocumento.getIdTipoDocumento());
             throw new NotFoundException("no se encontro el documento v;"+ tipoDocumento.getIdTipoDocumento());
         }
         else {
@@ -166,6 +192,8 @@ public class TipoDocumentoService implements ITipoDocumentoService {
 
                 return repository.save(existingtTipoDocumento);
             }catch (Exception e){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

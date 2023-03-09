@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.Marca;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.MarcaRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class MarcaService implements IMarcaService {
-
+    private Log mi_log = new Log();
     @Autowired
     private MarcaRepository repository;
 
@@ -25,6 +26,8 @@ public class MarcaService implements IMarcaService {
             validarMarca(marca);
             return repository.save(marca);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -37,6 +40,8 @@ public class MarcaService implements IMarcaService {
             }
             return repository.saveAll(marcas);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -46,6 +51,8 @@ public class MarcaService implements IMarcaService {
         try {
             return repository.findAll();
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -56,9 +63,13 @@ public class MarcaService implements IMarcaService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la marca " + id);
             throw new NotFoundException("No se encontró la marca " + id);
         }
         return opt.get();
@@ -70,9 +81,13 @@ public class MarcaService implements IMarcaService {
         try {
             opt = repository.findFirstByNombre(nombre);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la marca " + nombre);
             throw new NotFoundException("No se encontró la marca " + nombre);
         }
         return opt.get();
@@ -84,14 +99,20 @@ public class MarcaService implements IMarcaService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la marca " + id);
             throw new NotFoundException("No se encontró la marca " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e1) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -109,9 +130,13 @@ public class MarcaService implements IMarcaService {
             }
             opt = repository.findById(marca.getIdMarca());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la marca " + marca.getIdMarca());
             throw new NotFoundException("No se encontró la marca " + marca.getIdMarca());
         } else{
             try {
@@ -121,6 +146,8 @@ public class MarcaService implements IMarcaService {
                 );
                 return repository.save(marcaExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
