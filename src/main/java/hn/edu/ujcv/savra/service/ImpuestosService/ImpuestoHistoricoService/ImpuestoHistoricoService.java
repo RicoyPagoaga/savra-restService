@@ -7,6 +7,7 @@ import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.Impuesto.ImpuestoHistoricoRepository;
 import hn.edu.ujcv.savra.repository.Impuesto.ImpuestoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class ImpuestoHistoricoService implements IImpuestoHistoricoService {
+
+    private Log mi_log = new Log();
 
     @Autowired
     private ImpuestoHistoricoRepository repository;
@@ -29,6 +32,8 @@ public class ImpuestoHistoricoService implements IImpuestoHistoricoService {
             setearImpuestoHistorico(impuestoHistorico);
             return repository.save(impuestoHistorico);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -49,9 +54,14 @@ public class ImpuestoHistoricoService implements IImpuestoHistoricoService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el impuesto " + impuestoHistorico.getIdImpuesto() +
+                    ", con fecha de inicio: " + impuestoHistorico.getFechaInicio());
             throw new NotFoundException("No se encontró el impuesto " + impuestoHistorico.getIdImpuesto() +
                     ", con fecha de inicio: " + impuestoHistorico.getFechaInicio());
         } else{
@@ -66,6 +76,8 @@ public class ImpuestoHistoricoService implements IImpuestoHistoricoService {
                 );
                 return repository.save(impuestoHistoricoExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -174,10 +186,14 @@ public class ImpuestoHistoricoService implements IImpuestoHistoricoService {
                         }
                     }
                 } else {
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("Fecha Final inválida");
                     throw new BusinessException("Fecha Final inválida");
                 }
             }
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }

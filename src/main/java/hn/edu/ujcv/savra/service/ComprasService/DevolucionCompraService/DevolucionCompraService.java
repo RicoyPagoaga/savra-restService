@@ -10,6 +10,7 @@ import hn.edu.ujcv.savra.repository.Compra.CompraDetalleRepository;
 import hn.edu.ujcv.savra.repository.Compra.CompraRepository;
 import hn.edu.ujcv.savra.repository.Compra.DevolucionCompraRepository;
 import hn.edu.ujcv.savra.repository.Repuesto.RepuestoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ import java.util.regex.Pattern;
 @Service
 public class DevolucionCompraService implements IDevolucionCompraService{
 
+    private Log mi_log = new Log();
+
     @Autowired
     private DevolucionCompraRepository repository;
 
@@ -31,6 +34,8 @@ public class DevolucionCompraService implements IDevolucionCompraService{
             validarDevolucion(devolucionCompra);
             return repository.save(devolucionCompra);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -44,6 +49,8 @@ public class DevolucionCompraService implements IDevolucionCompraService{
             }
             return repository.saveAll(devolucionesCompra);
         } catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -63,9 +70,13 @@ public class DevolucionCompraService implements IDevolucionCompraService{
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la devolución de compra: " + id);
             throw new NotFoundException("No se encontró la devolución de compra: " + id);
         }
         return opt.get();
@@ -77,14 +88,20 @@ public class DevolucionCompraService implements IDevolucionCompraService{
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la devolución de compra: " + id);
             throw new NotFoundException("No se encontró la devolución de compra: " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -99,9 +116,13 @@ public class DevolucionCompraService implements IDevolucionCompraService{
             }
             opt = repository.findById(devolucionCompra.getIdDevolucion());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la devolución de compra: " + devolucionCompra.getIdDevolucion());
             throw new NotFoundException("No se encontró la devolución de compra: " + devolucionCompra.getIdDevolucion());
         } else {
             try {
@@ -115,6 +136,8 @@ public class DevolucionCompraService implements IDevolucionCompraService{
                 );
                 return repository.save(devolucionExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

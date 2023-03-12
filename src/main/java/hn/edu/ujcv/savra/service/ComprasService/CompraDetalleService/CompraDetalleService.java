@@ -8,6 +8,7 @@ import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.Compra.CompraDetalleRepository;
 import hn.edu.ujcv.savra.repository.Compra.CompraRepository;
 import hn.edu.ujcv.savra.repository.Repuesto.RepuestoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class CompraDetalleService implements ICompraDetalleService {
+
+    private Log mi_log = new Log();
 
     @Autowired
     private CompraDetalleRepository repository;
@@ -28,6 +31,8 @@ public class CompraDetalleService implements ICompraDetalleService {
             validarCompraDetalle(compraDetalle);
             return repository.save(compraDetalle);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -41,6 +46,8 @@ public class CompraDetalleService implements ICompraDetalleService {
             }
             return repository.saveAll(comprasDetalle);
         } catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -54,6 +61,8 @@ public class CompraDetalleService implements ICompraDetalleService {
             }
             return repository.saveAll(comprasDetalle);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -73,9 +82,13 @@ public class CompraDetalleService implements ICompraDetalleService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el detalle de compra: " + id);
             throw new NotFoundException("No se encontró el detalle de compra: " + id);
         }
         return opt.get();
@@ -87,14 +100,20 @@ public class CompraDetalleService implements ICompraDetalleService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el detalle de compra: " + id);
             throw new NotFoundException("No se encontró el detalle de compra: " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -109,9 +128,13 @@ public class CompraDetalleService implements ICompraDetalleService {
             }
             opt = repository.findById(compraDetalle.getIdCompraDetalle());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el detalle de compra: " + compraDetalle.getIdCompraDetalle());
             throw new NotFoundException("No se encontró el detalle de compra: " + compraDetalle.getIdCompraDetalle());
         } else {
             try {
@@ -125,6 +148,8 @@ public class CompraDetalleService implements ICompraDetalleService {
                 );
                 return repository.save(compraDetalleExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

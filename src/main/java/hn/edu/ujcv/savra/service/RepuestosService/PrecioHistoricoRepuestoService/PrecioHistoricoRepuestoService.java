@@ -7,6 +7,7 @@ import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.Repuesto.PrecioHistoricoRepuestoRepository;
 import hn.edu.ujcv.savra.repository.Repuesto.RepuestoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class PrecioHistoricoRepuestoService implements IPrecioHistoricoRepuestoService {
+
+    private Log mi_log = new Log();
 
     @Autowired
     private PrecioHistoricoRepuestoRepository repository;
@@ -29,6 +32,8 @@ public class PrecioHistoricoRepuestoService implements IPrecioHistoricoRepuestoS
             setearPrecioHistorico(precioRepuesto);
             return repository.save(precioRepuesto);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -61,9 +66,14 @@ public class PrecioHistoricoRepuestoService implements IPrecioHistoricoRepuestoS
         try {
             opt = repository.findById(pk);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el precio histórico del repuesto " + id +
+                    ", con fecha de inicio: " + fechaInicio);
             throw new NotFoundException("No se encontró el precio histórico del repuesto " + id +
                     ", con fecha de inicio: " + fechaInicio);
         }
@@ -77,15 +87,22 @@ public class PrecioHistoricoRepuestoService implements IPrecioHistoricoRepuestoS
         try {
             opt = repository.findById(pk);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el precio histórico del repuesto " + id +
+                    ", con fecha de inicio: " + fechaInicio);
             throw new NotFoundException("No se encontró el precio histórico del repuesto " + id +
                     ", con fecha de inicio: " + fechaInicio);
         } else {
             try {
                 repository.deleteById(pk);
             } catch (Exception e1) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -98,9 +115,14 @@ public class PrecioHistoricoRepuestoService implements IPrecioHistoricoRepuestoS
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el precio histórico del repuesto " + precioRepuesto.getIdRepuesto() +
+                    ", con fecha de inicio: " + precioRepuesto.getFechaInicio());
             throw new NotFoundException("No se encontró el precio histórico del repuesto " + precioRepuesto.getIdRepuesto() +
                     ", con fecha de inicio: " + precioRepuesto.getFechaInicio());
         } else{
@@ -115,6 +137,8 @@ public class PrecioHistoricoRepuestoService implements IPrecioHistoricoRepuestoS
                 );
                 return repository.save(precioExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -142,10 +166,14 @@ public class PrecioHistoricoRepuestoService implements IPrecioHistoricoRepuestoS
                         }
                     }
                 } else {
+                    mi_log.CrearArchivo(this.getClass().getSimpleName());
+                    mi_log.logger.severe("Fecha Final inválida");
                     throw new BusinessException("Fecha Final inválida");
                 }
             }
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }

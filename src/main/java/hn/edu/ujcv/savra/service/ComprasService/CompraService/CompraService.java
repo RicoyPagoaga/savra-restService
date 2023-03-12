@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.Compra.Compra;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.Compra.CompraRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.regex.Pattern;
 @Service
 public class CompraService implements ICompraService {
 
+    private Log mi_log = new Log();
+
     @Autowired
     private CompraRepository repository;
 
@@ -27,6 +30,8 @@ public class CompraService implements ICompraService {
             validarCompra(compra, detalle);
             return repository.save(compra);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -58,9 +63,13 @@ public class CompraService implements ICompraService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la compra: " + id);
             throw new NotFoundException("No se encontró la compra: " + id);
         }
         return opt.get();
@@ -72,14 +81,20 @@ public class CompraService implements ICompraService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la compra: " + id);
             throw new NotFoundException("No se encontró la compra: " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -94,9 +109,13 @@ public class CompraService implements ICompraService {
             }
             opt = repository.findById(compra.getIdCompra());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró la compra: " + compra.getIdCompra());
             throw new NotFoundException("No se encontró la compra: " + compra.getIdCompra());
         } else {
             try {
@@ -111,6 +130,8 @@ public class CompraService implements ICompraService {
                 );
                 return repository.save(compraExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -155,7 +176,7 @@ public class CompraService implements ICompraService {
                 }
             }
 
-            if (compra.getFechaRecibido().isBefore(fechaActual)) {
+            if (compra.getFechaRecibido().isBefore(compra.getFechaCompra())) {
                 throw new BusinessException("La fecha de entrega no puede ser una fecha anterior a la fecha de compra");
             }
             if (compra.getFechaRecibido().isBefore(compra.getFechaDespacho())) {

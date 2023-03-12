@@ -5,6 +5,7 @@ import hn.edu.ujcv.savra.entity.Repuesto.Repuesto;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.Repuesto.RepuestoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.regex.Pattern;
 @Service
 public class RepuestoService implements IRepuestoService {
 
+    private Log mi_log = new Log();
+
     @Autowired
     private RepuestoRepository repository;
 
@@ -28,6 +31,8 @@ public class RepuestoService implements IRepuestoService {
             validarRepuesto(repuesto, stockA, stockM, stockMa, precio);
             return repository.save(repuesto);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -59,9 +64,13 @@ public class RepuestoService implements IRepuestoService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el repuesto " + id);
             throw new NotFoundException("No se encontró el repuesto " + id);
         }
         return opt.get();
@@ -73,9 +82,13 @@ public class RepuestoService implements IRepuestoService {
         try {
             opt = repository.findFirstByNombre(nombre);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el repuesto " + nombre);
             throw new NotFoundException("No se encontró el repuesto " + nombre);
         }
         return opt.get();
@@ -87,14 +100,20 @@ public class RepuestoService implements IRepuestoService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el repuesto " + id);
             throw new NotFoundException("No se encontró el repuesto " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e1) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -107,9 +126,13 @@ public class RepuestoService implements IRepuestoService {
         try {
             opt = repository.findById(repuesto.getIdRepuesto());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el repuesto " + repuesto.getIdRepuesto());
             throw new NotFoundException("No se encontró el repuesto " + repuesto.getIdRepuesto());
         } else{
             try {
@@ -122,6 +145,8 @@ public class RepuestoService implements IRepuestoService {
                 );
                 return repository.save(repuestoExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

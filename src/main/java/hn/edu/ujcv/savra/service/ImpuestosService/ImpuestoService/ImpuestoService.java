@@ -5,6 +5,7 @@ import hn.edu.ujcv.savra.entity.TipoEntrega;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.Impuesto.ImpuestoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class ImpuestoService implements IImpuestoService {
+
+    private Log mi_log = new Log();
 
     @Autowired
     private ImpuestoRepository repository;
@@ -27,6 +30,8 @@ public class ImpuestoService implements IImpuestoService {
             validarImpuesto(impuesto, valor, nulo);
             return repository.save(impuesto);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -58,9 +63,13 @@ public class ImpuestoService implements IImpuestoService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el impuesto " + id);
             throw new NotFoundException("No se encontró el impuesto " + id);
         }
         return opt.get();
@@ -72,9 +81,13 @@ public class ImpuestoService implements IImpuestoService {
         try {
             opt = repository.findFirstByNombre(nombre);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el impuesto " + nombre);
             throw new NotFoundException("No se encontró el impuesto " + nombre);
         }
         return opt.get();
@@ -86,14 +99,20 @@ public class ImpuestoService implements IImpuestoService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el impuesto " + id);
             throw new NotFoundException("No se encontró el impuesto " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e1) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -105,9 +124,13 @@ public class ImpuestoService implements IImpuestoService {
         try {
             opt = repository.findById(impuesto.getIdImpuesto());
         } catch (Exception e) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el impuesto " + impuesto.getIdImpuesto());
             throw new NotFoundException("No se encontró el impuesto " + impuesto.getIdImpuesto());
         } else{
             try {
@@ -118,6 +141,8 @@ public class ImpuestoService implements IImpuestoService {
                 );
                 return repository.save(impuestoExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
