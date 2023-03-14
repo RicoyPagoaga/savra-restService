@@ -32,4 +32,6 @@ public class Constants {
 
     public  static final String URL_BASE_ROL                    = String.format("%s/rol", URL_BASE);
     public  static final String URL_BASE_EMPLEADO_CARGO        = String.format("%s/empleado_cargos", URL_BASE);
+
+    public  static final String URL_BASE_MODULO_PERMISO = String.format("%s/modulo_permisos", URL_BASE);
 }
