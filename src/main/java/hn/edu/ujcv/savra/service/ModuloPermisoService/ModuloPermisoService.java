@@ -44,15 +44,15 @@ public class ModuloPermisoService implements IModuloPermisoService {
     }
 
     @Override
-    public ModuloPermiso getModuloPermisoById(long id, long idPermiso) throws BusinessException, NotFoundException {
+    public ModuloPermiso getModuloPermisoById(long id, long idmodulo) throws BusinessException, NotFoundException {
         Optional<ModuloPermiso> opt=null;
-        ModuloPermisoPK pk = new ModuloPermisoPK(id,idPermiso);
+        ModuloPermisoPK pk = new ModuloPermisoPK(id,idmodulo);
         try {
             opt= repository.findById(pk);
         }catch (Exception e){
             throw new BusinessException(e.getMessage());
         }if (!opt.isPresent()) {
-            throw new NotFoundException("No se encontró el usuario permiso " + id);
+            throw new NotFoundException("No se encontró el modulo permiso " + id);
         }
         return opt.get();
     }
@@ -63,16 +63,16 @@ public class ModuloPermisoService implements IModuloPermisoService {
     //}
 
     @Override
-    public void deleteModuloPermiso(long id, long idPermiso) throws BusinessException, NotFoundException {
+    public void deleteModuloPermiso(long id, long idmodulo) throws BusinessException, NotFoundException {
         Optional<ModuloPermiso> opt=null;
-        ModuloPermisoPK pk = new ModuloPermisoPK(id,idPermiso);
+        ModuloPermisoPK pk = new ModuloPermisoPK(id,idmodulo);
         try {
             opt = repository.findById(pk);
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
-            throw new NotFoundException("No se encontró el usuario permiso" + id);
+            throw new NotFoundException("No se encontró el modulo permiso" + id);
         } else {
             try {
                 repository.deleteById(pk);
@@ -86,7 +86,7 @@ public class ModuloPermisoService implements IModuloPermisoService {
     @Override
     public ModuloPermiso updateModuloPermiso(ModuloPermiso moduloPermiso) throws BusinessException, NotFoundException {
         Optional<ModuloPermiso> opt=null;
-        ModuloPermisoPK pk = new ModuloPermisoPK(moduloPermiso.getIdUsuario(), moduloPermiso.getIdModulo());
+        ModuloPermisoPK pk = new ModuloPermisoPK(moduloPermiso.getIdModulo(), moduloPermiso.getIdModulo());
         try {
 
             opt = repository.findById(pk);
@@ -98,8 +98,8 @@ public class ModuloPermisoService implements IModuloPermisoService {
         } else{
             try {
                 ModuloPermiso existingModuloPermiso = new ModuloPermiso();
-                existingModuloPermiso.setIdUsuario(moduloPermiso.getIdUsuario());
                 existingModuloPermiso.setIdModulo(moduloPermiso.getIdModulo());
+                existingModuloPermiso.setIdPermiso(moduloPermiso.getIdPermiso());
                 return repository.save(existingModuloPermiso);
             } catch (Exception e) {
                 throw new BusinessException(e.getMessage());

@@ -11,6 +11,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class ModuloPermisoPK implements Serializable {
-    private long idUsuario;
     private long idModulo;
+    private long idPermiso;
 }
