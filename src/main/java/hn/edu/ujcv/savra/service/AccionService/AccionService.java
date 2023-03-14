@@ -1,10 +1,9 @@
-package hn.edu.ujcv.savra.service.PermisoService;
+package hn.edu.ujcv.savra.service.AccionService;
 
-import hn.edu.ujcv.savra.entity.Cargo;
-import hn.edu.ujcv.savra.entity.Permiso;
+import hn.edu.ujcv.savra.entity.Accion;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
-import hn.edu.ujcv.savra.repository.PermisoRepository;
+import hn.edu.ujcv.savra.repository.AccionRepository;
 import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,21 +14,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class PermisoService implements IPermisoService{
+public class AccionService implements IAccionService {
     private Log mi_log = new Log();
     @Autowired
-    private PermisoRepository repository;
+    private AccionRepository repository;
     @Override
-    public Permiso savePermiso(Permiso permiso) throws BusinessException {
+    public Accion saveAccion(Accion accion) throws BusinessException {
         try {
-            permiso.setNombre(permiso.getNombre().toUpperCase());
-            Optional<Permiso> opt=null;
-            opt=repository.findPermisoByNombre(permiso.getNombre());
+            accion.setNombre(accion.getNombre().toUpperCase());
+            Optional<Accion> opt=null;
+            opt=repository.findAccionByNombre(accion.getNombre());
             if (opt.isPresent()){
                 throw new BusinessException("Permiso ya existe!!");
             }
-            validarPermisos(permiso);
-            return repository.save(permiso);
+            validarAcciones(accion);
+            return repository.save(accion);
         }catch (Exception e){
             mi_log.CrearArchivo(this.getClass().getSimpleName());
             mi_log.logger.severe(e.getMessage());
@@ -38,13 +37,13 @@ public class PermisoService implements IPermisoService{
     }
 
     @Override
-    public List<Permiso> savePermisos(List<Permiso> permisos) throws BusinessException {
+    public List<Accion> saveAccions(List<Accion> accions) throws BusinessException {
         try {
-            for (Permiso permiso1:permisos) {
-                validarPermisos(permiso1);
+            for (Accion accion1 : accions) {
+                validarAcciones(accion1);
 
             }
-            return repository.saveAll(permisos);
+            return repository.saveAll(accions);
         }catch (Exception e){
             mi_log.CrearArchivo(this.getClass().getSimpleName());
             mi_log.logger.severe(e.getMessage());
@@ -53,7 +52,7 @@ public class PermisoService implements IPermisoService{
     }
 
     @Override
-    public List<Permiso> getPermisos() throws BusinessException {
+    public List<Accion> getAccion() throws BusinessException {
         try {
             return repository.findAll();
         }catch (Exception e){
@@ -64,8 +63,8 @@ public class PermisoService implements IPermisoService{
     }
 
     @Override
-    public Permiso getPermisoById(long id) throws BusinessException, NotFoundException {
-        Optional<Permiso> opt= null;
+    public Accion getAccionById(long id) throws BusinessException, NotFoundException {
+        Optional<Accion> opt= null;
         try {
             opt=repository.findById(id);
         }catch (Exception e){
@@ -79,10 +78,10 @@ public class PermisoService implements IPermisoService{
     }
 
     @Override
-    public Permiso getPermisoByNombre(String nombre) throws BusinessException, NotFoundException {
-        Optional<Permiso> opt= null;
+    public Accion getAccionByNombre(String nombre) throws BusinessException, NotFoundException {
+        Optional<Accion> opt= null;
         try {
-            opt=repository.findPermisoByNombre(nombre);
+            opt=repository.findAccionByNombre(nombre);
         }catch (Exception e){
             mi_log.CrearArchivo(this.getClass().getSimpleName());
             mi_log.logger.severe(e.getMessage());
@@ -97,8 +96,8 @@ public class PermisoService implements IPermisoService{
     }
 
     @Override
-    public void deletePermiso(long id) throws BusinessException, NotFoundException {
-        Optional<Permiso> opt= null;
+    public void deleteAccion(long id) throws BusinessException, NotFoundException {
+        Optional<Accion> opt= null;
         try {
             opt=repository.findById(id);
         }catch (Exception e){
@@ -123,10 +122,10 @@ public class PermisoService implements IPermisoService{
     }
 
     @Override
-    public Permiso updatePermiso(Permiso permiso) throws BusinessException, NotFoundException {
-        Optional<Permiso> opt= null;
+    public Accion updateAccion(Accion accion) throws BusinessException, NotFoundException {
+        Optional<Accion> opt= null;
         try {
-            opt=repository.findById(permiso.getIdPermiso());
+            opt=repository.findById(accion.getIdAccion());
         }catch (Exception e){
             mi_log.CrearArchivo(this.getClass().getSimpleName());
             mi_log.logger.severe(e.getMessage());
@@ -134,18 +133,17 @@ public class PermisoService implements IPermisoService{
         }
         if (!opt.isPresent()){
             mi_log.CrearArchivo(this.getClass().getSimpleName());
-            mi_log.logger.severe("no se encontro el permiso"+permiso.getIdPermiso());
-            throw new NotFoundException("no se encontro el permiso"+permiso.getIdPermiso());
+            mi_log.logger.severe("no se encontro el permiso"+ accion.getIdAccion());
+            throw new NotFoundException("no se encontro el permiso"+ accion.getIdAccion());
         }
         else {
             try {
-                validarPermisos(permiso);
-                Permiso existingPermiso =new Permiso();
-                existingPermiso.setIdPermiso(permiso.getIdPermiso());
-                existingPermiso.setNombre(permiso.getNombre());
-                existingPermiso.setDescripcion(permiso.getDescripcion());
-                permiso.setNombre(permiso.getNombre().toUpperCase());
-                return repository.save(existingPermiso);
+                validarAcciones(accion);
+                Accion existingAccion =new Accion();
+                existingAccion.setIdAccion(accion.getIdAccion());
+                existingAccion.setNombre(accion.getNombre());
+                accion.setNombre(accion.getNombre().toUpperCase());
+                return repository.save(existingAccion);
             }catch (Exception e){
                 mi_log.CrearArchivo(this.getClass().getSimpleName());
                 mi_log.logger.severe(e.getMessage());
@@ -154,41 +152,41 @@ public class PermisoService implements IPermisoService{
         }
     }
 
-    private void validarPermisos(Permiso permiso) throws BusinessException{
+    private void validarAcciones(Accion accion) throws BusinessException{
         //Nombre
-        if (permiso.getNombre().trim().isEmpty()){
+        if (accion.getNombre().trim().isEmpty()){
             throw new BusinessException("El nombre no debe estar vacio");
         }
-        if (permiso.getNombre().trim().length()>50){
+        if (accion.getNombre().trim().length()>50){
             throw new BusinessException("El nombre no debe contener mas de 50 carácteres ఠ_ఠ");
         }
-        if (permiso.getNombre().trim().length()<4){
+        if (accion.getNombre().trim().length()<4){
             throw new BusinessException("El nombre debe contener minimo 4 carácteres ఠ_ఠ");
         }
         Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
-        Matcher matDoc = patDoc.matcher(permiso.getNombre().trim());
+        Matcher matDoc = patDoc.matcher(accion.getNombre().trim());
         if(!matDoc.matches()){
             throw new BusinessException("Nombre Cargo no debe contener números o carácteres especiales ఠ_ఠ");
         }
 
         //Descripcion
-        if(permiso.getDescripcion().trim().isEmpty()){
+       /* if(accion.getDescripcion().trim().isEmpty()){
             throw new BusinessException("La descripción no debe estar vacia ఠ_ఠ");
         }
-        if (permiso.getDescripcion().trim().length()>50){
+        if (accion.getDescripcion().trim().length()>50){
             throw new BusinessException("La descripción no debe ser mayor a 50 ఠ_ఠ");
         }
-        if (permiso.getDescripcion().trim().length()<3){
+        if (accion.getDescripcion().trim().length()<3){
             throw new BusinessException("La descripción no debe contener menos de 3 caracteres ఠ_ఠ");
         }
         Pattern pat3 = Pattern.compile("[a-zA-ZñÑáéíóúÁÉÍÓÚ ]*");
-        Matcher matDoc1 = pat3.matcher(permiso.getDescripcion().trim());
+        Matcher matDoc1 = pat3.matcher(accion.getDescripcion().trim());
         if(!matDoc1.matches()){
             throw new BusinessException("Descripción no debe contener números o caracteres especiales.");
         }
         Pattern dobleEspacio = Pattern.compile("\\s{2,}");
-        if (dobleEspacio.matcher(permiso.getDescripcion().trim()).find()) {
+        if (dobleEspacio.matcher(accion.getDescripcion().trim()).find()) {
             throw new BusinessException("Descripción no debe contener espacios dobles.");
-        }
+        }*/
     }
 }

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @IdClass(ModuloPermisoPK.class)
 public class ModuloPermiso {
     @Id
-    private long idUsuario;
-    @Id
     private long idModulo;
+    @Id
+    private long idPermiso;
 }

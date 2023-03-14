@@ -1,10 +1,10 @@
 package hn.edu.ujcv.savra.controller;
 
 import hn.edu.ujcv.savra.entity.Cargo;
-import hn.edu.ujcv.savra.entity.Permiso;
+import hn.edu.ujcv.savra.entity.Accion;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
-import hn.edu.ujcv.savra.service.PermisoService.PermisoService;
+import hn.edu.ujcv.savra.service.AccionService.AccionService;
 import hn.edu.ujcv.savra.utils.Constants;
 import hn.edu.ujcv.savra.utils.RestApiError;
 import org.hibernate.mapping.Any;
@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/permisos")
-public class PermisoController {
+@RequestMapping("/api/v1/acciones")
+public class AccionController {
     @Autowired
-    private PermisoService service;
+    private AccionService service;
 
-    @PostMapping("/addPermiso")
-    public ResponseEntity<Permiso> addPermiso (@RequestBody Permiso permiso){
+    @PostMapping("/addAccion")
+    public ResponseEntity<Accion> addAccion (@RequestBody Accion accion){
         try {
-            service.savePermiso(permiso);
+            service.saveAccion(accion);
             HttpHeaders responseHeader = new HttpHeaders();
-            responseHeader.set("location", Constants.URL_BASE_PERMISO + permiso.getIdPermiso());
-            return new ResponseEntity(permiso,responseHeader, HttpStatus.CREATED);
+            responseHeader.set("location", Constants.URL_BASE_ACCION + accion.getIdAccion());
+            return new ResponseEntity(accion,responseHeader, HttpStatus.CREATED);
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "La nformacion enviada no es valida ;V ",
@@ -36,10 +36,10 @@ public class PermisoController {
             return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/addPermisos")
-    public ResponseEntity<Any> addPermisos (@RequestBody List<Permiso> permisos){
+    @PostMapping("/addAcciones")
+    public ResponseEntity<Any> addAcciones (@RequestBody List<Accion> accions){
         try {
-            return new ResponseEntity(service.savePermisos(permisos),HttpStatus.CREATED);
+            return new ResponseEntity(service.saveAccions(accions),HttpStatus.CREATED);
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "La nformacion enviada no es valida XD ",
@@ -48,9 +48,9 @@ public class PermisoController {
         }
     }
     @GetMapping("")
-    public ResponseEntity <List<Permiso>> findAllPermisos(){
+    public ResponseEntity <List<Accion>> findAllAcciones(){
         try {
-            return new ResponseEntity(service.getPermisos(),HttpStatus.OK);
+            return new ResponseEntity(service.getAccion(),HttpStatus.OK);
 
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -60,9 +60,9 @@ public class PermisoController {
         }
     }
     @GetMapping("/id/{id}")
-    public ResponseEntity <Cargo> findPermisoById (@PathVariable Long id){
+    public ResponseEntity <Cargo> findAccionById (@PathVariable Long id){
         try {
-            return new ResponseEntity(service.getPermisoById(id),HttpStatus.OK);
+            return new ResponseEntity(service.getAccionById(id),HttpStatus.OK);
 
         }catch (BusinessException e){
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -72,10 +72,10 @@ public class PermisoController {
         }
     }
     @PutMapping("")
-    public ResponseEntity<Any> updatePermiso (@RequestBody Permiso permiso){
+    public ResponseEntity<Any> updateAccion (@RequestBody Accion accion){
         try {
-            service.updatePermiso(permiso);
-            return new ResponseEntity(permiso,HttpStatus.OK);
+            service.updateAccion(accion);
+            return new ResponseEntity(accion,HttpStatus.OK);
 
         }catch (BusinessException e){
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,9 +86,9 @@ public class PermisoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public  ResponseEntity<Any> deletePermiso (@PathVariable Long id){
+    public  ResponseEntity<Any> deleteAccion (@PathVariable Long id){
         try {
-            service.deletePermiso(id);
+            service.deleteAccion(id);
             return new ResponseEntity(HttpStatus.OK);
 
         }catch (BusinessException e){
@@ -98,8 +98,4 @@ public class PermisoController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
-
-
-
-
 }

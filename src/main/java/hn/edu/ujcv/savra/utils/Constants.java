@@ -19,7 +19,7 @@ public class Constants {
     public static final String URL_BASE_USUARIOS   = String.format("%s/usuarios", URL_BASE);
     public static final String URL_BASE_CARGO   = String.format("%s/cargos", URL_BASE);
     public static final String URL_BASE_ARQUEO   = String.format("%s/arqueos", URL_BASE);
-    public static final String URL_BASE_PERMISO   = String.format("%s/permisos", URL_BASE);
+    public static final String URL_BASE_ACCION   = String.format("%s/acciones", URL_BASE);
     public static final String URL_BASE_SHIPPER   = String.format("%s/shippers", URL_BASE);
     public static final String URL_BASE_TIPO_ENTREGA       = String.format("%s/tipos_entrega", URL_BASE);
     public static final String URL_BASE_METODO_PAGO        = String.format("%s/metodos_pago", URL_BASE);

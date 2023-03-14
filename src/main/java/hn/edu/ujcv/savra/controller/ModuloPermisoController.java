@@ -17,28 +17,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/usuario_permisos")
+@RequestMapping("/api/v1/modulo_permisos")
 public class ModuloPermisoController {
     @Autowired
     private ModuloPermisoService service;
 
-    @PostMapping("/addUsuarioPermiso")
+    @PostMapping("/addModuloPermiso")
     public ResponseEntity<Object> addUsuarioPermiso (@RequestBody ModuloPermiso moduloPermiso){
         try {
 
             service.saveModuloPermiso(moduloPermiso);
             HttpHeaders responseHeader = new HttpHeaders();
-            responseHeader.set("location", Constants.URL_BASE_MODULO_PERMISO + moduloPermiso.getIdUsuario());
+            responseHeader.set("location", Constants.URL_BASE_MODULO_PERMISO + moduloPermiso.getIdModulo());
             return new ResponseEntity(moduloPermiso,responseHeader, HttpStatus.CREATED);
         }catch (Exception e){
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+
                     "La nformacion enviada no es valida ;V ",
                     e.getMessage());
             return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/addUsuarioPermisos")
+        @PostMapping("/addModuloPermisos")
     public ResponseEntity<Any> addUsuarioPermisos (@RequestBody List<ModuloPermiso> moduloPermisos){
         try {
             return new ResponseEntity(service.saveModuloPermisos(moduloPermisos),HttpStatus.CREATED);
@@ -63,7 +64,7 @@ public class ModuloPermisoController {
         }
     }
     @GetMapping("/id/{id}/{idPermiso}")
-    public ResponseEntity <Cargo> findUsuarioPermisoById (@PathVariable Long id, @PathVariable Long idPermiso){
+    public ResponseEntity <ModuloPermiso> findModuloPermisoById (@PathVariable Long id, @PathVariable Long idPermiso){
         try {
             return new ResponseEntity(service.getModuloPermisoById(id,idPermiso),HttpStatus.OK);
 
