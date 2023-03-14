@@ -1,14 +1,12 @@
 package hn.edu.ujcv.savra.service.FacturaService;
 
-import hn.edu.ujcv.savra.entity.Cupon;
-import hn.edu.ujcv.savra.entity.Factura;
-import hn.edu.ujcv.savra.entity.FacturaRecibo;
-import hn.edu.ujcv.savra.entity.ParametroFactura;
+import hn.edu.ujcv.savra.entity.*;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.CuponRepository;
 import hn.edu.ujcv.savra.repository.FacturaRepository;
 import hn.edu.ujcv.savra.repository.ParametroFacturaRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +18,19 @@ import java.util.regex.Pattern;
 
 @Service
 public class FacturaService implements IFacturaService{
+
+    private Log mi_log = new Log();
+    private final String clase = this.getClass().getSimpleName();
     @Autowired
     private FacturaRepository repository;
     @Override
-    public Factura guardarFactura(Factura pFactura) throws BusinessException {
+    public Factura guardarFactura(Factura pFactura,int pDetalles,double total) throws BusinessException {
         try{
-            validarFactura(pFactura);
+            validarFactura(pFactura,pDetalles,total);
             return repository.save(pFactura);
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -37,6 +40,8 @@ public class FacturaService implements IFacturaService{
         try{
             return repository.findAll();
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -47,9 +52,13 @@ public class FacturaService implements IFacturaService{
         try{
             opt = repository.findByNoFactura(idFactura);
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró la factura número: " + idFactura);
             throw new NotFoundException("No se encontró la factura número: " + idFactura);
         }
         return opt.get();
@@ -61,15 +70,22 @@ public class FacturaService implements IFacturaService{
         try{
             opt = repository.getReciboEncabezado(idFactura);
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if(!opt.isPresent()){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se pudo enoncontrar esta Factura: " + idFactura);
             throw new NotFoundException("No se pudo enoncontrar esta Factura: " + idFactura);
         }
         return opt.get();
     }
 
-    private void validarFactura(Factura pFactura)throws BusinessException{
+    private void validarFactura(Factura pFactura, int detalles,double total)throws BusinessException,NotFoundException{
+        if(detalles == 0){
+            throw new BusinessException("Agregue un repuesto/artículo antes de facturar!");
+        }
         if (pFactura.getParametroFactura() == null){
             throw new BusinessException("Parámetro de factura esta vacío");
         }
@@ -84,6 +100,14 @@ public class FacturaService implements IFacturaService{
         }
         if (pFactura.getMetodoPago() == null){
             throw new BusinessException("Forma de Pago esta vacío!");
+        }
+        if(pFactura.getMetodoPago().getNombre().contains("EFECTIVO")){
+            if(pFactura.getEfectivo() <= 0){
+                throw new BusinessException("Efectivo no puede ser menor o igual a 0!");
+            }
+            if(pFactura.getEfectivo() < total){
+                throw new BusinessException("Efectivo digitado insuficiente!");
+            }
         }
         if (pFactura.getMetodoPago().getNombre().contains("TARJETA")){
             if (pFactura.getTarjeta().trim().isEmpty()){
@@ -100,6 +124,12 @@ public class FacturaService implements IFacturaService{
             pFactura.setTarjeta(pFactura.getTarjeta().substring(pFactura.getTarjeta().length()-4));
         }
         if (pFactura.getMetodoPago().getNombre().contains("MIXTO")){
+            if(pFactura.getEfectivo() <= 0){
+                throw new BusinessException("Efectivo no puede ser menor o igual a 0!");
+            }
+            if(pFactura.getEfectivo() >= total){
+                throw new BusinessException("Efectivo no puede ser mayor o igual al total!");
+            }
             if (pFactura.getTarjeta().trim().isEmpty()){
                 throw new BusinessException("No. de Tarjeta vacío!");
             }
@@ -161,27 +191,39 @@ public class FacturaService implements IFacturaService{
     }
     @Autowired
     private ParametroFacturaRepository repositoryParametro;
-    private ParametroFactura validarParametro(long idParametro)throws BusinessException{
-        List<ParametroFactura> parametros = repositoryParametro.findAll();
-        for (ParametroFactura item:
-             parametros) {
-            if(item.getIdParametro() == idParametro){
-                return item;
-
-            }
+    private ParametroFactura validarParametro(long idParametro)throws BusinessException, NotFoundException{
+        Optional<ParametroFactura> opt = null;
+        try{
+            opt = repositoryParametro.findById(idParametro);
+        }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
+            throw new BusinessException(e.getMessage());
         }
-        return null;
+        if (!opt.isPresent()){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró el parámetro seleccionado");
+            throw new NotFoundException("No se encontró el parámetro seleccionado");
+        }
+        return opt.get();
     }
 
     @Autowired
     private CuponRepository repositoryCupon;
-    private Cupon validarCupon(long idCupon)throws BusinessException{
-        List<Cupon> cupones = repositoryCupon.findAll();
-        for (Cupon item:cupones) {
-            if(item.getIdCupon() == idCupon){
-                return item;
-            }
+    private Cupon validarCupon(long idCupon)throws BusinessException,NotFoundException{
+        Optional<Cupon> opt = null;
+        try{
+            opt = repositoryCupon.findById(idCupon);
+        }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
+            throw new BusinessException(e.getMessage());
         }
-        return null;
+        if (!opt.isPresent()){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró el parámetro seleccionado");
+            throw new NotFoundException("No se encontró el parámetro seleccionado");
+        }
+        return opt.get();
     }
 }

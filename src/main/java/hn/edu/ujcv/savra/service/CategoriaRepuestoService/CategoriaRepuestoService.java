@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.CategoriaRepuesto;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.CategoriaRepuestoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ import java.util.regex.Pattern;
 
 @Service
 public class CategoriaRepuestoService implements ICategoriaRepuestoService {
+
+    private Log mi_log = new Log();
+    private final String clase = this.getClass().getSimpleName();
     @Autowired
     private CategoriaRepuestoRepository repository;
 
@@ -24,6 +28,8 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
             validarCategoria(categoriaRepuesto);
             return repository.save(categoriaRepuesto);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -36,6 +42,8 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
             }
             return repository.saveAll(categoriasRepuesto);
         } catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -45,6 +53,8 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
         try {
             return repository.findAll();
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -55,9 +65,13 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró la categoría de repuesto: " + id);
             throw new NotFoundException("No se encontró la categoría de repuesto: " + id);
         }
         return opt.get();
@@ -69,9 +83,13 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
         try {
             opt = repository.findByNombre(nombre);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró la categoría de repuesto: " + nombre);
             throw new NotFoundException("No se encontró la categoría de repuesto: " + nombre);
         }
         return opt.get();
@@ -83,14 +101,20 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró la categoría de repuesto: " + id);
             throw new NotFoundException("No se encontró la categoría de repuesto: " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e) {
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -108,9 +132,13 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
             }
             opt = repository.findById(categoriaRepuesto.getIdCategoria());
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró la categoría de repuesto: " + categoriaRepuesto.getIdCategoria());
             throw new NotFoundException("No se encontró la categoría de repuesto: " + categoriaRepuesto.getIdCategoria());
         } else {
             try {
@@ -121,6 +149,8 @@ public class CategoriaRepuestoService implements ICategoriaRepuestoService {
                 );
                 return repository.save(categoriaExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

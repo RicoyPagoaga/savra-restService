@@ -25,12 +25,12 @@ public class Log {
     public boolean CrearArchivo(String nameClass){
         boolean flag = false;
         String nombreArchivo = ObtenerNombreArchivo(nameClass);
-        File f = new File(nombreArchivo);
+        File f = new File("logs\\",nombreArchivo);
         if(!f.exists()){
             try{
                 f.createNewFile();
                 flag = true;
-                fh = new FileHandler(nombreArchivo);
+                fh = new FileHandler("logs\\"+nombreArchivo);
                 logger = Logger.getLogger(nameClass);
                 logger.addHandler(fh);
                 SimpleFormatter formatter = new SimpleFormatter();

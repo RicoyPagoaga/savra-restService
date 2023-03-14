@@ -3,8 +3,10 @@ package hn.edu.ujcv.savra.service.FacturaService;
 import hn.edu.ujcv.savra.entity.*;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
+import hn.edu.ujcv.savra.repository.FacturaDetalleRepository;
 import hn.edu.ujcv.savra.repository.FacturaRepository;
 import hn.edu.ujcv.savra.repository.ParametroFacturaRepository;
+import hn.edu.ujcv.savra.service.FacturaDetalleService.FacturaDetalleService;
 import hn.edu.ujcv.savra.service.ParametroFacturaService.ParametroFacturaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,11 +29,14 @@ import static org.mockito.Mockito.when;
 class FacturaServiceTest {
     @Mock
     private FacturaRepository facturaRepository;
-
     @Mock
     private ParametroFacturaRepository parametroFacturaRepository;
+    @Mock
+    private FacturaDetalleRepository facturaDetalleRepository;
     @InjectMocks
     private FacturaService facturaService;
+
+    private FacturaDetalle facturaDetalleEnviado;
 
     private Factura factura;
     private Factura facturaEnviada;
@@ -48,6 +53,7 @@ class FacturaServiceTest {
                 LocalDate.now(),LocalDate.now().plusDays(3));
         parametroFacturaEnviado = new ParametroFactura(1,"C1D1E9-342413-FC4180-82F25E-C52983-BA","020-001-01-01000000"
                 ,"020-001-01-01060001", LocalDate.now().plusMonths(5),LocalDate.now(),15400);
+        facturaDetalleEnviado = new FacturaDetalle(1,2,3,5,2);
         facturaRecibo = new FacturaRecibo() {
             @Override
             public String getCai() {
@@ -140,7 +146,7 @@ class FacturaServiceTest {
     void guardarFactura() throws BusinessException {
         when(parametroFacturaRepository.findAll()).thenReturn(Arrays.asList(parametroFacturaEnviado));
         when(facturaRepository.save(any(Factura.class))).thenReturn(factura);
-        assertNotNull(facturaService.guardarFactura(facturaEnviada));
+        assertNotNull(facturaService.guardarFactura(facturaEnviada,1, 2500));
     }
 
     @Test

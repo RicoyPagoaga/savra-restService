@@ -21,11 +21,10 @@ public class AccionService implements IAccionService {
     @Override
     public Accion saveAccion(Accion accion) throws BusinessException {
         try {
-            accion.setNombre(accion.getNombre().toUpperCase());
             Optional<Accion> opt=null;
             opt=repository.findAccionByNombre(accion.getNombre());
             if (opt.isPresent()){
-                throw new BusinessException("Permiso ya existe!!");
+                throw new BusinessException("Acción ya existe!!");
             }
             validarAcciones(accion);
             return repository.save(accion);
@@ -71,8 +70,8 @@ public class AccionService implements IAccionService {
             throw new BusinessException(e.getMessage());
         }if (!opt.isPresent()){
             mi_log.CrearArchivo(this.getClass().getSimpleName());
-            mi_log.logger.severe("No se encontró el permiso"+id);
-            throw new NotFoundException("No se encontró el permiso"+id);
+            mi_log.logger.severe("No se encontró la acción: "+id);
+            throw new NotFoundException("No se encontró ela acción: "+id);
         }
         return opt.get();
     }
@@ -89,8 +88,8 @@ public class AccionService implements IAccionService {
         }
         if (!opt.isPresent()){
             mi_log.CrearArchivo(this.getClass().getSimpleName());
-            mi_log.logger.severe("no se encontro el cargo :v"+nombre);
-            throw new NotFoundException("no se encontro el cargo :v"+nombre);
+            mi_log.logger.severe("no se encontro la acción"+nombre);
+            throw new NotFoundException("no se encontro la acción"+nombre);
         }
         return opt.get();
     }
@@ -107,8 +106,8 @@ public class AccionService implements IAccionService {
         }
         if (!opt.isPresent()){
             mi_log.CrearArchivo(this.getClass().getSimpleName());
-            mi_log.logger.severe("no se encontro el permiso"+id);
-            throw new NotFoundException("no se encontro el permiso"+id);
+            mi_log.logger.severe("no se encontro la acción"+id);
+            throw new NotFoundException("no se encontro la acción"+id);
         }
         else {
             try {
@@ -133,8 +132,8 @@ public class AccionService implements IAccionService {
         }
         if (!opt.isPresent()){
             mi_log.CrearArchivo(this.getClass().getSimpleName());
-            mi_log.logger.severe("no se encontro el permiso"+ accion.getIdAccion());
-            throw new NotFoundException("no se encontro el permiso"+ accion.getIdAccion());
+            mi_log.logger.severe("no se encontro la acción"+ accion.getIdAccion());
+            throw new NotFoundException("no se encontro la acción"+ accion.getIdAccion());
         }
         else {
             try {
@@ -142,7 +141,6 @@ public class AccionService implements IAccionService {
                 Accion existingAccion =new Accion();
                 existingAccion.setIdAccion(accion.getIdAccion());
                 existingAccion.setNombre(accion.getNombre());
-                accion.setNombre(accion.getNombre().toUpperCase());
                 return repository.save(existingAccion);
             }catch (Exception e){
                 mi_log.CrearArchivo(this.getClass().getSimpleName());
@@ -166,7 +164,7 @@ public class AccionService implements IAccionService {
         Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
         Matcher matDoc = patDoc.matcher(accion.getNombre().trim());
         if(!matDoc.matches()){
-            throw new BusinessException("Nombre Cargo no debe contener números o carácteres especiales ఠ_ఠ");
+            throw new BusinessException("Nombre de acción no debe contener números o carácteres especiales ఠ_ఠ");
         }
 
         //Descripcion
