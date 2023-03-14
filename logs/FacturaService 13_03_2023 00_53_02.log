@@ -1,0 +1,4 @@
+mar 13, 2023 12:53:02 AM hn.edu.ujcv.savra.service.FacturaService.FacturaService guardarFactura
+GRAVE: null
+mar 13, 2023 12:53:22 AM hn.edu.ujcv.savra.service.FacturaService.FacturaService guardarFactura
+GRAVE: Parámetro de factura esta vacío

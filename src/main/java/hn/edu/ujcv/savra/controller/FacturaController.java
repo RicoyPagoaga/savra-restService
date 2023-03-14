@@ -22,10 +22,10 @@ public class FacturaController {
     @Autowired
     private FacturaService service;
 
-    @PostMapping("/addFactura")
-    public ResponseEntity<Object> agregarFactura(@RequestBody Factura factura){
+    @PostMapping("/addFactura/detalles/{detalles}/total/{total}")
+    public ResponseEntity<Object> agregarFactura(@RequestBody Factura factura,@PathVariable  int detalles,@PathVariable  double total){
         try{
-            service.guardarFactura(factura);
+            service.guardarFactura(factura,detalles,total);
             HttpHeaders responseHeader = new HttpHeaders();
             responseHeader.set("location", Constants.URL_BASE_CATEGORIA_CLIENTES + factura.getIdFactura());
             return new ResponseEntity(factura,responseHeader, HttpStatus.CREATED);

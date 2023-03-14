@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.Cargo;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.CargoRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class CargoService implements ICargoService{
+    private Log mi_log = new Log();
+    private final String clase = this.getClass().getSimpleName();
     @Autowired
     private CargoRepository repository;
 
@@ -22,7 +25,7 @@ public class CargoService implements ICargoService{
         try {
             //Nombre Cargo
             if (cargo.getNombre().trim().isEmpty()){
-                throw new BusinessException("El nombre no debe estar vacio");
+                throw new BusinessException("El nombre del cargo no debe estar vacio");
             }
             if(cargo.getNombre().trim().length() <5){
                 throw new BusinessException("Nombre Cargo debe contener mínimo 5 carácteres ఠ_ఠ");
@@ -58,6 +61,8 @@ public class CargoService implements ICargoService{
             cargo.setNombre(cargo.getNombre().toUpperCase());
             return repository.save(cargo);
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -72,6 +77,8 @@ public class CargoService implements ICargoService{
             }
             return repository.saveAll(cargos);
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -81,6 +88,8 @@ public class CargoService implements ICargoService{
         try {
             return repository.findAll();
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -91,10 +100,14 @@ public class CargoService implements ICargoService{
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
-            throw new NotFoundException("no se encontro el Cargo"+id);
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("no se encontro el Cargo: "+id);
+            throw new NotFoundException("no se encontro el Cargo: "+id);
         }
         return opt.get();
     }
@@ -105,10 +118,14 @@ public class CargoService implements ICargoService{
         try {
             opt=repository.findCargoByNombre(nombre);
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
-            throw new NotFoundException("no se encontro el cargo :v"+nombre);
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("no se encontro el cargo: "+nombre);
+            throw new NotFoundException("no se encontro el cargo: "+nombre);
         }
         return opt.get();
     }
@@ -119,15 +136,21 @@ public class CargoService implements ICargoService{
         try {
             opt=repository.findById(id);
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
-            throw new NotFoundException("no se encontro el cargo"+id);
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("no se encontro el cargo: "+id);
+            throw new NotFoundException("no se encontro el cargo: "+id);
         }
         else {
             try {
                 repository.deleteById(id);
             }catch (Exception e){
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -140,9 +163,13 @@ public class CargoService implements ICargoService{
         try {
             opt=repository.findById(cargo.getIdCargo());
         }catch (Exception e){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()){
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró el cargo"+ cargo.getIdCargo());
             throw new NotFoundException("No se encontró el cargo"+ cargo.getIdCargo());
         }
         else {
@@ -197,6 +224,8 @@ public class CargoService implements ICargoService{
                 existingCargo.setSalarioBase(cargo.getSalarioBase());
                 return repository.save(existingCargo);
             }catch (Exception e){
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }

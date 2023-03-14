@@ -1,0 +1,4 @@
+mar 12, 2023 10:59:54 PM hn.edu.ujcv.savra.service.CargoService.CargoService saveCargo
+GRAVE: Salario no debe ser menor de L. 6,000.00
+mar 12, 2023 11:00:41 PM hn.edu.ujcv.savra.service.CargoService.CargoService saveCargo
+GRAVE: la descripción debe contener mínimo 3 carácteres ఠ_ఠ

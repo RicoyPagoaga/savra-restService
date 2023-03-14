@@ -4,6 +4,7 @@ import hn.edu.ujcv.savra.entity.Usuario;
 import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.UsuarioRepository;
+import hn.edu.ujcv.savra.utils.Log;
 import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
@@ -25,6 +26,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class UsuarioService implements IUsuarioService {
+    private Log mi_log = new Log();
+    private final String clase = this.getClass().getSimpleName();
 
     @Autowired
     private UsuarioRepository repository;
@@ -40,6 +43,8 @@ public class UsuarioService implements IUsuarioService {
             validarUsuario(usuario, coinciden);
             return repository.save(usuario);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -49,6 +54,8 @@ public class UsuarioService implements IUsuarioService {
         try {
             return repository.saveAll(usuarios);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -58,6 +65,8 @@ public class UsuarioService implements IUsuarioService {
         try {
             return repository.findAll();
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -68,9 +77,13 @@ public class UsuarioService implements IUsuarioService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró el usuario " + id);
             throw new NotFoundException("No se encontró el usuario " + id);
         }
         return opt.get();
@@ -82,9 +95,13 @@ public class UsuarioService implements IUsuarioService {
         try {
             opt = repository.findPorUsername(username);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró el usuario " );
             throw new NotFoundException("No se encontró el usuario");
         }
         return opt.get();
@@ -96,14 +113,20 @@ public class UsuarioService implements IUsuarioService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró el usuario " + id);
             throw new NotFoundException("No se encontró el usuario " + id);
         } else {
             try {
                 repository.deleteById(id);
             } catch (Exception e1) {
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e1.getMessage());
                 throw new BusinessException(e1.getMessage());
             }
         }
@@ -121,9 +144,13 @@ public class UsuarioService implements IUsuarioService {
             }
             opt = repository.findById(usuario.getIdUsuario());
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró el usuario " + usuario.getIdUsuario());
             throw new NotFoundException("No se encontró el usuario " + usuario.getIdUsuario());
         } else {
             try {
@@ -137,6 +164,8 @@ public class UsuarioService implements IUsuarioService {
                 );
                 return repository.save(usuarioExistente);
             } catch (Exception e) {
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -148,14 +177,20 @@ public class UsuarioService implements IUsuarioService {
         try {
             opt = repository.findById(id);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró el usuario: " + id);
             throw new NotFoundException("No se encontró el usuario: " + id);
         } else {
             try {
                 repository.activoUsuario(estado, id);
             } catch (Exception e) {
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -167,14 +202,20 @@ public class UsuarioService implements IUsuarioService {
         try {
             opt = repository.findPorUsername(username);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (!opt.isPresent()) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe("No se encontró el usuario " + username);
             throw new NotFoundException("No se encontró el usuario: " + username);
         } else {
             try {
                 repository.bloqueoUsuario(estado, username);
             } catch (Exception e) {
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -187,6 +228,8 @@ public class UsuarioService implements IUsuarioService {
             LocalDateTime date = Instant.ofEpochMilli(miliseconds).atZone(ZoneId.systemDefault()).toLocalDateTime();
             repository.cierreSesion(clientes, date, nombreUsuario);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }
@@ -281,6 +324,8 @@ public class UsuarioService implements IUsuarioService {
         try {
             opt = repository.findPorUsername(username);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (opt.isPresent()) {
@@ -290,6 +335,8 @@ public class UsuarioService implements IUsuarioService {
                 if (cryptPassword.equals(opt.get().getPassword()) && opt.get().getActivo() == 1)
                     coincide = true;
             } catch (Exception e) {
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
@@ -302,6 +349,8 @@ public class UsuarioService implements IUsuarioService {
         try {
             opt = repository.findPorUsername(username);
         } catch (Exception e) {
+            mi_log.CrearArchivo(clase);
+            mi_log.logger.severe(e.getMessage());
             throw new BusinessException(e.getMessage());
         }
         if (opt.isPresent()) {
@@ -309,6 +358,8 @@ public class UsuarioService implements IUsuarioService {
                 if (opt.get().getBloqueado() == 1 && opt.get().getActivo() == 1)
                     coincide = true;
             } catch (Exception e) {
+                mi_log.CrearArchivo(clase);
+                mi_log.logger.severe(e.getMessage());
                 throw new BusinessException(e.getMessage());
             }
         }
