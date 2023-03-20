@@ -96,23 +96,23 @@ public class ModuloService implements IModuloService {
         mi_log.CrearArchivo(this.getClass().getSimpleName());
         mi_log.logger.severe(e.getMessage());
         throw new BusinessException(e.getMessage());
-    }
-        if (!opt.isPresent()){
-        mi_log.CrearArchivo(this.getClass().getSimpleName());
-        mi_log.logger.severe("No se encontró el modulo:" + modulo.getIdModulo());
-        throw new NotFoundException("No se encontró el modulo:" + modulo.getIdModulo());
-    }else {
-        try {
-            Pais newPais = new Pais();
-            Modulo newModulo=new Modulo();
-            newModulo.setIdModulo(modulo.getIdModulo());
-            newModulo.setNombre(modulo.getNombre());
-            return Repository.save(newModulo);
-        }catch (Exception e1){
-            mi_log.CrearArchivo(this.getClass().getSimpleName());
-            mi_log.logger.severe(e1.getMessage());
-            throw new BusinessException(e1.getMessage());
         }
-    }
+            if (!opt.isPresent()){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe("No se encontró el modulo:" + modulo.getIdModulo());
+            throw new NotFoundException("No se encontró el modulo:" + modulo.getIdModulo());
+        }else {
+            try {
+                Pais newPais = new Pais();
+                Modulo newModulo=new Modulo();
+                newModulo.setIdModulo(modulo.getIdModulo());
+                newModulo.setNombre(modulo.getNombre());
+                return Repository.save(newModulo);
+            }catch (Exception e1){
+                mi_log.CrearArchivo(this.getClass().getSimpleName());
+                mi_log.logger.severe(e1.getMessage());
+                throw new BusinessException(e1.getMessage());
+            }
+        }
     }
 }

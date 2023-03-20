@@ -29,7 +29,7 @@ class PermisoServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         accion = new Accion();
-        setAccion = new Accion(1,"guardia","Vigilancia");
+        setAccion = new Accion(1, "Vigilancia"); //"guardia",
     }
 
     @Test

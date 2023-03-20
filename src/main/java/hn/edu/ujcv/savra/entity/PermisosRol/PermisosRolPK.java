@@ -1,4 +1,4 @@
-package hn.edu.ujcv.savra.entity.ModuloPermiso;
+package hn.edu.ujcv.savra.entity.PermisosRol;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class ModuloPermisoPK implements Serializable {
-    private long idModulo;
-    private long idPermiso;
+public class PermisosRolPK implements Serializable {
+    private long idModuloAccion;
+    private long idRol;
 }
