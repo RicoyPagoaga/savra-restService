@@ -172,7 +172,7 @@ public class AccionService implements IAccionService {
         if (accion.getNombre().trim().length()<4){
             throw new BusinessException("El nombre debe contener minimo 4 carácteres ఠ_ఠ");
         }
-        Pattern patDoc = Pattern.compile("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+        Pattern patDoc = Pattern.compile("[a-zA-Z/ñÑáéíóúÁÉÍÓÚ ]*");
         Matcher matDoc = patDoc.matcher(accion.getNombre().trim());
         if(!matDoc.matches()){
             throw new BusinessException("Nombre de acción no debe contener números o carácteres especiales ఠ_ఠ");
