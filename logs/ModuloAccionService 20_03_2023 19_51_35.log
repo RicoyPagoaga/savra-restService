@@ -1,0 +1,2 @@
+mar 20, 2023 7:51:35 PM hn.edu.ujcv.savra.service.ModuloAccionService.ModuloAccionService deleteModuloAccion
+GRAVE: could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement
