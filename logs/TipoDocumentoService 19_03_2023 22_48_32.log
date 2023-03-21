@@ -1,0 +1,4 @@
+mar 19, 2023 10:48:32 PM hn.edu.ujcv.savra.service.TipoDocumentoService.TipoDocumentoService getTipoDocumentos
+GRAVE: Could not open JPA EntityManager for transaction; nested exception is org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection
+mar 19, 2023 10:49:09 PM hn.edu.ujcv.savra.service.TipoDocumentoService.TipoDocumentoService getTipoDocumentos
+GRAVE: Could not open JPA EntityManager for transaction; nested exception is org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection

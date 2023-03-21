@@ -98,4 +98,15 @@ public class AccionController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/rol/{rol}/modulo/{mod}")
+    public ResponseEntity <List<Accion>> findAccionesModulo(@PathVariable long rol,@PathVariable String mod){
+        try {
+            return new ResponseEntity(service.accionesByRolModulo(rol,mod),HttpStatus.OK);
+        }catch (Exception e){
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "La Información enviada no es valida XD ",
+                    e.getMessage());
+            return new ResponseEntity(apiError,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

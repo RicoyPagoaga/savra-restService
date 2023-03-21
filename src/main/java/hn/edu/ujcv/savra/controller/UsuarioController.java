@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -222,6 +223,17 @@ public class UsuarioController {
         }catch (BusinessException e) {
             RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Cierre Sesion Errónea!", e.getMessage());
+            return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/rol/{rol}")
+    public ResponseEntity<List<String>> obtenerModulos(@PathVariable long rol) {
+        try {
+            return new ResponseEntity(service.getModulos(rol), HttpStatus.OK);
+        } catch (BusinessException e) {
+            RestApiError apiError = new RestApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Informacion enviada no es valida",
+                    e.getMessage());
             return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

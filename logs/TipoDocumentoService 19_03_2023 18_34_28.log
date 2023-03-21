@@ -1,0 +1,2 @@
+mar 19, 2023 6:34:28 PM hn.edu.ujcv.savra.service.TipoDocumentoService.TipoDocumentoService deleteTipoDocumento
+GRAVE: could not execute statement; SQL [n/a]; constraint [null]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement

@@ -1,0 +1,2 @@
+mar 19, 2023 10:48:32 PM hn.edu.ujcv.savra.service.AccionService.AccionService accionesByRolModulo
+GRAVE: Unable to acquire JDBC Connection; nested exception is org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection

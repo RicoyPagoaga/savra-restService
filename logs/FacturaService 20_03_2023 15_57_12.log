@@ -1,0 +1,2 @@
+mar 20, 2023 3:57:13 PM hn.edu.ujcv.savra.service.FacturaService.FacturaService obtenerFacturas
+GRAVE: Could not open JPA EntityManager for transaction; nested exception is org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection

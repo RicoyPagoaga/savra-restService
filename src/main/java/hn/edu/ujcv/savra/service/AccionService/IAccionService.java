@@ -14,4 +14,5 @@ public interface IAccionService {
     Accion getAccionByNombre(String nombre) throws BusinessException,NotFoundException;
     void deleteAccion(long id) throws BusinessException,NotFoundException;
     Accion updateAccion(Accion accion) throws BusinessException,NotFoundException;
+    List <Accion> accionesByRolModulo(long idRol,String modulo)throws BusinessException;
 }
