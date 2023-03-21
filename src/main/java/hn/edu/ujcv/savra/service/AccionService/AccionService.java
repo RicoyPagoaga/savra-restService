@@ -150,6 +150,17 @@ public class AccionService implements IAccionService {
         }
     }
 
+    @Override
+    public List<Accion> accionesByRolModulo(long idRol, String modulo) throws BusinessException {
+        try{
+            return repository.accionesPorModuloRol(idRol,modulo);
+        }catch (Exception e){
+            mi_log.CrearArchivo(this.getClass().getSimpleName());
+            mi_log.logger.severe(e.getMessage());
+            throw new BusinessException(e.getMessage());
+        }
+    }
+
     private void validarAcciones(Accion accion) throws BusinessException{
         //Nombre
         if (accion.getNombre().trim().isEmpty()){

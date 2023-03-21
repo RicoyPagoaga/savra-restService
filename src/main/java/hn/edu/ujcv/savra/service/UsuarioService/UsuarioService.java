@@ -5,22 +5,14 @@ import hn.edu.ujcv.savra.exceptions.BusinessException;
 import hn.edu.ujcv.savra.exceptions.NotFoundException;
 import hn.edu.ujcv.savra.repository.UsuarioRepository;
 import hn.edu.ujcv.savra.utils.Log;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,8 +30,6 @@ public class UsuarioService implements IUsuarioService {
             if (!usuario.getPassword().trim().isEmpty()) {
                 usuario.setPassword(encriptar(usuario.getPassword().trim()));
             }
-            usuario.setNombre(usuario.getNombre().trim().toUpperCase());
-            usuario.setApellido(usuario.getApellido().trim().toUpperCase());
             validarUsuario(usuario, coinciden);
             return repository.save(usuario);
         } catch (Exception e) {
@@ -157,7 +147,7 @@ public class UsuarioService implements IUsuarioService {
                 validarUsuario(usuario, coinciden);
                 Usuario usuarioExistente = new Usuario(
                         usuario.getIdUsuario(), usuario.getUsername().trim(), usuario.getPassword().trim(),
-                        usuario.getNombre().trim().toUpperCase(), usuario.getApellido().trim().toUpperCase(),
+                        usuario.getNombre().trim(), usuario.getApellido().trim(),
                         usuario.getActivo(), usuario.getBloqueado(),
                         usuario.getRol(), usuario.getClientesVista(), usuario.getUltimaVisita(), usuario.getVentasVista(),
                         usuario.getRepuestosVista()
@@ -230,6 +220,15 @@ public class UsuarioService implements IUsuarioService {
         } catch (Exception e) {
             mi_log.CrearArchivo(clase);
             mi_log.logger.severe(e.getMessage());
+            throw new BusinessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<String> getModulos(long idRol) throws BusinessException {
+        try{
+            return repository.obtenerModulos(idRol);
+        }catch (Exception e){
             throw new BusinessException(e.getMessage());
         }
     }
